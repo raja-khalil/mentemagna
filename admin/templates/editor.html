@@ -1,0 +1,45 @@
+<!-- admin/templates/editor.html -->
+{% extends 'admin_base.html' %}
+
+{% block title %}Novo Post — Admin{% endblock %}
+{% block content %}
+<h2>Novo Artigo</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{ form.titulo.label(class="form-label") }}
+        {{ form.titulo(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.conteudo.label(class="form-label") }}
+        {{ form.conteudo(class="form-control") }}
+    </div>
+
+    <div class="mb-3">
+        {{ form.imagem.label(class="form-label") }}
+        {{ form.imagem(class="form-control") }}
+    </div>
+
+    <button type="submit" class="btn btn-primary">{{ form.enviar.label.text }}</button>
+    <a href="{{ url_for('blog.blog') }}" class="btn btn-secondary">← Voltar ao Blog</a>
+</form>
+
+<!-- CKEditor 5 com plugins de upload -->
+<script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+<script>
+ClassicEditor
+  .create(document.querySelector('#conteudo'), {
+    simpleUpload: {
+      uploadUrl: '/admin/upload'
+    },
+    toolbar: [
+      'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList',
+      'blockQuote', 'insertTable', 'mediaEmbed', 'undo', 'redo'
+    ]
+  })
+  .catch(error => console.error(error));
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+# Arquivos de ambiente
+.env
+*.pyc
+__pycache__/
+instance/
+*.sqlite3
+*.db
+
+# Ambiente virtual
+venv/
+.env/
+
+# IDEs e editores
+.vscode/
+.idea/
+
+# Uploads
+static/uploads/

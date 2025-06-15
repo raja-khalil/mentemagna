@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}Contato - Mente Magna{% endblock %}
+
+{% block content %}
+<h1>Fale com a Mente Magna</h1>
+
+<p class="mb-4">
+    Entre em contato preenchendo o formulário abaixo ou pelos canais diretos:
+</p>
+
+<div class="mb-4">
+    <p>📞 <strong>WhatsApp:</strong> <a href="https://wa.me/qr/NZWMKYIVZBZXF1" target="_blank">(22) 99745-2645</a></p>
+    <p>✉️ <strong>Email:</strong> <a href="mailto:emagna.desenvolvimento@gmail.com">emagna.desenvolvimento@gmail.com</a></p>
+    <p>👤 <strong>Responsável:</strong> Raja Khalil</p>
+</div>
+
+<hr>
+
+<h2>Formulário de Contato</h2>
+
+<form method="POST" novalidate>
+    {{ form.hidden_tag() }}
+
+    <div class="mb-3">
+        {{ form.nome.label(class="form-label") }}
+        {{ form.nome(class="form-control") }}
+        {% for erro in form.nome.errors %}
+            <div class="text-danger">{{ erro }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.email.label(class="form-label") }}
+        {{ form.email(class="form-control") }}
+        {% for erro in form.email.errors %}
+            <div class="text-danger">{{ erro }}</div>
+        {% endfor %}
+    </div>
+
+    <div class="mb-3">
+        {{ form.mensagem.label(class="form-label") }}
+        {{ form.mensagem(class="form-control", rows=5) }}
+        {% for erro in form.mensagem.errors %}
+            <div class="text-danger">{{ erro }}</div>
+        {% endfor %}
+    </div>
+
+    <button type="submit" class="btn btn-primary">{{ form.enviar.label.text }}</button>
+</form>
+{% endblock %}

@@ -1,0 +1,33 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}Painel de Artigos - Admin - Mente Magna{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Painel de Artigos</h1>
+<a href="{{ url_for('admin.novo_post') }}" class="btn btn-success mb-4">➕ Novo Artigo</a>
+
+{% if posts %}
+<table class="table table-bordered table-hover">
+    <thead class="table-light">
+        <tr>
+            <th>Título</th>
+            <th>Data</th>
+            <th>Ações</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for post in posts %}
+        <tr>
+            <td>{{ post.titulo }}</td>
+            <td>{{ post.data_criacao.strftime('%d/%m/%Y %H:%M') }}</td>
+            <td>
+                <a href="{{ url_for('admin.editar_post', post_id=post.id) }}" class="btn btn-sm btn-primary">✏️ Editar</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% else %}
+<div class="alert alert-info">Nenhum artigo publicado ainda.</div>
+{% endif %}
+{% endblock %}

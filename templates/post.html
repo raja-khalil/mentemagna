@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ post.titulo }} - Blog{% endblock %}
+
+{% block content %}
+<h1>{{ post.titulo }}</h1>
+
+{% if post.imagem %}
+    <img src="{{ post.imagem }}" class="img-fluid mb-3 rounded shadow" alt="Imagem do post">
+{% endif %}
+
+<p class="text-muted"><small>Publicado em {{ post.data_criacao.strftime('%d/%m/%Y %H:%M') }}</small></p>
+
+<hr>
+
+<div class="mt-4">
+    {{ post.conteudo | safe }}
+</div>
+
+<a href="{{ url_for('blog.blog') }}" class="btn btn-secondary mt-4">← Voltar ao Blog</a>
+{% endblock %}

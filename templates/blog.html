@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog - Mente Magna{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Blog da Mente Magna</h1>
+
+<a href="{{ url_for('admin.novo_post') }}" class="btn btn-success mb-4">➕ Novo Artigo</a>
+
+<div class="row">
+  {% for post in posts %}
+  <div class="col-md-6 mb-4">
+    <div class="card h-100 shadow-sm">
+      {% if post.imagem %}
+      <img src="{{ post.imagem }}" class="card-img-top" alt="Imagem do post">
+      {% endif %}
+      <div class="card-body">
+        <h5 class="card-title">{{ post.titulo }}</h5>
+        <p class="card-text">{{ post.conteudo[:150]|safe }}...</p>
+        <a href="{{ url_for('blog.post', post_id=post.id) }}" class="btn btn-outline-primary">Ler mais</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}
