@@ -1,21 +1,45 @@
 {% extends 'base.html' %}
-
-{% block title %}{{ post.titulo }} - Blog{% endblock %}
+{% block title %}{{ post.titulo }} – Mente Magna{% endblock %}
 
 {% block content %}
-<h1>{{ post.titulo }}</h1>
+<article class="mb-5">
+  <h1>{{ post.titulo }}</h1>
+  <p class="text-muted">{{ post.data_criacao.strftime('%d/%m/%Y %H:%M') }}</p>
+  <p><strong>Autor:</strong> Lorem Ipsum</p>
+  {% if post.imagem %}
+    <img src="{{ post.imagem }}" class="img-fluid mb-4">
+  {% endif %}
 
-{% if post.imagem %}
-    <img src="{{ post.imagem }}" class="img-fluid mb-3 rounded shadow" alt="Imagem do post">
-{% endif %}
+  <!-- Primeira parte do conteúdo -->
+  <div>{{ post.conteudo|safe }}</div>
 
-<p class="text-muted"><small>Publicado em {{ post.data_criacao.strftime('%d/%m/%Y %H:%M') }}</small></p>
+  <!-- Anúncio interno após conteúdo 1 -->
+  <div class="my-4 text-center bg-light py-3">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+         data-ad-slot="3333333333"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
 
-<hr>
+  <!-- Demais parágrafos ou seções adicionais -->
+  <div>
+    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vestibulum...</p>
+    <h2>Seção Exemplo</h2>
+    <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris...</p>
+  </div>
 
-<div class="mt-4">
-    {{ post.conteudo | safe }}
-</div>
-
-<a href="{{ url_for('blog.blog') }}" class="btn btn-secondary mt-4">← Voltar ao Blog</a>
+  <!-- Anúncio final do post -->
+  <div class="my-4 text-center bg-light py-3">
+    <ins class="adsbygoogle"
+         style="display:block"
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
+         data-ad-slot="4444444444"
+         data-ad-format="auto"
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+  </div>
+</article>
 {% endblock %}

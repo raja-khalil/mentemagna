@@ -1,14 +1,24 @@
- {% extends 'base.html' %}
-
-{% block title %}Produtos e Serviços - Mente Magna{% endblock %}
+{% extends 'base.html' %}
+{% block title %}Produtos – Mente Magna{% endblock %}
 
 {% block content %}
-<h1>Nossos Produtos</h1>
-<ul class="list-group">
-    <li class="list-group-item">📘 eBooks e Livros (Amazon, PDF e outras plataformas)</li>
-    <li class="list-group-item">🎓 Cursos online sobre desenvolvimento pessoal, empresarial e programação</li>
-    <li class="list-group-item">💼 Consultorias e assessorias sob demanda</li>
-    <li class="list-group-item">🧠 Ferramentas interativas como calculadoras, visão computacional e IA</li>
-</ul>
+<h1>Produtos</h1>
+<div class="row">
+  {% for i in range(1,4) %}
+  <div class="col-md-4 mb-4">
+    <div class="card">
+      <img src="https://picsum.photos/seed/prod{{i}}/400/300" class="card-img-top">
+      <div class="card-body">
+        <h5 class="card-title">Produto Lorem {{i}}</h5>
+        <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+<!-- Anúncio final de produtos -->
+<div class="text-center my-4">
+  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXX" data-ad-slot="7777777777" data-ad-format="auto" data-full-width-responsive="true"></ins>
+  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+</div>
 {% endblock %}
-

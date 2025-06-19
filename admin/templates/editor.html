@@ -1,4 +1,3 @@
-<!-- admin/templates/editor.html -->
 {% extends 'admin_base.html' %}
 
 {% block title %}Novo Post — Admin{% endblock %}
@@ -15,7 +14,7 @@
 
     <div class="mb-3">
         {{ form.conteudo.label(class="form-label") }}
-        {{ form.conteudo(class="form-control") }}
+        {{ form.conteudo(class="form-control", id="conteudo") }}
     </div>
 
     <div class="mb-3">
@@ -24,20 +23,18 @@
     </div>
 
     <button type="submit" class="btn btn-primary">{{ form.enviar.label.text }}</button>
-    <a href="{{ url_for('blog.blog') }}" class="btn btn-secondary">← Voltar ao Blog</a>
+    <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary ms-2">← Voltar ao Painel</a>
 </form>
 
-<!-- CKEditor 5 com plugins de upload -->
+<!-- CKEditor 5 -->
 <script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
 <script>
 ClassicEditor
   .create(document.querySelector('#conteudo'), {
-    simpleUpload: {
-      uploadUrl: '/admin/upload'
-    },
+    simpleUpload: { uploadUrl: '/admin/upload' },
     toolbar: [
-      'heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList',
-      'blockQuote', 'insertTable', 'mediaEmbed', 'undo', 'redo'
+      'heading','|','bold','italic','link','bulletedList','numberedList',
+      'blockQuote','insertTable','mediaEmbed','undo','redo'
     ]
   })
   .catch(error => console.error(error));

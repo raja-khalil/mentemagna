@@ -1,11 +1,82 @@
 {% extends 'base.html' %}
-
-{% block title %}Início - Mente Magna{% endblock %}
+{% block title %}Início – Mente Magna{% endblock %}
 
 {% block content %}
-<div class="text-center">
-    <h1>Bem-vindo ao site da Mente Magna!</h1>
-    <p class="lead">Consultoria, treinamentos e tecnologia para o desenvolvimento humano e empresarial.</p>
+<!-- Carousel de Destaques -->
+<div id="destaquesCarousel" class="carousel slide mb-5" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    {% for i in [1,2,3] %}
+    <div class="carousel-item {% if loop.first %}active{% endif %}">
+      <img src="https://picsum.photos/seed/destaque{{i}}/1200/400" class="d-block w-100">
+      <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+        <h5>Lorem Ipsum Destaque {{i}}</h5>
+        <p>Texto de chamada para análise de layout.</p>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#destaquesCarousel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#destaquesCarousel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<div class="row">
+  <!-- Conteúdo principal: posts em carrossel + lista -->
+  <div class="col-lg-8">
+    <h2>Posts Recentes</h2>
+    <div id="postsCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        {% for i in [1,2] %}
+        <div class="carousel-item {% if loop.first %}active{% endif %}">
+          <img src="https://picsum.photos/seed/post{{i}}/800/400" class="d-block w-100">
+          <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+            <h5>Lorem Ipsum Post {{i}}</h5>
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    <!-- Lista de posts -->
+    {% for i in [3,4] %}
+    <div class="card mb-3">
+      <div class="row g-0">
+        <div class="col-md-4"><img src="https://picsum.photos/seed/post{{i}}/400/250" class="img-fluid rounded-start"></div>
+        <div class="col-md-8">
+          <div class="card-body">
+            <h5>Lorem Ipsum Post {{i}}</h5>
+            <p class="text-muted">Autor: Lorem Ipsum | {# data estática #}</p>
+            <p>Resumo fictício para layout do blog.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <!-- Sidebar: Produtos, Soluções + anúncio abaixo soluções -->
+  <aside class="col-lg-4">
+    <div class="mb-4">
+      <h4>Produtos</h4>
+      <ul class="list-group">
+        {% for i in [1,2,3] %}<li class="list-group-item">Produto Lorem {{i}}</li>{% endfor %}
+      </ul>
+    </div>
+    <div class="mb-4">
+      <h4>Soluções</h4>
+      <ul class="list-group">
+        <li class="list-group-item">App Exemplo 1</li>
+        <li class="list-group-item">App Exemplo 2</li>
+        <li class="list-group-item">App Exemplo 3</li>
+      </ul>
+    </div>
+    <!-- Anúncio sob Soluções -->
+    <div class="mb-4 text-center">
+      <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXX" data-ad-slot="999900001" data-ad-format="auto" data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </aside>
 </div>
 {% endblock %}
-
