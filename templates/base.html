@@ -1,535 +1,188 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  
-  <!-- SEO Básico -->
-  <title>{% block title %}{{ page_title or 'Mente Magna - Tecnologia, Inovação e Desenvolvimento' }}{% endblock %}</title>
-  <meta name="description" content="{% block description %}{{ page_description or 'Portal de referência em tecnologia, programação, IA e inovação. Artigos, tutoriais e insights para desenvolvedores e entusiastas de tecnologia.' }}{% endblock %}">
-  <meta name="keywords" content="{% block keywords %}{{ page_keywords or 'tecnologia, programação, python, flask, inteligência artificial, desenvolvimento web, tutorials, blog tech' }}{% endblock %}">
-  <meta name="author" content="Mente Magna">
-  <meta name="robots" content="index, follow">
-  
-  <!-- Open Graph / Facebook -->
-  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
-  <meta property="og:title" content="{% block og_title %}{{ page_title or 'Mente Magna - Tecnologia e Inovação' }}{% endblock %}">
-  <meta property="og:description" content="{% block og_description %}{{ page_description or 'Portal de referência em tecnologia, programação e inovação.' }}{% endblock %}">
-  <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='img/logo_mentemagna.png', _external=True) }}{% endblock %}">
-  <meta property="og:url" content="{% block og_url %}{{ request.url }}{% endblock %}">
-  <meta property="og:site_name" content="Mente Magna">
-  <meta property="og:locale" content="pt_BR">
-  
-  <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="{% block twitter_title %}{{ page_title or 'Mente Magna' }}{% endblock %}">
-  <meta name="twitter:description" content="{% block twitter_description %}{{ page_description or 'Portal de tecnologia e inovação' }}{% endblock %}">
-  <meta name="twitter:image" content="{% block twitter_image %}{{ url_for('static', filename='img/logo_mentemagna.png', _external=True) }}{% endblock %}">
-  <meta name="twitter:site" content="@mentemagna">
-  <meta name="twitter:creator" content="@mentemagna">
-  
-  <!-- Schema.org para Google -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "{% block schema_type %}Organization{% endblock %}",
-    "name": "Mente Magna",
-    "url": "{{ url_for('main.home', _external=True) }}",
-    "logo": "{{ url_for('static', filename='img/logo_mentemagna.png', _external=True) }}",
-    "description": "Portal de referência em tecnologia, programação e inovação",
-    "foundingDate": "2024",
-    "sameAs": [
-      "https://www.instagram.com/rajakhalil.emagna/",
-      "https://www.linkedin.com/in/raja-khalil/",
-      "https://www.facebook.com/mentemagna",
-      "https://www.youtube.com/@mentemagna"
-    ],
-    "contactPoint": {
-      "@type": "ContactPoint",
-      "contactType": "customer service",
-      "email": "contato@mentemagna.com"
-    }
-    {% block schema_extra %}{% endblock %}
-  }
-  </script>
-  
-  <!-- Canonical URL -->
-  <link rel="canonical" href="{% block canonical %}{{ request.url }}{% endblock %}">
-  
-  <!-- Favicons -->
-  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon_emagna.png') }}">
-  <link rel="apple-touch-icon" sizes="180x180" href="{{ url_for('static', filename='img/logo_mentemagna.png') }}">
-  <link rel="icon" type="image/png" sizes="32x32" href="{{ url_for('static', filename='img/favicon_emagna.png') }}">
-  <link rel="icon" type="image/png" sizes="16x16" href="{{ url_for('static', filename='img/favicon_emagna.png') }}">
-  
-  <!-- Preconnect para performance -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="preconnect" href="https://pagead2.googlesyndication.com">
-  <link rel="dns-prefetch" href="https://www.google-analytics.com">
-  
-  <!-- CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
-  
-  <!-- Font Awesome para ícones -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  
-  <!-- Google AdSense - SUBSTITUA PELO SEU CÓDIGO -->
-  <meta name="google-adsense-account" content="ca-pub-4115727278051485">
-  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4115727278051485" crossorigin="anonymous"></script>
-  
-  <!-- Auto Ads do AdSense (Recomendado) -->
-  <script>
-    (adsbygoogle = window.adsbygoogle || []).push({
-      google_ad_client: "ca-pub-4115727278051485",
-      enable_page_level_ads: true
-    });
-  </script>
-  
-  <!-- Google Analytics 4 - SUBSTITUA PELO SEU ID -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     
-    // Configurar consentimento padrão
-    gtag('consent', 'default', {
-      'analytics_storage': 'denied',
-      'ad_storage': 'denied'
-    });
+    <!-- SEO Básico -->
+    <title>{% block title %}Mente Magna - Tecnologia e Inovação{% endblock %}</title>
+    <meta name="description" content="{% block description %}Portal de tecnologia, programação e inovação da E-Magna. Artigos, tutoriais e soluções para desenvolvedores.{% endblock %}">
+    <meta name="keywords" content="tecnologia, programação, inovação, e-magna, desenvolvimento, blog tech">
+    <meta name="author" content="E-Magna">
     
-    gtag('config', 'G-XXXXXXXXXX');
-  </script>
-  
-  <!-- CSS Customizado para AdSense -->
-  <style>
-    .ad-container {
-      margin: 20px 0;
-      text-align: center;
-      background-color: #f8f9fa;
-      border: 1px solid #e9ecef;
-      border-radius: 8px;
-      padding: 10px;
-      transition: all 0.3s ease;
-    }
+    <!-- Open Graph -->
+    <meta property="og:title" content="{% block og_title %}Mente Magna{% endblock %}">
+    <meta property="og:description" content="Portal de tecnologia e inovação">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ request.url }}">
     
-    .ad-container:hover {
-      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    }
+    <!-- Favicon -->
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon_emagna.png') }}">
     
-    .ad-label {
-      font-size: 11px;
-      color: #6c757d;
-      text-transform: uppercase;
-      letter-spacing: 0.5px;
-      margin-bottom: 8px;
-      text-align: center;
-    }
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    .adsbygoogle {
-      display: block !important;
-      min-height: 50px;
-    }
+    <!-- Google AdSense - SUBSTITUA PELO SEU CÓDIGO -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-SEU-CODIGO-AQUI"
+            crossorigin="anonymous"></script>
     
-    /* Responsividade para anúncios */
-    @media (max-width: 768px) {
-      .ad-container {
-        margin: 15px 0;
-        padding: 8px;
-      }
-      
-      .adsbygoogle {
-        min-height: 100px;
-      }
-    }
+    <!-- CSS Customizado -->
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+        
+        .ad-container {
+            margin: 20px 0;
+            text-align: center;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .ad-label {
+            font-size: 11px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        
+        @media (max-width: 768px) {
+            .ad-container {
+                margin: 15px 0;
+                padding: 8px;
+            }
+        }
+    </style>
     
-    /* Esconder anúncios sidebar em mobile */
-    @media (max-width: 991px) {
-      .sidebar-ad {
-        display: none;
-      }
-    }
-  </style>
-  
-  {% block head %}{% endblock %}
+    {% block head %}{% endblock %}
 </head>
 <body class="d-flex flex-column min-vh-100">
-  <!-- Breadcrumbs -->
-  {% block breadcrumbs %}
-    {% if breadcrumbs %}
-      <nav aria-label="breadcrumb" class="bg-light py-2">
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-          <ol class="breadcrumb mb-0">
-            <li class="breadcrumb-item"><a href="{{ url_for('main.home') }}">🏠 Início</a></li>
-            {% for breadcrumb in breadcrumbs %}
-              {% if loop.last %}
-                <li class="breadcrumb-item active" aria-current="page">{{ breadcrumb.title }}</li>
-              {% else %}
-                <li class="breadcrumb-item"><a href="{{ breadcrumb.url }}">{{ breadcrumb.title }}</a></li>
-              {% endif %}
-            {% endfor %}
-          </ol>
-        </div>
-      </nav>
-    {% endif %}
-  {% endblock %}
-
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
-    <div class="container">
-      <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('main.home') }}">
-        <img src="{{ url_for('static', filename='img/logo_mentemagna.png') }}" 
-             alt="Mente Magna Logo" 
-             height="40" 
-             style="object-fit: contain;">
-      </a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'main.home' %}active{% endif %}" 
-               href="{{ url_for('main.home') }}">Início</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'main.sobre' %}active{% endif %}" 
-               href="{{ url_for('main.sobre') }}">Sobre</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'main.emagna' %}active{% endif %}" 
-               href="{{ url_for('main.emagna') }}">E-Magna</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'main.produtos' %}active{% endif %}" 
-               href="{{ url_for('main.produtos') }}">Produtos</a>
-          </li>
-          
-          <!-- MENU SOLUÇÕES CORRIGIDO -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle {% if 'solutions' in request.endpoint %}active{% endif %}" 
-               href="#" id="solucoesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-              🔧 Soluções
+            <a class="navbar-brand fw-bold" href="/">
+                <img src="{{ url_for('static', filename='img/logo_mentemagna.png') }}" 
+                     alt="Mente Magna" height="40" class="me-2">
+                Mente Magna
             </a>
-            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="solucoesDropdown">
-              <li><h6 class="dropdown-header">🏥 Saúde e Profissional</h6></li>
-              <li><a class="dropdown-item" href="/solucoes/consulta-cid">
-                🏥 Consulta CID
-              </a></li>
-              <li><a class="dropdown-item" href="/solucoes/consulta-cbo">
-                👔 Consulta CBO
-              </a></li>
-              
-              <li><hr class="dropdown-divider"></li>
-              <li><h6 class="dropdown-header">🧮 Ferramentas</h6></li>
-              <li><a class="dropdown-item" href="/solucoes/calculadora">
-                🧮 Calculadora Online
-              </a></li>
-              
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item text-center fw-bold" href="/solucoes">
-                🔧 Ver Todas as Soluções →
-              </a></li>
-            </ul>
-          </li>
-          
-          <li class="nav-item">
-            <a class="nav-link {% if 'blog' in request.endpoint %}active{% endif %}" 
-               href="{{ url_for('blog.blog') }}">📝 Blog</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link {% if request.endpoint == 'main.contato' %}active{% endif %}" 
-               href="{{ url_for('main.contato') }}">Contato</a>
-          </li>
-        </ul>
-      </div>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/">🏠 Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sobre">ℹ️ Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/emagna">⚡ E-Magna</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/produtos">📦 Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog">📝 Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contato">📞 Contato</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ANÚNCIO HEADER -->
+    <div class="container mt-3">
+        <div class="ad-container">
+            <div class="ad-label">Publicidade</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-SEU-CODIGO-AQUI"
+                 data-ad-slot="1234567890"
+                 data-ad-format="horizontal"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
     </div>
-  </nav>
 
-  <!-- ANÚNCIO HEADER - ALTA PERFORMANCE -->
-  {% block header_ad %}
-  <div class="container mt-3">
-    <div class="ad-container">
-      <div class="ad-label">Publicidade</div>
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-4115727278051485"
-           data-ad-slot="1234567890"
-           data-ad-format="horizontal"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    <!-- Conteúdo Principal -->
+    <main class="container my-4 flex-grow-1">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- ANÚNCIO FOOTER -->
+    <div class="container my-4">
+        <div class="ad-container">
+            <div class="ad-label">Publicidade</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-SEU-CODIGO-AQUI"
+                 data-ad-slot="9999999999"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
     </div>
-  </div>
-  {% endblock %}
 
-  <!-- Flash Messages -->
-  {% with messages = get_flashed_messages(with_categories=true) %}
-    {% if messages %}
-      <div class="container mt-3">
-        {% for category, message in messages %}
-          <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show" role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-          </div>
-        {% endfor %}
-      </div>
-    {% endif %}
-  {% endwith %}
+    <!-- Footer -->
+    <footer class="bg-light border-top py-4 mt-auto">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8">
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="/sobre" class="text-decoration-none text-dark small">Sobre</a>
+                        <span class="text-muted">•</span>
+                        <a href="/blog" class="text-decoration-none text-dark small">Blog</a>
+                        <span class="text-muted">•</span>
+                        <a href="/contato" class="text-decoration-none text-dark small">Contato</a>
+                        <span class="text-muted">•</span>
+                        <a href="/produtos" class="text-decoration-none text-dark small">Produtos</a>
+                    </div>
+                </div>
+                <div class="col-md-4 text-end">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="https://www.instagram.com/rajakhalil.emagna/" target="_blank" 
+                           class="btn btn-outline-secondary btn-sm rounded-circle">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/raja-khalil/" target="_blank" 
+                           class="btn btn-outline-secondary btn-sm rounded-circle">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="row mt-3">
+                <div class="col-12 text-center">
+                    <small class="text-muted">
+                        © 2025 E-Magna - Mente Magna. Todos os direitos reservados.
+                    </small>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-  <!-- Main Content -->
-  <main class="container my-4 flex-grow-1" role="main">
-    {% block content %}{% endblock %}
-  </main>
-
-  <!-- ANÚNCIO FOOTER - BOA VISIBILIDADE -->
-  {% block footer_ad %}
-  <div class="container my-4">
-    <div class="ad-container">
-      <div class="ad-label">Publicidade</div>
-      <ins class="adsbygoogle"
-           style="display:block"
-           data-ad-client="ca-pub-4115727278051485"
-           data-ad-slot="1111111111"
-           data-ad-format="auto"
-           data-full-width-responsive="true"></ins>
-      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-  </div>
-  {% endblock %}
-
-  <!-- Aviso de Cookies (LGPD) -->
-  <div id="cookieConsent" class="cookie-consent position-fixed bottom-0 start-0 end-0 bg-dark text-white p-3 shadow-lg" style="z-index: 9999; display: none;">
-    <div class="container">
-      <div class="row align-items-center">
-        <div class="col-md-8">
-          <p class="mb-2 mb-md-0 small">
-            🍪 Este site utiliza cookies para melhorar sua experiência de navegação. 
-            Ao continuar navegando, você concorda com nossa 
-            <a href="{{ url_for('main.privacidade') }}" class="text-warning">Política de Privacidade</a> e 
-            <a href="{{ url_for('main.cookies') }}" class="text-warning">Política de Cookies</a>.
-          </p>
-        </div>
-        <div class="col-md-4 text-end">
-          <button type="button" class="btn btn-success btn-sm me-2" onclick="acceptCookies()">✅ Aceitar</button>
-          <button type="button" class="btn btn-outline-light btn-sm" onclick="showCookieSettings()">⚙️ Configurar</button>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Footer -->
-  <footer class="bg-light border-top py-4 mt-auto" role="contentinfo">
-    <div class="container">
-      <!-- Links principais -->
-      <div class="row mb-3">
-        <div class="col-md-8">
-          <div class="d-flex flex-wrap gap-3">
-            <a href="{{ url_for('main.sobre') }}" class="text-decoration-none text-dark small">Sobre</a>
-            <span class="text-muted">•</span>
-            <a href="{{ url_for('blog.blog') }}" class="text-decoration-none text-dark small">Blog</a>
-            <span class="text-muted">•</span>
-            <a href="/solucoes" class="text-decoration-none text-dark small">Soluções</a>
-            <span class="text-muted">•</span>
-            <a href="{{ url_for('main.contato') }}" class="text-decoration-none text-dark small">Contato</a>
-            <span class="text-muted">•</span>
-            <a href="{{ url_for('main.termos') }}" class="text-decoration-none text-dark small">Condições Gerais</a>
-            <span class="text-muted">•</span>
-            <a href="{{ url_for('main.aviso_legal') }}" class="text-decoration-none text-dark small">Aviso Legal</a>
-            <span class="text-muted">•</span>
-            <a href="{{ url_for('main.privacidade') }}" class="text-decoration-none text-dark small">Privacidade</a>
-            <span class="text-muted">•</span>
-            <a href="{{ url_for('main.cookies') }}" class="text-decoration-none text-dark small">Cookies</a>
-          </div>
-        </div>
-        <div class="col-md-4 text-end">
-          <!-- Redes sociais -->
-          <div class="d-flex justify-content-end gap-2">
-            <a href="https://www.instagram.com/rajakhalil.emagna/" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary btn-sm rounded-circle p-2" style="width: 36px; height: 36px;" title="Instagram" aria-label="Instagram">
-              <i class="fab fa-instagram" style="font-size: 14px;"></i>
-            </a>
-            <a href="https://www.linkedin.com/in/raja-khalil/" target="_blank" rel="noopener noreferrer" class="btn btn-outline-secondary btn-sm rounded-circle p-2" style="width: 36px; height: 36px;" title="LinkedIn" aria-label="LinkedIn">
-              <i class="fab fa-linkedin-in" style="font-size: 14px;"></i>
-            </a>
-            <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle p-2" style="width: 36px; height: 36px;" title="Facebook" aria-label="Facebook">
-              <i class="fab fa-facebook-f" style="font-size: 14px;"></i>
-            </a>
-            <a href="#" class="btn btn-outline-secondary btn-sm rounded-circle p-2" style="width: 36px; height: 36px;" title="YouTube" aria-label="YouTube">
-              <i class="fab fa-youtube" style="font-size: 14px;"></i>
-            </a>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Links secundários -->
-      <div class="row mb-3">
-        <div class="col-12">
-          <div class="d-flex flex-wrap gap-3">
-            <a href="#" class="text-decoration-none text-muted small">Acessibilidade</a>
-            <span class="text-muted">•</span>
-            <a href="#" class="text-decoration-none text-muted small">Suporte e Ajuda</a>
-            <span class="text-muted">•</span>
-            <a href="{{ url_for('main.home') }}" class="text-decoration-none text-muted small">Início</a>
-            <span class="text-muted">•</span>
-            <a href="{{ url_for('main.produtos') }}" class="text-decoration-none text-muted small">Produtos</a>
-            <span class="text-muted">•</span>
-            <a href="{{ url_for('main.emagna') }}" class="text-decoration-none text-muted small">E-Magna</a>
-          </div>
-        </div>
-      </div>
-      
-      <!-- Copyright e logo -->
-      <div class="row align-items-center">
-        <div class="col-md-8">
-          <div class="d-flex align-items-center">
-            <img src="{{ url_for('static', filename='img/logo_emagna.png') }}" 
-                 alt="E-Magna Logo" 
-                 height="24" 
-                 class="me-2"
-                 style="object-fit: contain;">
-            <small class="text-muted">
-              © 2025, Mente Magna. Todos os direitos reservados
-            </small>
-          </div>
-        </div>
-        <div class="col-md-4 text-end">
-          <button type="button" class="btn btn-outline-danger btn-sm" style="border-radius: 20px; font-size: 11px; padding: 4px 12px;" onclick="showCookieSettings()">
-            Definições de cookies
-          </button>
-        </div>
-      </div>
-    </div>
-  </footer>
-
-  <!-- JavaScript -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-  
-  <!-- Scripts Customizados -->
-  <script>
-    // Smooth scroll para links internos
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-      anchor.addEventListener('click', function (e) {
-        e.preventDefault();
-        const target = document.querySelector(this.getAttribute('href'));
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth' });
-        }
-      });
-    });
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
-    // Analytics para cliques em links externos
-    document.querySelectorAll('a[href^="http"]').forEach(link => {
-      link.addEventListener('click', function() {
-        if (typeof gtag !== 'undefined') {
-          gtag('event', 'click', {
-            'event_category': 'outbound',
-            'event_label': this.href
-          });
-        }
-      });
-    });
-
-    // Loading states para formulários
-    document.querySelectorAll('form').forEach(form => {
-      form.addEventListener('submit', function() {
-        const submitBtn = this.querySelector('button[type="submit"]');
-        if (submitBtn) {
-          submitBtn.disabled = true;
-          submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2" role="status"></span>Enviando...';
-        }
-      });
-    });
-
-    // Gerenciamento de Cookies (LGPD)
-    function checkCookieConsent() {
-      const consent = localStorage.getItem('cookieConsent');
-      if (!consent) {
-        document.getElementById('cookieConsent').style.display = 'block';
-      } else {
-        applySavedPreferences();
-      }
-    }
-
-    function acceptCookies() {
-      localStorage.setItem('cookieConsent', 'accepted');
-      localStorage.setItem('cookieConsentDate', new Date().toISOString());
-      document.getElementById('cookieConsent').style.display = 'none';
-      
-      // Ativar Google Analytics após aceite
-      if (typeof gtag !== 'undefined') {
-        gtag('consent', 'update', {
-          'analytics_storage': 'granted',
-          'ad_storage': 'granted'
-        });
-      }
-      
-      // Ativar AdSense após aceite
-      if (typeof adsbygoogle !== 'undefined') {
-        (adsbygoogle = window.adsbygoogle || []).push({});
-      }
-    }
-
-    function showCookieSettings() {
-      window.location.href = "{{ url_for('main.cookies') }}";
-    }
-
-    function applySavedPreferences() {
-      const consent = localStorage.getItem('cookieConsent');
-      const preferences = JSON.parse(localStorage.getItem('cookiePreferences') || '{}');
-      
-      if (consent === 'accepted') {
-        if (typeof gtag !== 'undefined') {
-          gtag('consent', 'update', {
-            'analytics_storage': 'granted',
-            'ad_storage': 'granted'
-          });
-        }
-      } else if (consent === 'customized') {
-        if (typeof gtag !== 'undefined') {
-          gtag('consent', 'update', {
-            'analytics_storage': preferences.analytics ? 'granted' : 'denied',
-            'ad_storage': preferences.advertising ? 'granted' : 'denied'
-          });
-        }
-      }
-    }
-
-    // Verificar consentimento ao carregar página
-    document.addEventListener('DOMContentLoaded', function() {
-      checkCookieConsent();
-      
-      // Carregar AdSense após delay se permitido
-      setTimeout(function() {
-        const consent = localStorage.getItem('cookieConsent');
-        if (consent === 'accepted' || (consent === 'customized' && JSON.parse(localStorage.getItem('cookiePreferences') || '{}').advertising)) {
-          if (typeof adsbygoogle !== 'undefined') {
-            (adsbygoogle = window.adsbygoogle || []).push({});
-          }
-        }
-      }, 2000);
-    });
-
-    // Lazy loading para AdSense
-    function lazyLoadAds() {
-      const ads = document.querySelectorAll('.adsbygoogle');
-      ads.forEach(ad => {
-        if (ad.getAttribute('data-adsbygoogle-status') !== 'done') {
-          (adsbygoogle = window.adsbygoogle || []).push({});
-        }
-      });
-    }
-
-    // Carregar anúncios quando scroll chegar perto
-    let adsLoaded = false;
-    window.addEventListener('scroll', function() {
-      if (!adsLoaded && window.scrollY > 100) {
-        adsLoaded = true;
-        lazyLoadAds();
-      }
-    });
-  </script>
-  
-  {% block scripts %}{% endblock %}
+    {% block scripts %}{% endblock %}
 </body>
 </html>

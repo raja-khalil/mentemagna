@@ -1,383 +1,486 @@
-{% extends 'base.html' %}
-{% block title %}Início – Mente Magna{% endblock %}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mente Magna - Tecnologia e Inovação</title>
+    <meta name="description" content="Portal de tecnologia, programação e inovação da E-Magna">
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Google AdSense - SUBSTITUA PELO SEU CÓDIGO -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-SEU-CODIGO-AQUI" crossorigin="anonymous"></script>
+    
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .card {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
+        }
+        
+        .ad-container {
+            margin: 20px 0;
+            text-align: center;
+            background-color: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 10px;
+        }
+        
+        .ad-label {
+            font-size: 11px;
+            color: #6c757d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body class="d-flex flex-column min-vh-100">
 
-{% block content %}
-<!-- Hero Section -->
-<div class="hero-section bg-primary text-white py-5 mb-5 rounded">
-    <div class="container text-center">
-        <h1 class="display-4 fw-bold mb-4">🚀 Bem-vindo ao Mente Magna</h1>
-        <p class="lead mb-4">
-            Seu portal de referência em tecnologia, programação e inovação. 
-            Descubra as últimas tendências e acelere seu desenvolvimento profissional.
-        </p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="{{ url_for('blog.blog') }}" class="btn btn-light btn-lg">📖 Explorar Blog</a>
-            <a href="{{ url_for('main.sobre') }}" class="btn btn-outline-light btn-lg">ℹ️ Sobre Nós</a>
-        </div>
-    </div>
-</div>
-
-<!-- ANÚNCIO BANNER SUPERIOR -->
-<div class="container mb-5">
-    <div class="text-center p-3 bg-light rounded">
-        <small class="text-muted">Publicidade</small>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-4115727278051485"
-             data-ad-slot="1234567890"
-             data-ad-format="horizontal"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-</div>
-
-<div class="row">
-    <!-- Conteúdo Principal -->
-    <div class="col-lg-8">
-        <!-- Carousel de Destaques -->
-        <section class="mb-5">
-            <h2 class="h3 fw-bold mb-4">📝 Posts em Destaque</h2>
-            <div id="postsCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
-                <div class="carousel-inner">
-                    {% for i in [1,2,3] %}
-                    <div class="carousel-item {% if loop.first %}active{% endif %}">
-                        <img src="https://picsum.photos/seed/destaque{{i}}/1200/400" class="d-block w-100 rounded">
-                        <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
-                            <h5>Post Destaque {{i}}</h5>
-                            <p>Exemplo de conteúdo destacado sobre tecnologia e inovação.</p>
-                            <a href="#" class="btn btn-primary btn-sm">Ler Mais →</a>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-                <button class="carousel-control-prev" type="button" data-bs-target="#postsCarousel" data-bs-slide="prev">
-                    <span class="carousel-control-prev-icon"></span>
-                </button>
-                <button class="carousel-control-next" type="button" data-bs-target="#postsCarousel" data-bs-slide="next">
-                    <span class="carousel-control-next-icon"></span>
-                </button>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                🧠 Mente Magna
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">🏠 Início</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/sobre">ℹ️ Sobre</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/emagna">⚡ E-Magna</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/produtos">📦 Produtos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/blog">📝 Blog</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/contato">📞 Contato</a>
+                    </li>
+                </ul>
             </div>
-        </section>
+        </div>
+    </nav>
 
-        <!-- ANÚNCIO ENTRE CONTEÚDOS -->
-        <div class="text-center my-5 p-3 bg-light rounded">
-            <small class="text-muted">Publicidade</small>
+    <!-- ANÚNCIO HEADER -->
+    <div class="container mt-3">
+        <div class="ad-container">
+            <div class="ad-label">Publicidade</div>
             <ins class="adsbygoogle"
                  style="display:block"
-                 data-ad-client="ca-pub-4115727278051485"
-                 data-ad-slot="8888888888"
-                 data-ad-format="auto"
+                 data-ad-client="ca-pub-SEU-CODIGO-AQUI"
+                 data-ad-slot="1234567890"
+                 data-ad-format="horizontal"
                  data-full-width-responsive="true"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
+    </div>
 
-        <!-- Lista de Posts Recentes -->
-        <section class="mb-5">
-            <h3 class="h4 fw-bold mb-4">🔥 Artigos Recentes</h3>
-            <div class="row">
-                {% for i in [1,2,3,4,5,6] %}
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100">
-                        <div class="row g-0">
-                            <div class="col-4">
-                                <img src="https://picsum.photos/seed/post{{i}}/200/150" 
-                                     class="img-fluid rounded-start h-100" 
-                                     style="object-fit: cover;">
+    <!-- Conteúdo Principal -->
+    <main class="container my-4 flex-grow-1">
+        <!-- Hero Section -->
+        <div class="hero-section text-white py-5 mb-5 rounded">
+            <div class="container text-center">
+                <h1 class="display-4 fw-bold mb-4">🚀 Bem-vindo ao Mente Magna</h1>
+                <p class="lead mb-4">
+                    Seu portal de referência em tecnologia, programação e inovação. 
+                    Descubra as últimas tendências e acelere seu desenvolvimento profissional.
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="/blog" class="btn btn-light btn-lg">📖 Explorar Blog</a>
+                    <a href="/sobre" class="btn btn-outline-light btn-lg">ℹ️ Sobre Nós</a>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Conteúdo Principal -->
+            <div class="col-lg-8">
+                <!-- Carousel de Destaques -->
+                <section class="mb-5">
+                    <h2 class="h3 fw-bold mb-4">📝 Conteúdo em Destaque</h2>
+                    <div id="postsCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+                        <div class="carousel-inner">
+                            <div class="carousel-item active">
+                                <img src="https://picsum.photos/1200/400?random=1" class="d-block w-100 rounded" alt="Destaque 1">
+                                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                    <h5>Tecnologia e Inovação</h5>
+                                    <p>Descubra as últimas tendências em desenvolvimento e programação.</p>
+                                </div>
                             </div>
-                            <div class="col-8">
-                                <div class="card-body p-3">
-                                    <h6 class="card-title mb-2">
-                                        <a href="#" class="text-decoration-none text-dark">
-                                            Artigo {{i}}: Exemplo de Título
-                                        </a>
-                                    </h6>
-                                    <p class="card-text small text-muted mb-2">
-                                        Breve resumo do artigo sobre tecnologia...
-                                    </p>
-                                    <small class="text-muted">📅 20/06/2025</small>
+                            <div class="carousel-item">
+                                <img src="https://picsum.photos/1200/400?random=2" class="d-block w-100 rounded" alt="Destaque 2">
+                                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                    <h5>Inteligência Artificial</h5>
+                                    <p>Explore o mundo da IA e suas aplicações práticas.</p>
+                                </div>
+                            </div>
+                            <div class="carousel-item">
+                                <img src="https://picsum.photos/1200/400?random=3" class="d-block w-100 rounded" alt="Destaque 3">
+                                <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-75 rounded p-3">
+                                    <h5>Desenvolvimento Web</h5>
+                                    <p>Aprenda as melhores práticas em desenvolvimento moderno.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#postsCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#postsCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                </section>
+
+                <!-- ANÚNCIO ENTRE CONTEÚDOS -->
+                <div class="ad-container">
+                    <div class="ad-label">Publicidade</div>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-SEU-CODIGO-AQUI"
+                         data-ad-slot="8888888888"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+
+                <!-- Lista de Posts Simulados -->
+                <section class="mb-5">
+                    <h3 class="h4 fw-bold mb-4">🔥 Artigos Recentes</h3>
+                    <div class="row">
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="row g-0">
+                                    <div class="col-4">
+                                        <img src="https://picsum.photos/200/150?random=1" 
+                                             class="img-fluid rounded-start h-100" 
+                                             style="object-fit: cover;"
+                                             alt="Artigo 1">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body p-3">
+                                            <h6 class="card-title mb-2">
+                                                <a href="#" class="text-decoration-none text-dark">
+                                                    Artigo 1: Tecnologia em Foco
+                                                </a>
+                                            </h6>
+                                            <p class="card-text small text-muted mb-2">
+                                                Breve resumo sobre inovações tecnológicas...
+                                            </p>
+                                            <small class="text-muted">📅 20/06/2025</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="row g-0">
+                                    <div class="col-4">
+                                        <img src="https://picsum.photos/200/150?random=2" 
+                                             class="img-fluid rounded-start h-100" 
+                                             style="object-fit: cover;"
+                                             alt="Artigo 2">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body p-3">
+                                            <h6 class="card-title mb-2">
+                                                <a href="#" class="text-decoration-none text-dark">
+                                                    Artigo 2: IA e Automação
+                                                </a>
+                                            </h6>
+                                            <p class="card-text small text-muted mb-2">
+                                                Como a inteligência artificial está mudando...
+                                            </p>
+                                            <small class="text-muted">📅 19/06/2025</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="row g-0">
+                                    <div class="col-4">
+                                        <img src="https://picsum.photos/200/150?random=3" 
+                                             class="img-fluid rounded-start h-100" 
+                                             style="object-fit: cover;"
+                                             alt="Artigo 3">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body p-3">
+                                            <h6 class="card-title mb-2">
+                                                <a href="#" class="text-decoration-none text-dark">
+                                                    Artigo 3: Python para Iniciantes
+                                                </a>
+                                            </h6>
+                                            <p class="card-text small text-muted mb-2">
+                                                Guia completo para começar a programar...
+                                            </p>
+                                            <small class="text-muted">📅 18/06/2025</small>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6 mb-4">
+                            <div class="card h-100">
+                                <div class="row g-0">
+                                    <div class="col-4">
+                                        <img src="https://picsum.photos/200/150?random=4" 
+                                             class="img-fluid rounded-start h-100" 
+                                             style="object-fit: cover;"
+                                             alt="Artigo 4">
+                                    </div>
+                                    <div class="col-8">
+                                        <div class="card-body p-3">
+                                            <h6 class="card-title mb-2">
+                                                <a href="#" class="text-decoration-none text-dark">
+                                                    Artigo 4: Desenvolvimento Web
+                                                </a>
+                                            </h6>
+                                            <p class="card-text small text-muted mb-2">
+                                                Melhores práticas para desenvolvimento...
+                                            </p>
+                                            <small class="text-muted">📅 17/06/2025</small>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </section>
+
+                <!-- Categorias -->
+                <section class="mb-5">
+                    <h3 class="h4 fw-bold mb-4">🏷️ Explore por Categoria</h3>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">🤖 Inteligência Artificial</h5>
+                                    <p class="card-text small">Machine Learning, ChatGPT, Deep Learning</p>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Ver Artigos</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">💻 Programação</h5>
+                                    <p class="card-text small">Python, JavaScript, Flask, APIs</p>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Ver Artigos</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="card text-center">
+                                <div class="card-body">
+                                    <h5 class="card-title">🌐 Web Development</h5>
+                                    <p class="card-text small">Frontend, Backend, Cloud, DevOps</p>
+                                    <a href="#" class="btn btn-outline-primary btn-sm">Ver Artigos</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <!-- Sidebar -->
+            <aside class="col-lg-4">
+                <!-- ANÚNCIO SIDEBAR PRINCIPAL -->
+                <div class="card mb-4">
+                    <div class="card-header bg-primary text-white">
+                        <h6 class="card-title mb-0">Publicidade</h6>
+                    </div>
+                    <div class="card-body text-center p-2">
+                        <ins class="adsbygoogle"
+                             style="display:block"
+                             data-ad-client="ca-pub-SEU-CODIGO-AQUI"
+                             data-ad-slot="5555555555"
+                             data-ad-format="rectangle"
+                             data-full-width-responsive="true"></ins>
+                        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                    </div>
                 </div>
-                {% endfor %}
+
+                <!-- Newsletter -->
+                <div class="card mb-4">
+                    <div class="card-header bg-success text-white">
+                        <h5 class="card-title mb-0">📧 Newsletter</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Receba nossos melhores artigos diretamente no seu email!</p>
+                        <div class="mb-3">
+                            <input type="email" class="form-control" placeholder="seu@email.com" id="newsletterEmail">
+                        </div>
+                        <button type="button" class="btn btn-success w-100" onclick="subscribeNewsletter()">
+                            ✉️ Inscrever-se Grátis
+                        </button>
+                        <small class="text-muted mt-2 d-block">Sem spam. Cancele quando quiser.</small>
+                    </div>
+                </div>
+
+                <!-- Sobre E-Magna -->
+                <div class="card mb-4">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">⚡ E-Magna</h5>
+                    </div>
+                    <div class="card-body">
+                        <p class="card-text">Conheça nossa empresa e nossos serviços em tecnologia e inovação.</p>
+                        <a href="/emagna" class="btn btn-info btn-sm w-100">Saiba Mais</a>
+                    </div>
+                </div>
+
+                <!-- Estatísticas -->
+                <div class="card mb-4">
+                    <div class="card-header bg-dark text-white">
+                        <h5 class="card-title mb-0">📊 Estatísticas</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row text-center">
+                            <div class="col-6 border-end">
+                                <h4 class="text-primary">25+</h4>
+                                <small class="text-muted">Artigos</small>
+                            </div>
+                            <div class="col-6">
+                                <h4 class="text-success">7.5k</h4>
+                                <small class="text-muted">Visualizações</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Redes Sociais -->
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h5 class="card-title mb-0">🌐 Siga-nos</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="d-grid gap-2">
+                            <a href="https://www.instagram.com/rajakhalil.emagna/" 
+                               target="_blank" 
+                               class="btn btn-outline-danger btn-sm">
+                                📷 Instagram
+                            </a>
+                            <a href="https://www.linkedin.com/in/raja-khalil/" 
+                               target="_blank" 
+                               class="btn btn-outline-primary btn-sm">
+                                💼 LinkedIn
+                            </a>
+                            <a href="#" class="btn btn-outline-primary btn-sm">📘 Facebook</a>
+                            <a href="#" class="btn btn-outline-danger btn-sm">🎥 YouTube</a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </div>
+
+        <!-- Call-to-Action Final -->
+        <section class="bg-light py-5 rounded my-5">
+            <div class="container text-center">
+                <h3 class="mb-4">🎯 Pronto para Acelerar sua Carreira em Tech?</h3>
+                <p class="lead mb-4">
+                    Junte-se a milhares de desenvolvedores que já transformaram suas carreiras 
+                    com nosso conteúdo de qualidade.
+                </p>
+                <div class="d-flex justify-content-center gap-3 flex-wrap">
+                    <a href="/blog" class="btn btn-primary btn-lg">📖 Começar Agora</a>
+                    <a href="/contato" class="btn btn-outline-primary btn-lg">💬 Fale Conosco</a>
+                </div>
             </div>
         </section>
+    </main>
 
-        <!-- Categorias -->
-        <section class="mb-5">
-            <h3 class="h4 fw-bold mb-4">🏷️ Explore por Categoria</h3>
+    <!-- ANÚNCIO FOOTER -->
+    <div class="container my-4">
+        <div class="ad-container">
+            <div class="ad-label">Publicidade</div>
+            <ins class="adsbygoogle"
+                 style="display:block"
+                 data-ad-client="ca-pub-SEU-CODIGO-AQUI"
+                 data-ad-slot="9999999999"
+                 data-ad-format="auto"
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="bg-light border-top py-4 mt-auto">
+        <div class="container">
             <div class="row">
-                <div class="col-md-4 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">🤖 Inteligência Artificial</h5>
-                            <p class="card-text small">Machine Learning, ChatGPT, Deep Learning</p>
-                            <a href="#" class="btn btn-outline-primary btn-sm">Ver Artigos</a>
-                        </div>
+                <div class="col-md-8">
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="/sobre" class="text-decoration-none text-dark small">Sobre</a>
+                        <span class="text-muted">•</span>
+                        <a href="/blog" class="text-decoration-none text-dark small">Blog</a>
+                        <span class="text-muted">•</span>
+                        <a href="/contato" class="text-decoration-none text-dark small">Contato</a>
+                        <span class="text-muted">•</span>
+                        <a href="/produtos" class="text-decoration-none text-dark small">Produtos</a>
                     </div>
                 </div>
-                <div class="col-md-4 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">💻 Programação</h5>
-                            <p class="card-text small">Python, JavaScript, Flask, APIs</p>
-                            <a href="#" class="btn btn-outline-primary btn-sm">Ver Artigos</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-4 mb-3">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="card-title">🌐 Web Development</h5>
-                            <p class="card-text small">Frontend, Backend, Cloud, DevOps</p>
-                            <a href="#" class="btn btn-outline-primary btn-sm">Ver Artigos</a>
-                        </div>
+                <div class="col-md-4 text-end">
+                    <div class="d-flex justify-content-end gap-2">
+                        <a href="https://www.instagram.com/rajakhalil.emagna/" target="_blank" 
+                           class="btn btn-outline-secondary btn-sm rounded-circle">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/raja-khalil/" target="_blank" 
+                           class="btn btn-outline-secondary btn-sm rounded-circle">
+                            <i class="fab fa-linkedin-in"></i>
+                        </a>
                     </div>
                 </div>
             </div>
-        </section>
-    </div>
-
-    <!-- Sidebar -->
-    <aside class="col-lg-4">
-        <!-- ANÚNCIO SIDEBAR PRINCIPAL -->
-        <div class="card mb-4">
-            <div class="card-header bg-primary text-white">
-                <h6 class="card-title mb-0">Publicidade</h6>
-            </div>
-            <div class="card-body text-center p-2">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-4115727278051485"
-                     data-ad-slot="5555555555"
-                     data-ad-format="rectangle"
-                     data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-        </div>
-
-        <!-- Newsletter -->
-        <div class="card mb-4">
-            <div class="card-header bg-success text-white">
-                <h5 class="card-title mb-0">📧 Newsletter</h5>
-            </div>
-            <div class="card-body">
-                <p class="card-text">Receba nossos melhores artigos diretamente no seu email!</p>
-                <div class="mb-3">
-                    <input type="email" class="form-control" placeholder="seu@email.com" id="newsletterEmail">
-                </div>
-                <button type="button" class="btn btn-success w-100" onclick="subscribeNewsletter()">
-                    ✉️ Inscrever-se Grátis
-                </button>
-                <small class="text-muted mt-2 d-block">Sem spam. Cancele quando quiser.</small>
-            </div>
-        </div>
-
-        <!-- Produtos -->
-        <div class="card mb-4">
-            <div class="card-header bg-info text-white">
-                <h5 class="card-title mb-0">🚀 Nossos Produtos</h5>
-            </div>
-            <div class="card-body">
-                <div class="mb-3">
-                    <h6 class="mb-1">📱 E-Magna Platform</h6>
-                    <p class="mb-2 small">Plataforma completa de desenvolvimento</p>
-                    <a href="{{ url_for('main.emagna') }}" class="btn btn-outline-info btn-sm">Saiba Mais</a>
-                </div>
-                <div>
-                    <h6 class="mb-1">🔧 Dev Tools Suite</h6>
-                    <p class="mb-2 small">Ferramentas para desenvolvedores</p>
-                    <a href="{{ url_for('main.produtos') }}" class="btn btn-outline-info btn-sm">Ver Produtos</a>
+            <div class="row mt-3">
+                <div class="col-12 text-center">
+                    <small class="text-muted">
+                        © 2025 E-Magna - Mente Magna. Todos os direitos reservados.
+                    </small>
                 </div>
             </div>
         </div>
+    </footer>
 
-        <!-- ANÚNCIO SIDEBAR SECUNDÁRIO -->
-        <div class="card mb-4">
-            <div class="card-header bg-warning text-dark">
-                <h6 class="card-title mb-0">Recomendado</h6>
-            </div>
-            <div class="card-body text-center p-2">
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-4115727278051485"
-                     data-ad-slot="6666666666"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-            </div>
-        </div>
-
-        <!-- Estatísticas -->
-        <div class="card mb-4">
-            <div class="card-header bg-dark text-white">
-                <h5 class="card-title mb-0">📊 Estatísticas</h5>
-            </div>
-            <div class="card-body">
-                <div class="row text-center">
-                    <div class="col-6 border-end">
-                        <h4 class="text-primary" id="articleCount">25</h4>
-                        <small class="text-muted">Artigos</small>
-                    </div>
-                    <div class="col-6">
-                        <h4 class="text-success" id="viewCount">7.5k</h4>
-                        <small class="text-muted">Visualizações</small>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Redes Sociais -->
-        <div class="card">
-            <div class="card-header bg-secondary text-white">
-                <h5 class="card-title mb-0">🌐 Siga-nos</h5>
-            </div>
-            <div class="card-body">
-                <div class="d-grid gap-2">
-                    <a href="https://www.instagram.com/rajakhalil.emagna/" 
-                       target="_blank" 
-                       class="btn btn-outline-danger btn-sm">
-                        📷 Instagram
-                    </a>
-                    <a href="https://www.linkedin.com/in/raja-khalil/" 
-                       target="_blank" 
-                       class="btn btn-outline-primary btn-sm">
-                        💼 LinkedIn
-                    </a>
-                    <a href="#" class="btn btn-outline-primary btn-sm">📘 Facebook</a>
-                    <a href="#" class="btn btn-outline-danger btn-sm">🎥 YouTube</a>
-                </div>
-            </div>
-        </div>
-    </aside>
-</div>
-
-<!-- ANÚNCIO FINAL DA PÁGINA -->
-<div class="container my-5">
-    <div class="text-center p-3 bg-light rounded">
-        <small class="text-muted">Publicidade</small>
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-4115727278051485"
-             data-ad-slot="9999999999"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-    </div>
-</div>
-
-<!-- Call-to-Action Final -->
-<section class="bg-light py-5 rounded my-5">
-    <div class="container text-center">
-        <h3 class="mb-4">🎯 Pronto para Acelerar sua Carreira em Tech?</h3>
-        <p class="lead mb-4">
-            Junte-se a milhares de desenvolvedores que já transformaram suas carreiras 
-            com nosso conteúdo de qualidade.
-        </p>
-        <div class="d-flex justify-content-center gap-3 flex-wrap">
-            <a href="{{ url_for('blog.blog') }}" class="btn btn-primary btn-lg">📖 Começar Agora</a>
-            <a href="{{ url_for('main.contato') }}" class="btn btn-outline-primary btn-lg">💬 Fale Conosco</a>
-        </div>
-    </div>
-</section>
-
-<style>
-/* Estilos específicos da home */
-.hero-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-}
-
-.card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
-}
-
-.carousel-item .card {
-    border: none;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-}
-
-/* Responsividade */
-@media (max-width: 768px) {
-    .hero-section {
-        margin: 0 -15px;
-    }
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     
-    .carousel-control-prev,
-    .carousel-control-next {
-        width: 8%;
-    }
-}
-
-.btn:hover {
-    transform: translateY(-2px);
-    transition: all 0.2s ease;
-}
-</style>
-{% endblock %}
-
-{% block scripts %}
-<script>
-// Newsletter subscription
-function subscribeNewsletter() {
-    const email = document.getElementById('newsletterEmail').value;
-    
-    if (!email || !isValidEmail(email)) {
-        alert('Por favor, insira um email válido!');
-        return;
-    }
-    
-    alert('✅ Inscrição realizada com sucesso!\n\nVocê receberá nossos melhores conteúdos no email: ' + email);
-    document.getElementById('newsletterEmail').value = '';
-    
-    // Analytics
-    if (typeof gtag !== 'undefined') {
-        gtag('event', 'newsletter_signup', {
-            'event_category': 'engagement',
-            'event_label': 'home_page'
-        });
-    }
-}
-
-function isValidEmail(email) {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
-}
-
-// Tracking de interações
-document.addEventListener('DOMContentLoaded', function() {
-    // Track carousel interactions
-    const carousel = document.getElementById('postsCarousel');
-    if (carousel) {
-        carousel.addEventListener('slide.bs.carousel', function(e) {
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'carousel_slide', {
-                    'event_category': 'engagement',
-                    'event_label': 'featured_posts',
-                    'value': e.to
-                });
+    <script>
+        // Newsletter subscription
+        function subscribeNewsletter() {
+            const email = document.getElementById('newsletterEmail').value;
+            
+            if (!email || !email.includes('@')) {
+                alert('Por favor, insira um email válido!');
+                return;
             }
-        });
-    }
-    
-    // Track CTA clicks
-    document.querySelectorAll('.btn').forEach(function(button) {
-        button.addEventListener('click', function() {
-            const buttonText = this.textContent.trim();
-            if (typeof gtag !== 'undefined') {
-                gtag('event', 'cta_click', {
-                    'event_category': 'engagement',
-                    'event_label': buttonText,
-                    'value': 1
-                });
-            }
-        });
-    });
-});
-</script>
-{% endblock %}
+            
+            alert('✅ Inscrição realizada com sucesso!\n\nVocê receberá nossos melhores conteúdos no email: ' + email);
+            document.getElementById('newsletterEmail').value = '';
+        }
+    </script>
+</body>
+</html>

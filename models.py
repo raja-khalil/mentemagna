@@ -1,74 +1,68 @@
-# models.py - Versão simplificada
+# models.py - Modelos Simplificados e Funcionais
+
 from datetime import datetime
-from slugify import slugify
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
-
 from extensions import db, login_manager
+
+class User(UserMixin, db.Model):
+    """Modelo de usuário para administração"""
+    __tablename__ = 'users'
+    
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(50), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=True)
+    pw_hash = db.Column(db.String(128), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    is_active = db.Column(db.Boolean, default=True)
+
+    def set_password(self, password):
+        """Define uma nova senha"""
+        self.pw_hash = generate_password_hash(password)
+
+    def check_password(self, password):
+        """Verifica se a senha está correta"""
+        return check_password_hash(self.pw_hash, password)
+
+    def __repr__(self):
+        return f"<User {self.username}>"
 
 class Post(db.Model):
     """Modelo para posts do blog"""
     __tablename__ = 'posts'
     
     id = db.Column(db.Integer, primary_key=True)
-    titulo = db.Column(db.String(150), nullable=False)
-    slug = db.Column(db.String(150), unique=True, nullable=False)
-    resumo = db.Column(db.Text, nullable=True)
-    conteudo = db.Column(db.Text, nullable=False)
-    imagem = db.Column(db.String(200), nullable=True)
-    publicado = db.Column(db.Boolean, default=True, nullable=False)
-    data_criacao = db.Column(db.DateTime, default=datetime.utcnow, nullable=False)
-    data_atualizacao = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    title = db.Column(db.String(200), nullable=False)
+    slug = db.Column(db.String(200), unique=True, nullable=False)
+    content = db.Column(db.Text, nullable=False)
+    excerpt = db.Column(db.Text, nullable=True)
+    image_url = db.Column(db.String(500), nullable=True)
     
-    # Campos para SEO
+    # Status e datas
+    is_published = db.Column(db.Boolean, default=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
+    published_at = db.Column(db.DateTime, nullable=True)
+    
+    # SEO e Analytics
     meta_description = db.Column(db.String(160), nullable=True)
-    keywords = db.Column(db.Text, nullable=True)
-    
-    # Campos para analytics
+    keywords = db.Column(db.String(500), nullable=True)
     views = db.Column(db.Integer, default=0)
-    likes = db.Column(db.Integer, default=0)
     
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        # Se não foi fornecido slug, gera a partir do título
-        if not self.slug and self.titulo:
-            self.slug = slugify(self.titulo)
-        # Se não há resumo, extrai dos primeiros 200 caracteres do conteúdo
-        if not self.resumo:
-            plain = (self.conteudo or "").replace('<', '').replace('>', '')
-            self.resumo = (plain[:200] + '...') if len(plain) > 200 else plain
+    # Relacionamento com usuário
+    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
+    author = db.relationship('User', backref=db.backref('posts', lazy=True))
+
+    def __repr__(self):
+        return f"<Post {self.title}>"
     
     @property
     def reading_time(self):
-        """Estima tempo de leitura em minutos"""
-        words = len(self.conteudo.split())
+        """Calcula tempo estimado de leitura"""
+        words = len(self.content.split())
         return max(1, round(words / 200))  # ~200 palavras por minuto
-    
-    def increment_views(self):
-        """Incrementa contador de visualizações"""
-        self.views += 1
-        db.session.commit()
-    
-    def __repr__(self):
-        return f"<Post {self.slug}>"
 
-class User(UserMixin, db.Model):
-    """Modelo de usuário"""
-    __tablename__ = 'users'
-    id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(50), unique=True, nullable=False)
-    pw_hash = db.Column(db.String(128), nullable=False)
-
-    def set_password(self, password: str):
-        self.pw_hash = generate_password_hash(password)
-
-    def check_password(self, password: str) -> bool:
-        return check_password_hash(self.pw_hash, password)
-
-    def __repr__(self):
-        return f"<User {self.username}>"
-
-# callback para Flask-Login
+# Callback do Flask-Login
 @login_manager.user_loader
-def load_user(user_id: str):
+def load_user(user_id):
     return User.query.get(int(user_id))
