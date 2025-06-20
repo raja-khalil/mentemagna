@@ -1,0 +1,1050 @@
+{% extends 'admin_base.html' %}
+
+{% block title %}
+  {% if editing %}Editar Post{% else %}Novo Post{% endif %} — Admin
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+    <div class="row">
+        <!-- Editor Principal -->
+        <div class="col-lg-8">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+                    <h4 class="mb-0">
+                        {% if editing %}✏️ Editar Post{% else %}📝 Novo Post{% endif %}
+                    </h4>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-light btn-sm" onclick="togglePreview()">
+                            👁️ Preview
+                        </button>
+                        <button type="button" class="btn btn-light btn-sm" onclick="saveAsDraft()">
+                            💾 Rascunho
+                        </button>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" id="postForm">
+                        {{ form.hidden_tag() }}
+
+                        <!-- Título -->
+                        <div class="mb-4">
+                            {{ form.titulo.label(class="form-label fw-bold") }}
+                            {{ form.titulo(class="form-control form-control-lg", 
+                                           placeholder="Digite um título atrativo...",
+                                           id="tituloInput") }}
+                            <div id="tituloCounter" class="form-text">0/150 caracteres</div>
+                            {% if form.titulo.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.titulo.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+
+                        <!-- Barra de Ferramentas do Editor -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">{{ form.conteudo.label.text }}</label>
+                            
+                            <!-- Toolbar Moderna -->
+                            <div class="editor-toolbar bg-light border rounded-top p-3">
+                                <div class="row g-2">
+                                    <!-- Formatação Básica -->
+                                    <div class="col-auto">
+                                        <div class="btn-group" role="group" aria-label="Formatação">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="formatText('bold')" title="Negrito (Ctrl+B)">
+                                                <i class="fas fa-bold"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="formatText('italic')" title="Itálico (Ctrl+I)">
+                                                <i class="fas fa-italic"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="formatText('underline')" title="Sublinhado">
+                                                <i class="fas fa-underline"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Títulos -->
+                                    <div class="col-auto">
+                                        <div class="btn-group" role="group" aria-label="Títulos">
+                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="insertHeading('h2')" title="Título Grande">
+                                                <i class="fas fa-heading"></i> H2
+                                            </button>
+                                            <button type="button" class="btn btn-outline-primary btn-sm" onclick="insertHeading('h3')" title="Subtítulo">
+                                                <i class="fas fa-heading"></i> H3
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Listas -->
+                                    <div class="col-auto">
+                                        <div class="btn-group" role="group" aria-label="Listas">
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="insertList('ul')" title="Lista com Marcadores">
+                                                <i class="fas fa-list-ul"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="insertList('ol')" title="Lista Numerada">
+                                                <i class="fas fa-list-ol"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Mídia -->
+                                    <div class="col-auto">
+                                        <div class="btn-group" role="group" aria-label="Mídia">
+                                            <button type="button" class="btn btn-outline-success btn-sm" onclick="showImageUpload()" title="Inserir Imagem">
+                                                <i class="fas fa-image"></i> Imagem
+                                            </button>
+                                            <button type="button" class="btn btn-outline-danger btn-sm" onclick="showVideoInsert()" title="Inserir Vídeo">
+                                                <i class="fas fa-video"></i> Vídeo
+                                            </button>
+                                            <button type="button" class="btn btn-outline-info btn-sm" onclick="showLinkInsert()" title="Inserir Link">
+                                                <i class="fas fa-link"></i> Link
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <!-- Ferramentas -->
+                                    <div class="col-auto ms-auto">
+                                        <div class="btn-group" role="group" aria-label="Ferramentas">
+                                            <button type="button" class="btn btn-outline-warning btn-sm" onclick="insertCodeBlock()" title="Bloco de Código">
+                                                <i class="fas fa-code"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="insertQuote()" title="Citação">
+                                                <i class="fas fa-quote-left"></i>
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary btn-sm" onclick="insertHR()" title="Linha Divisória">
+                                                <i class="fas fa-minus"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Editor de Conteúdo -->
+                            <div class="editor-container">
+                                {{ form.conteudo(class="form-control editor-textarea", 
+                                                 style="height: 400px; resize: vertical;", 
+                                                 id="conteudoEditor",
+                                                 placeholder="Comece a escrever seu conteúdo aqui...\n\nUse a barra de ferramentas acima para formatação ou arraste imagens diretamente para o editor.") }}
+                            </div>
+
+                            {% if form.conteudo.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.conteudo.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                            
+                            <div class="form-text mt-2">
+                                <span id="wordCount">0 palavras</span> • 
+                                <span id="charCount">0 caracteres</span> • 
+                                <span id="readingTime">0 min de leitura</span>
+                            </div>
+                        </div>
+
+                        <!-- Upload de Imagem Modal -->
+                        <div class="modal fade" id="imageUploadModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">📷 Inserir Imagem</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">Upload de Arquivo:</label>
+                                            <div class="drop-zone" id="dropZone">
+                                                <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+                                                <p class="text-muted">Arraste uma imagem aqui ou clique para selecionar</p>
+                                                <input type="file" id="imageFileInput" accept="image/*" class="d-none">
+                                                <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('imageFileInput').click()">
+                                                    Selecionar Arquivo
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Ou URL da Imagem:</label>
+                                            <input type="url" class="form-control" id="imageUrlInput" placeholder="https://exemplo.com/imagem.jpg">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Texto Alternativo (Alt):</label>
+                                            <input type="text" class="form-control" id="imageAltInput" placeholder="Descrição da imagem">
+                                        </div>
+                                        <div id="imagePreview" class="text-center d-none">
+                                            <img id="previewImage" class="img-thumbnail" style="max-height: 200px;">
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-success" onclick="insertImage()">Inserir Imagem</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal de Vídeo -->
+                        <div class="modal fade" id="videoModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">🎥 Inserir Vídeo</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">URL do Vídeo:</label>
+                                            <input type="url" class="form-control" id="videoUrlInput" placeholder="Cole o link do YouTube, Vimeo ou arquivo MP4">
+                                            <div class="form-text">Suporta: YouTube, Vimeo, links diretos para MP4</div>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Título do Vídeo (opcional):</label>
+                                            <input type="text" class="form-control" id="videoTitleInput" placeholder="Título ou descrição">
+                                        </div>
+                                        <div id="videoPreview" class="d-none">
+                                            <p class="text-success">✅ Vídeo detectado e pronto para inserir</p>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-danger" onclick="insertVideo()">Inserir Vídeo</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Modal de Link -->
+                        <div class="modal fade" id="linkModal" tabindex="-1">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title">🔗 Inserir Link</h5>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="mb-3">
+                                            <label class="form-label">URL:</label>
+                                            <input type="url" class="form-control" id="linkUrlInput" placeholder="https://exemplo.com">
+                                        </div>
+                                        <div class="mb-3">
+                                            <label class="form-label">Texto do Link:</label>
+                                            <input type="text" class="form-control" id="linkTextInput" placeholder="Texto que aparecerá como link">
+                                        </div>
+                                        <div class="mb-3">
+                                            <div class="form-check">
+                                                <input class="form-check-input" type="checkbox" id="linkTargetBlank" checked>
+                                                <label class="form-check-label" for="linkTargetBlank">
+                                                    Abrir em nova aba
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                                        <button type="button" class="btn btn-info" onclick="insertLink()">Inserir Link</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Configurações do Post -->
+                        <div class="row">
+                            <div class="col-md-8">
+                                <div class="mb-3">
+                                    {{ form.imagem.label(class="form-label") }}
+                                    {{ form.imagem(class="form-control") }}
+                                    {% if editing and post and post.imagem %}
+                                        <small class="form-text text-muted">
+                                            Imagem atual: <a href="{{ post.imagem }}" target="_blank">Ver imagem</a>
+                                        </small>
+                                    {% endif %}
+                                    <div class="form-text">Imagem principal que aparecerá na listagem do blog</div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <div class="form-check form-switch">
+                                        {{ form.publicado(class="form-check-input", id="publicadoSwitch") }}
+                                        <label class="form-check-label" for="publicadoSwitch">
+                                            <strong>📢 Publicar Imediatamente</strong>
+                                        </label>
+                                    </div>
+                                    <small class="form-text text-muted">
+                                        Se desmarcado, ficará como rascunho
+                                    </small>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Botões de Ação -->
+                        <div class="d-flex justify-content-between align-items-center mt-4 pt-3 border-top">
+                            <div>
+                                <button type="submit" class="btn btn-primary btn-lg me-2">
+                                    {% if editing %}💾 Atualizar Post{% else %}🚀 Publicar Post{% endif %}
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" onclick="saveAsDraft()">
+                                    📝 Salvar Rascunho
+                                </button>
+                            </div>
+                            <div>
+                                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">
+                                    ← Voltar ao Painel
+                                </a>
+                                {% if editing %}
+                                    <button type="button" class="btn btn-outline-danger ms-2" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                        🗑️ Deletar
+                                    </button>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar com Preview -->
+        <div class="col-lg-4">
+            <!-- Preview Card -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">👁️ Preview em Tempo Real</h5>
+                </div>
+                <div class="card-body">
+                    <div id="livePreview">
+                        <h6 id="previewTitle" class="text-muted">Digite um título...</h6>
+                        <div id="previewContent" class="mt-3 text-muted">
+                            Digite o conteúdo para ver o preview...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dicas -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">💡 Dicas de Escrita</h5>
+                </div>
+                <div class="card-body">
+                    <small>
+                        <strong>📝 Título:</strong> Use 50-60 caracteres para melhor SEO<br>
+                        <strong>🖼️ Imagens:</strong> Sempre adicione texto alternativo<br>
+                        <strong>📊 Conteúdo:</strong> Mínimo 300 palavras é recomendado<br>
+                        <strong>🔗 Links:</strong> Use links para fontes confiáveis<br>
+                        <strong>📱 Mobile:</strong> Teste em diferentes tamanhos
+                    </small>
+                </div>
+            </div>
+
+            <!-- Estatísticas -->
+            <div class="card shadow-sm">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">📊 Estatísticas</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <h6 id="seoScore" class="text-primary">0%</h6>
+                            <small>SEO Score</small>
+                        </div>
+                        <div class="col-6">
+                            <h6 id="readabilityScore" class="text-success">Fácil</h6>
+                            <small>Legibilidade</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if editing %}
+<!-- Modal de confirmação para deletar -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">⚠️ Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja deletar o post <strong>"{{ post.titulo }}"</strong>?</p>
+                <p class="text-danger"><strong>Esta ação não pode ser desfeita.</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="POST" action="{{ url_for('admin.deletar_post', post_id=post.id) }}" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">🗑️ Deletar Definitivamente</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+<style>
+/* Estilos do Editor Avançado */
+.editor-toolbar {
+    border-bottom: none;
+    border-top-left-radius: 0.375rem;
+    border-top-right-radius: 0.375rem;
+}
+
+.editor-container {
+    position: relative;
+}
+
+.editor-textarea {
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+    font-family: 'Fira Code', 'Monaco', 'Consolas', monospace;
+    line-height: 1.6;
+    resize: vertical;
+    min-height: 400px;
+}
+
+.editor-textarea:focus {
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+    border-color: #86b7fe;
+}
+
+/* Drop Zone */
+.drop-zone {
+    border: 3px dashed #dee2e6;
+    border-radius: 0.5rem;
+    padding: 2rem;
+    text-align: center;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.drop-zone:hover,
+.drop-zone.dragover {
+    border-color: #0d6efd;
+    background-color: #f8f9ff;
+    transform: translateY(-2px);
+}
+
+/* Preview */
+#livePreview {
+    max-height: 300px;
+    overflow-y: auto;
+    font-size: 0.9rem;
+}
+
+#previewContent h2,
+#previewContent h3 {
+    color: #495057;
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+#previewContent img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.25rem;
+}
+
+/* Responsividade */
+@media (max-width: 991px) {
+    .col-lg-4 {
+        margin-top: 2rem;
+    }
+    
+    .editor-toolbar .btn-group {
+        margin-bottom: 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .editor-toolbar .col-auto {
+        flex: 1 1 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .editor-toolbar .btn-group {
+        width: 100%;
+    }
+    
+    .editor-toolbar .btn {
+        flex: 1;
+    }
+}
+
+/* Animações */
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1) !important;
+}
+
+.btn {
+    transition: all 0.2s ease;
+}
+
+/* Indicadores visuais */
+.form-control:valid {
+    border-color: #198754;
+}
+
+.form-control:invalid {
+    border-color: #dc3545;
+}
+
+/* Counter styles */
+#tituloCounter {
+    font-size: 0.875rem;
+    transition: color 0.3s ease;
+}
+
+#tituloCounter.warning {
+    color: #f57c00;
+}
+
+#tituloCounter.danger {
+    color: #d32f2f;
+}
+</style>
+
+<script>
+// Referências aos elementos
+const tituloInput = document.getElementById('tituloInput');
+const conteudoEditor = document.getElementById('conteudoEditor');
+const previewTitle = document.getElementById('previewTitle');
+const previewContent = document.getElementById('previewContent');
+const tituloCounter = document.getElementById('tituloCounter');
+const wordCount = document.getElementById('wordCount');
+const charCount = document.getElementById('charCount');
+const readingTime = document.getElementById('readingTime');
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    updatePreview();
+    updateCounters();
+    setupDragAndDrop();
+    
+    // Event listeners
+    tituloInput.addEventListener('input', updatePreview);
+    conteudoEditor.addEventListener('input', updatePreview);
+    tituloInput.addEventListener('input', updateCounters);
+    conteudoEditor.addEventListener('input', updateCounters);
+    
+    // Atalhos de teclado
+    document.addEventListener('keydown', handleKeyboardShortcuts);
+});
+
+// Atualizar preview em tempo real
+function updatePreview() {
+    const titulo = tituloInput.value || 'Digite um título...';
+    const conteudo = conteudoEditor.value || 'Digite o conteúdo para ver o preview...';
+    
+    previewTitle.textContent = titulo;
+    previewContent.innerHTML = conteudo;
+}
+
+// Atualizar contadores
+function updateCounters() {
+    const tituloLength = tituloInput.value.length;
+    const conteudo = conteudoEditor.value;
+    const words = conteudo.trim() ? conteudo.trim().split(/\s+/).length : 0;
+    const chars = conteudo.length;
+    const readingMinutes = Math.max(1, Math.ceil(words / 200));
+    
+    // Contador do título
+    tituloCounter.textContent = `${tituloLength}/150 caracteres`;
+    tituloCounter.className = 'form-text';
+    if (tituloLength > 120) tituloCounter.classList.add('warning');
+    if (tituloLength > 150) tituloCounter.classList.add('danger');
+    
+    // Contadores do conteúdo
+    wordCount.textContent = `${words} palavras`;
+    charCount.textContent = `${chars} caracteres`;
+    readingTime.textContent = `${readingMinutes} min de leitura`;
+    
+    // Atualizar SEO score
+    updateSEOScore(tituloLength, words);
+}
+
+// Calcular SEO score simples
+function updateSEOScore(tituloLength, words) {
+    let score = 0;
+    
+    // Título entre 50-60 caracteres
+    if (tituloLength >= 50 && tituloLength <= 60) score += 25;
+    else if (tituloLength >= 40 && tituloLength <= 70) score += 15;
+    
+    // Conteúdo com mais de 300 palavras
+    if (words >= 300) score += 25;
+    else if (words >= 150) score += 15;
+    
+    // Tem imagem
+    if (conteudoEditor.value.includes('<img')) score += 25;
+    
+    // Tem links
+    if (conteudoEditor.value.includes('<a')) score += 25;
+    
+    document.getElementById('seoScore').textContent = `${score}%`;
+    
+    // Legibilidade básica
+    const avgWordsPerSentence = words / (conteudoEditor.value.split(/[.!?]+/).length || 1);
+    let readability = 'Fácil';
+    if (avgWordsPerSentence > 20) readability = 'Difícil';
+    else if (avgWordsPerSentence > 15) readability = 'Médio';
+    
+    document.getElementById('readabilityScore').textContent = readability;
+}
+
+// Atalhos de teclado
+function handleKeyboardShortcuts(e) {
+    if (e.ctrlKey || e.metaKey) {
+        switch(e.key) {
+            case 'b':
+                e.preventDefault();
+                formatText('bold');
+                break;
+            case 'i':
+                e.preventDefault();
+                formatText('italic');
+                break;
+            case 's':
+                e.preventDefault();
+                saveAsDraft();
+                break;
+        }
+    }
+}
+
+// Formatação de texto
+function formatText(format) {
+    const textarea = conteudoEditor;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    const selectedText = textarea.value.substring(start, end);
+    
+    let formattedText = '';
+    
+    switch(format) {
+        case 'bold':
+            formattedText = `<strong>${selectedText || 'texto em negrito'}</strong>`;
+            break;
+        case 'italic':
+            formattedText = `<em>${selectedText || 'texto em itálico'}</em>`;
+            break;
+        case 'underline':
+            formattedText = `<u>${selectedText || 'texto sublinhado'}</u>`;
+            break;
+    }
+    
+    insertTextAtCursor(formattedText);
+}
+
+// Inserir títulos
+function insertHeading(level) {
+    const selectedText = getSelectedText() || `Seu ${level} aqui`;
+    const heading = `<${level}>${selectedText}</${level}>\n\n`;
+    insertTextAtCursor(heading);
+}
+
+// Inserir listas
+function insertList(type) {
+    const listType = type === 'ul' ? 'ul' : 'ol';
+    const listHTML = `<${listType}>
+    <li>Item 1</li>
+    <li>Item 2</li>
+    <li>Item 3</li>
+</${listType}>\n\n`;
+    insertTextAtCursor(listHTML);
+}
+
+// Inserir bloco de código
+function insertCodeBlock() {
+    const selectedText = getSelectedText() || 'seu código aqui';
+    const codeBlock = `<pre><code>${selectedText}</code></pre>\n\n`;
+    insertTextAtCursor(codeBlock);
+}
+
+// Inserir citação
+function insertQuote() {
+    const selectedText = getSelectedText() || 'Sua citação aqui';
+    const quote = `<blockquote>${selectedText}</blockquote>\n\n`;
+    insertTextAtCursor(quote);
+}
+
+// Inserir linha horizontal
+function insertHR() {
+    insertTextAtCursor('<hr>\n\n');
+}
+
+// Mostrar modal de upload de imagem
+function showImageUpload() {
+    const modal = new bootstrap.Modal(document.getElementById('imageUploadModal'));
+    modal.show();
+}
+
+// Mostrar modal de vídeo
+function showVideoInsert() {
+    const modal = new bootstrap.Modal(document.getElementById('videoModal'));
+    modal.show();
+}
+
+// Mostrar modal de link
+function showLinkInsert() {
+    const modal = new bootstrap.Modal(document.getElementById('linkModal'));
+    modal.show();
+}
+
+// Setup drag and drop
+function setupDragAndDrop() {
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('imageFileInput');
+    const editor = conteudoEditor;
+
+    // Drag and drop no editor
+    editor.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        editor.classList.add('dragover');
+    });
+
+    editor.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        editor.classList.remove('dragover');
+    });
+
+    editor.addEventListener('drop', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        editor.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleImageUpload(files[0]);
+        }
+    });
+
+    // Drag and drop no modal
+    dropZone.addEventListener('click', () => fileInput.click());
+    
+    dropZone.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        dropZone.classList.add('dragover');
+    });
+
+    dropZone.addEventListener('dragleave', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+    });
+
+    dropZone.addEventListener('drop', function(e) {
+        e.preventDefault();
+        dropZone.classList.remove('dragover');
+        
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+            handleImageUpload(files[0]);
+        }
+    });
+
+    fileInput.addEventListener('change', function(e) {
+        if (e.target.files.length > 0) {
+            handleImageUpload(e.target.files[0]);
+        }
+    });
+}
+
+// Manipular upload de imagem
+function handleImageUpload(file) {
+    if (!file.type.startsWith('image/')) {
+        alert('Por favor, selecione apenas arquivos de imagem.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    // Mostrar progresso
+    const dropZone = document.getElementById('dropZone');
+    dropZone.innerHTML = '<div class="spinner-border text-primary" role="status"></div><p class="mt-2">Fazendo upload...</p>';
+
+    fetch('/admin/upload', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Mostrar preview
+            document.getElementById('imageUrlInput').value = data.file_url;
+            showImagePreview(data.file_url);
+            
+            // Resetar drop zone
+            resetDropZone();
+        } else {
+            alert('Erro no upload: ' + data.error);
+            resetDropZone();
+        }
+    })
+    .catch(error => {
+        alert('Erro no upload: ' + error);
+        resetDropZone();
+    });
+}
+
+function resetDropZone() {
+    const dropZone = document.getElementById('dropZone');
+    dropZone.innerHTML = `
+        <i class="fas fa-cloud-upload-alt fa-3x text-muted mb-3"></i>
+        <p class="text-muted">Arraste uma imagem aqui ou clique para selecionar</p>
+        <button type="button" class="btn btn-outline-primary" onclick="document.getElementById('imageFileInput').click()">
+            Selecionar Arquivo
+        </button>
+    `;
+}
+
+function showImagePreview(url) {
+    document.getElementById('previewImage').src = url;
+    document.getElementById('imagePreview').classList.remove('d-none');
+}
+
+// Inserir imagem
+function insertImage() {
+    const url = document.getElementById('imageUrlInput').value;
+    const alt = document.getElementById('imageAltInput').value || 'Imagem';
+    
+    if (!url) {
+        alert('Por favor, forneça uma URL de imagem ou faça upload de um arquivo.');
+        return;
+    }
+
+    const imageHTML = `<img src="${url}" alt="${alt}" class="img-fluid rounded shadow-sm my-3" loading="lazy">\n\n`;
+    insertTextAtCursor(imageHTML);
+    
+    // Fechar modal e limpar
+    bootstrap.Modal.getInstance(document.getElementById('imageUploadModal')).hide();
+    clearImageModal();
+}
+
+function clearImageModal() {
+    document.getElementById('imageUrlInput').value = '';
+    document.getElementById('imageAltInput').value = '';
+    document.getElementById('imagePreview').classList.add('d-none');
+    resetDropZone();
+}
+
+// Inserir vídeo
+function insertVideo() {
+    const url = document.getElementById('videoUrlInput').value;
+    const title = document.getElementById('videoTitleInput').value;
+    
+    if (!url) {
+        alert('Por favor, forneça uma URL de vídeo.');
+        return;
+    }
+
+    let videoHTML = '';
+    
+    // YouTube
+    if (url.includes('youtube.com') || url.includes('youtu.be')) {
+        const videoId = extractYouTubeId(url);
+        videoHTML = `<div class="video-container my-4">
+    <div class="ratio ratio-16x9">
+        <iframe src="https://www.youtube.com/embed/${videoId}" 
+                title="${title || 'Vídeo do YouTube'}" 
+                allowfullscreen></iframe>
+    </div>
+    ${title ? `<p class="text-center text-muted mt-2"><small>${title}</small></p>` : ''}
+</div>\n\n`;
+    }
+    // Vimeo
+    else if (url.includes('vimeo.com')) {
+        const videoId = url.split('/').pop();
+        videoHTML = `<div class="video-container my-4">
+    <div class="ratio ratio-16x9">
+        <iframe src="https://player.vimeo.com/video/${videoId}" 
+                title="${title || 'Vídeo do Vimeo'}" 
+                allowfullscreen></iframe>
+    </div>
+    ${title ? `<p class="text-center text-muted mt-2"><small>${title}</small></p>` : ''}
+</div>\n\n`;
+    }
+    // MP4 direto
+    else {
+        videoHTML = `<div class="video-container my-4 text-center">
+    <video controls class="w-100" style="max-width: 100%; height: auto;">
+        <source src="${url}" type="video/mp4">
+        Seu navegador não suporta vídeo HTML5.
+    </video>
+    ${title ? `<p class="text-center text-muted mt-2"><small>${title}</small></p>` : ''}
+</div>\n\n`;
+    }
+    
+    insertTextAtCursor(videoHTML);
+    
+    // Fechar modal e limpar
+    bootstrap.Modal.getInstance(document.getElementById('videoModal')).hide();
+    document.getElementById('videoUrlInput').value = '';
+    document.getElementById('videoTitleInput').value = '';
+}
+
+function extractYouTubeId(url) {
+    const regex = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/;
+    const match = url.match(regex);
+    return match ? match[1] : '';
+}
+
+// Inserir link
+function insertLink() {
+    const url = document.getElementById('linkUrlInput').value;
+    const text = document.getElementById('linkTextInput').value;
+    const targetBlank = document.getElementById('linkTargetBlank').checked;
+    
+    if (!url) {
+        alert('Por favor, forneça uma URL.');
+        return;
+    }
+    
+    const linkText = text || url;
+    const target = targetBlank ? ' target="_blank" rel="noopener noreferrer"' : '';
+    const linkHTML = `<a href="${url}"${target}>${linkText}</a>`;
+    
+    insertTextAtCursor(linkHTML);
+    
+    // Fechar modal e limpar
+    bootstrap.Modal.getInstance(document.getElementById('linkModal')).hide();
+    document.getElementById('linkUrlInput').value = '';
+    document.getElementById('linkTextInput').value = '';
+}
+
+// Funções auxiliares
+function getSelectedText() {
+    const start = conteudoEditor.selectionStart;
+    const end = conteudoEditor.selectionEnd;
+    return conteudoEditor.value.substring(start, end);
+}
+
+function insertTextAtCursor(text) {
+    const textarea = conteudoEditor;
+    const start = textarea.selectionStart;
+    const end = textarea.selectionEnd;
+    
+    textarea.value = textarea.value.substring(0, start) + text + textarea.value.substring(end);
+    
+    // Reposicionar cursor
+    const newPos = start + text.length;
+    textarea.selectionStart = newPos;
+    textarea.selectionEnd = newPos;
+    textarea.focus();
+    
+    // Atualizar preview e contadores
+    updatePreview();
+    updateCounters();
+}
+
+// Salvar como rascunho
+function saveAsDraft() {
+    document.getElementById('publicadoSwitch').checked = false;
+    document.getElementById('postForm').submit();
+}
+
+// Toggle preview
+function togglePreview() {
+    const previewCard = document.querySelector('#livePreview').closest('.card');
+    previewCard.style.display = previewCard.style.display === 'none' ? 'block' : 'none';
+}
+
+// Validação antes de enviar
+document.getElementById('postForm').addEventListener('submit', function(e) {
+    const titulo = tituloInput.value.trim();
+    const conteudo = conteudoEditor.value.trim();
+    
+    if (!titulo) {
+        e.preventDefault();
+        alert('Por favor, digite um título para o post.');
+        tituloInput.focus();
+        return;
+    }
+    
+    if (!conteudo) {
+        e.preventDefault();
+        alert('Por favor, digite o conteúdo do post.');
+        conteudoEditor.focus();
+        return;
+    }
+    
+    // Adicionar loading ao botão
+    const submitBtn = this.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Salvando...';
+});
+
+// Auto-save (salvar automaticamente a cada 30 segundos)
+let autoSaveInterval;
+function startAutoSave() {
+    autoSaveInterval = setInterval(function() {
+        const titulo = tituloInput.value.trim();
+        const conteudo = conteudoEditor.value.trim();
+        
+        if (titulo && conteudo) {
+            // Salvar no localStorage como backup
+            localStorage.setItem('draft_titulo', titulo);
+            localStorage.setItem('draft_conteudo', conteudo);
+            localStorage.setItem('draft_timestamp', new Date().toISOString());
+            
+            // Mostrar indicação visual
+            showAutoSaveIndicator();
+        }
+    }, 30000); // A cada 30 segundos
+}
+
+function showAutoSaveIndicator() {
+    const indicator = document.createElement('div');
+    indicator.className = 'alert alert-success alert-dismissible fade show position-fixed';
+    indicator.style.cssText = 'top: 20px; right: 20px; z-index: 9999; width: auto;';
+    indicator.innerHTML = `
+        💾 Rascunho salvo automaticamente
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    `;
+    document.body.appendChild(indicator);
+    
+    setTimeout(() => {
+        if (indicator.parentNode) {
+            indicator.remove();
+        }
+    }, 3000);
+}
+
+// Carregar rascunho do localStorage se existir
+function loadDraftFromStorage() {
+    const savedTitulo = localStorage.getItem('draft_titulo');
+    const savedConteudo = localStorage.getItem('draft_conteudo');
+    const timestamp = localStorage.getItem('draft_timestamp');
+    
+    if (savedTitulo && savedConteudo && timestamp) {
+        const savedDate = new Date(timestamp);
+        const now = new Date();
+        const diffHours = (now - savedDate) / (1000 * 60 * 60);
+        
+        // Se o rascunho foi salvo nas últimas 24 horas
+        if (diffHours < 24) {
+            if (confirm('Encontramos um rascunho salvo automaticamente. Deseja carregá-lo?')) {
+                tituloInput.value = savedTitulo;
+                conteudoEditor.value = savedConteudo;
+                updatePreview();
+                updateCounters();
+            }
+        }
+    }
+}
+
+// Inicializar auto-save ao carregar a página
+document.addEventListener('DOMContentLoaded', function() {
+    loadDraftFromStorage();
+    startAutoSave();
+});
+
+// Limpar rascunho quando post for publicado com sucesso
+window.addEventListener('beforeunload', function() {
+    // Manter o rascunho caso o usuário saia sem salvar
+});
+</script>
+{% endblock %}

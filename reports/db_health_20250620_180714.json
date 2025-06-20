@@ -1,0 +1,60 @@
+{
+  "generated_at": "2025-06-20T18:07:14.504280",
+  "database_stats": {
+    "file_size_mb": 0.05,
+    "last_modified": "2025-06-20T16:26:44.404645",
+    "tables_count": 5,
+    "tables": {
+      "post": 0,
+      "posts": 0,
+      "users": 1,
+      "categories": 4,
+      "post_categories": 0
+    },
+    "posts_published": 0,
+    "posts_draft": 0,
+    "table_details": {
+      "post": {
+        "indexes": 0,
+        "records": 0
+      },
+      "posts": {
+        "indexes": 0,
+        "records": 0
+      },
+      "users": {
+        "indexes": 0,
+        "records": 1
+      },
+      "categories": {
+        "indexes": 0,
+        "records": 4
+      },
+      "post_categories": {
+        "indexes": 0,
+        "records": 0
+      }
+    },
+    "status": "healthy",
+    "checked_at": "2025-06-20T18:07:14.501573"
+  },
+  "integrity_check": {
+    "integrity": "ok",
+    "foreign_key_errors": 0,
+    "journal_mode": "delete",
+    "indexes_count": 1,
+    "status": "ok",
+    "checked_at": "2025-06-20T18:07:14.503619"
+  },
+  "growth_analysis": {
+    "period_days": 30,
+    "total_posts_period": 0,
+    "avg_posts_per_day": 0,
+    "posts_last_week": 0,
+    "posts_prev_week": 0,
+    "growth_rate_percent": 0,
+    "posts_by_date": [],
+    "analyzed_at": "2025-06-20T18:07:14.504273"
+  },
+  "recommendations": []
+}

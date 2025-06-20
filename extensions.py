@@ -1,17 +1,18 @@
-# extensions.py - Versão sem CKEditor
+# extensions.py
+
 from flask_sqlalchemy import SQLAlchemy
-from flask_migrate   import Migrate
-from flask_mail      import Mail
-from flask_login     import LoginManager
+from flask_migrate import Migrate
+from flask_mail import Mail
+from flask_login import LoginManager
+from flask_ckeditor import CKEditor # <-- ADICIONADO
 
 # Extensões principais
-db       = SQLAlchemy()
-migrate  = Migrate()
-mail     = Mail()
+db = SQLAlchemy()
+migrate = Migrate()
+mail = Mail()
+ckeditor = CKEditor() # <-- ADICIONADO
 
 # Autenticação
 login_manager = LoginManager()
-# para onde redirecionar quando o usuário não estiver logado:
 login_manager.login_view = 'auth.login'
-# categoria da flash-message padrão de "login necessário"
 login_manager.login_message_category = 'info'

@@ -1,7 +1,6 @@
-# seo_helper.py - Sistema de SEO dinâmico e palavras-chave
+# seo_helper.py - Sistema de SEO dinâmico simplificado
 from dataclasses import dataclass
 from typing import List, Dict, Optional
-import re
 
 @dataclass
 class SEOData:
@@ -24,38 +23,6 @@ class SEOManager:
             "tutorial", "blog tech", "desenvolvedor", "código", "software"
         ]
         
-        # Palavras-chave por categoria
-        self.category_keywords = {
-            "inteligencia_artificial": [
-                "inteligência artificial", "machine learning", "deep learning", 
-                "chatgpt", "gpt", "redes neurais", "algoritmos", "ia", 
-                "reconhecimento de imagem", "processamento de linguagem natural",
-                "computer vision", "tensorflow", "pytorch", "scikit-learn"
-            ],
-            "programacao": [
-                "programação", "python", "javascript", "java", "c++", "php",
-                "desenvolvimento", "código", "algoritmos", "estrutura de dados",
-                "orientação a objetos", "framework", "biblioteca", "api"
-            ],
-            "web_development": [
-                "desenvolvimento web", "frontend", "backend", "html", "css",
-                "javascript", "react", "vue", "angular", "node.js", "flask",
-                "django", "laravel", "responsivo", "spa", "pwa"
-            ],
-            "ferramentas": [
-                "calculadora", "ferramentas online", "utilitários", "produtividade",
-                "cid", "cbo", "conversores", "geradores", "validadores"
-            ],
-            "mobile": [
-                "desenvolvimento mobile", "android", "ios", "react native",
-                "flutter", "kotlin", "swift", "app", "aplicativo móvel"
-            ],
-            "cloud": [
-                "cloud computing", "aws", "azure", "google cloud", "docker",
-                "kubernetes", "devops", "ci/cd", "infraestrutura", "serverless"
-            ]
-        }
-        
         # Templates de SEO por tipo de página
         self.seo_templates = {
             "home": {
@@ -68,16 +35,6 @@ class SEOManager:
                 "description": "Artigos sobre tecnologia, programação, inteligência artificial e desenvolvimento. Tutoriais práticos, análises e insights para desenvolvedores.",
                 "keywords": self.base_keywords + ["blog tecnologia", "artigos programação", "tutoriais desenvolvimento"]
             },
-            "category": {
-                "title_template": "{category_name} - Blog Mente Magna",
-                "description_template": "Artigos e tutoriais sobre {category_name}. Conteúdo especializado em {category_description} para desenvolvedores e entusiastas.",
-                "keywords_base": self.base_keywords
-            },
-            "post": {
-                "title_template": "{post_title} - Mente Magna",
-                "description_template": "{post_excerpt}",
-                "keywords_base": self.base_keywords
-            },
             "tool": {
                 "title_template": "{tool_name} - Ferramenta Online Gratuita | Mente Magna",
                 "description_template": "{tool_description}. Ferramenta online gratuita, rápida e segura. Use agora sem cadastro!",
@@ -85,78 +42,17 @@ class SEOManager:
             }
         }
     
-    def extract_keywords_from_content(self, content: str, max_keywords: int = 10) -> List[str]:
-        """Extrai palavras-chave relevantes do conteúdo"""
-        if not content:
-            return []
-        
-        # Remove HTML tags
-        clean_content = re.sub(r'<[^>]+>', '', content.lower())
-        
-        # Lista de palavras-chave técnicas relevantes
-        tech_keywords = [
-            "python", "javascript", "react", "vue", "angular", "node.js", "flask",
-            "django", "api", "rest", "graphql", "database", "sql", "nosql",
-            "mongodb", "postgresql", "mysql", "redis", "docker", "kubernetes",
-            "aws", "azure", "cloud", "serverless", "microservices", "devops",
-            "ci/cd", "git", "github", "artificial intelligence", "machine learning",
-            "deep learning", "neural networks", "tensorflow", "pytorch",
-            "scikit-learn", "pandas", "numpy", "data science", "big data",
-            "blockchain", "cryptocurrency", "iot", "mobile development",
-            "android", "ios", "react native", "flutter", "kotlin", "swift"
-        ]
-        
-        found_keywords = []
-        for keyword in tech_keywords:
-            if keyword in clean_content and keyword not in found_keywords:
-                found_keywords.append(keyword)
-                if len(found_keywords) >= max_keywords:
-                    break
-        
-        return found_keywords
-    
-    def get_category_seo(self, category_slug: str, category_name: str) -> SEOData:
-        """Gera SEO para páginas de categoria"""
-        category_keywords = self.category_keywords.get(category_slug, [])
-        
-        description_map = {
-            "inteligencia_artificial": "inteligência artificial, machine learning e deep learning",
-            "programacao": "programação, algoritmos e desenvolvimento de software",
-            "web_development": "desenvolvimento web, frontend e backend",
-            "ferramentas": "ferramentas online e utilitários para desenvolvedores",
-            "mobile": "desenvolvimento mobile e aplicativos",
-            "cloud": "cloud computing e infraestrutura"
-        }
-        
-        category_desc = description_map.get(category_slug, category_name.lower())
-        
-        return SEOData(
-            title=f"{category_name} - Blog Mente Magna",
-            description=f"Artigos e tutoriais sobre {category_desc}. Conteúdo especializado para desenvolvedores e entusiastas de tecnologia.",
-            keywords=self.base_keywords + category_keywords + [category_name.lower()],
-            schema_type="CollectionPage"
-        )
-    
-    def get_post_seo(self, post_title: str, post_content: str, post_excerpt: str = None, category: str = None) -> SEOData:
+    def get_post_seo(self, post_title: str, post_content: str, post_excerpt: str = None) -> SEOData:
         """Gera SEO para posts individuais"""
-        # Extrair palavras-chave do conteúdo
-        content_keywords = self.extract_keywords_from_content(post_content)
-        
-        # Adicionar palavras-chave da categoria se especificada
-        category_keywords = []
-        if category:
-            category_keywords = self.category_keywords.get(category, [])
-        
         # Gerar descrição
         description = post_excerpt or (post_content[:160] + "..." if len(post_content) > 160 else post_content)
-        description = re.sub(r'<[^>]+>', '', description)  # Remove HTML
-        
-        all_keywords = list(set(self.base_keywords + content_keywords + category_keywords))
+        # Remove HTML básico
+        description = description.replace('<', '').replace('>', '')
         
         return SEOData(
             title=f"{post_title} - Mente Magna",
             description=description,
-            keywords=all_keywords,
+            keywords=self.base_keywords + [post_title.lower()],
             schema_type="Article"
         )
     
@@ -166,9 +62,6 @@ class SEOManager:
             "calculadora": ["calculadora online", "calcular", "matemática", "fórmulas"],
             "cid": ["cid", "classificação internacional doenças", "código cid", "diagnóstico"],
             "cbo": ["cbo", "classificação brasileira ocupações", "profissões", "código cbo"],
-            "conversor": ["conversor", "conversão", "unidades", "medidas"],
-            "gerador": ["gerador", "criar", "gerar", "automático"],
-            "validador": ["validador", "validar", "verificar", "cpf", "cnpj"]
         }
         
         specific_keywords = tool_keywords.get(tool_type, [])
@@ -186,17 +79,11 @@ seo_manager = SEOManager()
 # Função helper para templates
 def get_seo_data(page_type: str, **kwargs) -> Dict:
     """Função helper para usar nos templates"""
-    if page_type == "category":
-        seo_data = seo_manager.get_category_seo(
-            kwargs.get('category_slug', ''),
-            kwargs.get('category_name', '')
-        )
-    elif page_type == "post":
+    if page_type == "post":
         seo_data = seo_manager.get_post_seo(
             kwargs.get('post_title', ''),
             kwargs.get('post_content', ''),
-            kwargs.get('post_excerpt', ''),
-            kwargs.get('category', '')
+            kwargs.get('post_excerpt', '')
         )
     elif page_type == "tool":
         seo_data = seo_manager.get_tool_seo(

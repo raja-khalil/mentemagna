@@ -1,24 +1,27 @@
-# forms.py - Versão sem CKEditor
+# forms.py
+
 from flask_wtf import FlaskForm
-from wtforms import StringField, TextAreaField, FileField, SubmitField, BooleanField, PasswordField
+from wtforms import StringField, SubmitField, BooleanField, PasswordField, TextAreaField
 from wtforms.validators import DataRequired, Email
-from flask_wtf.file import FileAllowed
+from flask_wtf.file import FileField, FileAllowed # <-- ADICIONADO "FileField" AQUI
+from flask_ckeditor import CKEditorField
 
 class ContatoForm(FlaskForm):
     nome = StringField('Nome', validators=[DataRequired()])
     email = StringField('Email', validators=[DataRequired(), Email()])
-    mensagem = TextAreaField('Mensagem', validators=[DataRequired()], render_kw={"rows": 6})
-    enviar = SubmitField('Enviar')
+    mensagem = TextAreaField('Mensagem', validators=[DataRequired()])
+    enviar = SubmitField('Enviar Mensagem')
 
 class PostForm(FlaskForm):
-    titulo = StringField('Título', validators=[DataRequired()])
-    conteudo = TextAreaField('Conteúdo', validators=[DataRequired()], render_kw={"rows": 10})
+    titulo = StringField('Título do Post', validators=[DataRequired()])
+    conteudo = CKEditorField('Conteúdo', validators=[DataRequired()])
+    resumo = TextAreaField('Resumo (Opcional - para SEO)')
     imagem = FileField(
-        'Imagem principal',
-        validators=[FileAllowed(['jpg', 'jpeg', 'png', 'gif'], 'Apenas imagens são permitidas.')]
+        'Imagem de Destaque',
+        validators=[FileAllowed(['jpg', 'png', 'jpeg', 'gif'], 'Somente imagens!')]
     )
-    publicado = BooleanField('Publicar agora', default=True)
-    enviar = SubmitField('Publicar')
+    publicado = BooleanField('Publicar Imediatamente', default=True)
+    submit = SubmitField('Salvar Post')
 
 class LoginForm(FlaskForm):
     username = StringField('Usuário', validators=[DataRequired()])
