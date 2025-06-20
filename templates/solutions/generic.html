@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <!-- SEO Básico -->
+  <title>{% block title %}{{ page_title or 'Mente Magna - Tecnologia, Inovação e Desenvolvimento' }}{% endblock %}</title>
+  <meta name="description" content="{% block description %}{{ page_description or 'Portal de referência em tecnologia, programação, IA e inovação. Artigos, tutoriais e insights para desenvolvedores e entusiastas de tecnologia.' }}{% endblock %}">
+  <meta name="keywords" content="{% block keywords %}{{ page_keywords or 'tecnologia, programação, python, flask, inteligência artificial, desenvolvimento web, tutorials, blog tech' }}{% endblock %}">
+  <meta name="author" content="Mente Magna">
+  <meta name="robots" content="index, follow">
+  
+  <!-- Open Graph / Facebook -->
+  <meta property="og:type" content="{% block og_type %}website{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}{{ page_title or 'Mente Magna - Tecnologia e Inovação' }}{% endblock %}">
+  <meta property="og:description" content="{% block og_description %}{{ page_description or 'Portal de referência em tecnologia, programação e inovação.' }}{% endblock %}">
+  <meta property="og:image" content="{% block og_image %}{{ url_for('static', filename='img/logo_mentemagna.png', _external=True) }}{% endblock %}">
+  <meta property="og:url" content="{% block og_url %}{{ request.url }}{% endblock %}">
+  <meta property="og:site_name" content="Mente Magna">
+  <meta property="og:locale" content="pt_BR">
+  
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="{% block twitter_title %}{{ page_title or 'Mente Magna' }}{% endblock %}">
+  <meta name="twitter:description" content="{% block twitter_description %}{{ page_description or 'Portal de tecnologia e inovação' }}{% endblock %}">
+  <meta name="twitter:image" content="{% block twitter_image %}{{ url_for('static', filename='img/logo_mentemagna.png', _external=True) }}{% endblock %}">
+  
+  <!-- Canonical URL -->
+  <link rel="canonical" href="{% block canonical %}{{ request.url }}{% endblock %}">
+  
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='img/favicon_emagna.png') }}">
+  
+  <!-- CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="{{ url_for('static', filename='css/custom.css') }}" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Google AdSense -->
+  <meta name="google-adsense-account" content="ca-pub-4115727278051485">
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4115727278051485" crossorigin="anonymous"></script>
+  
+  {% block head %}{% endblock %}
+</head>
+<body class="d-flex flex-column min-vh-100">
+
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark" role="navigation">
+    <div class="container">
+      <a class="navbar-brand fw-bold d-flex align-items-center" href="{{ url_for('main.home') }}">
+        <img src="{{ url_for('static', filename='img/logo_mentemagna.png') }}" 
+             alt="Mente Magna Logo" 
+             height="40" 
+             style="object-fit: contain;">
+      </a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ms-auto">
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'main.home' %}active{% endif %}" 
+               href="{{ url_for('main.home') }}">Início</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'main.sobre' %}active{% endif %}" 
+               href="{{ url_for('main.sobre') }}">Sobre</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'main.emagna' %}active{% endif %}" 
+               href="{{ url_for('main.emagna') }}">E-Magna</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'main.produtos' %}active{% endif %}" 
+               href="{{ url_for('main.produtos') }}">Produtos</a>
+          </li>
+          
+          <!-- MENU SOLUÇÕES ATUALIZADO -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle {% if 'solutions' in request.endpoint %}active{% endif %}" 
+               href="#" id="solucoesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              🔧 Soluções
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="solucoesDropdown">
+              <li><h6 class="dropdown-header">🏥 Saúde e Profissional</h6></li>
+              <li><a class="dropdown-item" href="{{ url_for('solutions.solution_detail', solution_slug='consulta-cid') }}">
+                🏥 Consulta CID
+              </a></li>
+              <li><a class="dropdown-item" href="{{ url_for('solutions.solution_detail', solution_slug='consulta-cbo') }}">
+                👔 Consulta CBO
+              </a></li>
+              
+              <li><hr class="dropdown-divider"></li>
+              <li><h6 class="dropdown-header">🧮 Ferramentas</h6></li>
+              <li><a class="dropdown-item" href="{{ url_for('solutions.solution_detail', solution_slug='calculadora') }}">
+                🧮 Calculadora Online
+              </a></li>
+              
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-center fw-bold" href="{{ url_for('solutions.solutions_index') }}">
+                🔧 Ver Todas as Soluções →
+              </a></li>
+            </ul>
+          </li>
+          
+          <li class="nav-item">
+            <a class="nav-link {% if 'blog' in request.endpoint %}active{% endif %}" 
+               href="{{ url_for('blog.blog') }}">📝 Blog</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link {% if request.endpoint == 'main.contato' %}active{% endif %}" 
+               href="{{ url_for('main.contato') }}">Contato</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ANÚNCIO HEADER -->
+  {% block header_ad %}
+  <div class="container mt-3">
+    <div class="text-center p-3 bg-light rounded">
+      <small class="text-muted">Publicidade</small>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4115727278051485"
+           data-ad-slot="1234567890"
+           data-ad-format="horizontal"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+  {% endblock %}
+
+  <!-- Flash Messages -->
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="container mt-3">
+        {% for category, message in messages %}
+          <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  <!-- Main Content -->
+  <main class="container my-4 flex-grow-1" role="main">
+    {% block content %}{% endblock %}
+  </main>
+
+  <!-- ANÚNCIO FOOTER -->
+  {% block footer_ad %}
+  <div class="container my-4">
+    <div class="text-center p-3 bg-light rounded">
+      <small class="text-muted">Publicidade</small>
+      <ins class="adsbygoogle"
+           style="display:block"
+           data-ad-client="ca-pub-4115727278051485"
+           data-ad-slot="1111111111"
+           data-ad-format="auto"
+           data-full-width-responsive="true"></ins>
+      <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+    </div>
+  </div>
+  {% endblock %}
+
+  <!-- Footer -->
+  <footer class="bg-light border-top py-4 mt-auto">
+    <div class="container">
+      <div class="row mb-3">
+        <div class="col-md-8">
+          <div class="d-flex flex-wrap gap-3">
+            <a href="{{ url_for('main.sobre') }}" class="text-decoration-none text-dark small">Sobre</a>
+            <span class="text-muted">•</span>
+            <a href="{{ url_for('blog.blog') }}" class="text-decoration-none text-dark small">Blog</a>
+            <span class="text-muted">•</span>
+            <a href="{{ url_for('solutions.solutions_index') }}" class="text-decoration-none text-dark small">Soluções</a>
+            <span class="text-muted">•</span>
+            <a href="{{ url_for('main.contato') }}" class="text-decoration-none text-dark small">Contato</a>
+          </div>
+        </div>
+        <div class="col-md-4 text-end">
+          <div class="d-flex justify-content-end gap-2">
+            <a href="https://www.instagram.com/rajakhalil.emagna/" target="_blank" class="btn btn-outline-secondary btn-sm rounded-circle p-2">
+              <i class="fab fa-instagram"></i>
+            </a>
+            <a href="https://www.linkedin.com/in/raja-khalil/" target="_blank" class="btn btn-outline-secondary btn-sm rounded-circle p-2">
+              <i class="fab fa-linkedin-in"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+      
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <small class="text-muted">© 2025, Mente Magna. Todos os direitos reservados</small>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- JavaScript -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+  
+  {% block scripts %}{% endblock %}
+</body>
+</html>

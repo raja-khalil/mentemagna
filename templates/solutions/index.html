@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-12">
+            <h1 class="display-4 text-center mb-5">🔧 Soluções Online Gratuitas</h1>
+            <p class="lead text-center mb-5">
+                Ferramentas práticas e úteis para o seu dia a dia. Todas gratuitas e sem necessidade de cadastro.
+            </p>
+        </div>
+    </div>
+    
+    <!-- ANÚNCIO HEADER -->
+    <div class="row mb-5">
+        <div class="col-12">
+            <div class="text-center p-3 bg-light rounded">
+                <small class="text-muted">Publicidade</small>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4115727278051485"
+                     data-ad-slot="1234567890"
+                     data-ad-format="horizontal"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Soluções por Categoria -->
+    {% for category_name, solutions in categories.items() %}
+    <div class="row mb-5">
+        <div class="col-12">
+            <h2 class="h3 border-bottom pb-2 mb-4">{{ category_name }}</h2>
+            <div class="row">
+                {% for solution in solutions %}
+                <div class="col-md-6 col-lg-4 mb-4">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <div class="mb-3" style="font-size: 3rem;">{{ solution.icon }}</div>
+                            <h5 class="card-title">{{ solution.name }}</h5>
+                            <p class="card-text">{{ solution.description }}</p>
+                            <a href="{{ url_for('solutions.solution_detail', solution_slug=solution.slug) }}" 
+                               class="btn btn-primary">
+                                Usar Agora →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    
+    <!-- ANÚNCIO FOOTER -->
+    <div class="row my-5">
+        <div class="col-12">
+            <div class="text-center p-3 bg-light rounded">
+                <small class="text-muted">Publicidade</small>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4115727278051485"
+                     data-ad-slot="9999999999"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

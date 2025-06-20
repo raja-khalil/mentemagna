@@ -1,0 +1,537 @@
+{% extends 'base.html' %}
+
+{% set page_title = solution.name + ' - Mente Magna' %}
+{% set page_description = solution.description %}
+
+{% block content %}
+<div class="row">
+    <!-- Ferramenta Principal -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h1 class="card-title mb-0">{{ solution.icon }} {{ solution.name }}</h1>
+                <small>Powered by Google Apps Script</small>
+            </div>
+            <div class="card-body">
+                <p class="lead">{{ solution.description }}</p>
+                
+                <!-- Interface de Busca CBO -->
+                <div class="search-container">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" 
+                                       id="cbo-search" 
+                                       class="form-control form-control-lg" 
+                                       placeholder="Digite o código CBO ou nome da profissão..."
+                                       maxlength="100">
+                                <button class="btn btn-primary" type="button" onclick="searchCBO()">
+                                    🔍 Buscar
+                                </button>
+                            </div>
+                            <small class="form-text text-muted">
+                                Exemplo: "2124-05", "administrador", "engenheiro", "programador"
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-grid">
+                                <button class="btn btn-outline-secondary" onclick="clearSearch()">
+                                    🗑️ Limpar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div id="loading" class="text-center" style="display: none;">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Buscando...</span>
+                    </div>
+                    <p class="mt-2">Consultando base de dados CBO...</p>
+                </div>
+
+                <!-- Resultados -->
+                <div id="cbo-results" class="mt-4" style="display: none;">
+                    <h5>📋 Resultados da Busca</h5>
+                    <div id="results-container" class="border rounded p-3" style="max-height: 400px; overflow-y: auto;">
+                        <!-- Resultados aparecerão aqui -->
+                    </div>
+                </div>
+
+                <!-- Categorias Principais -->
+                <div class="mt-4">
+                    <h5>📊 Categorias Principais</h5>
+                    <div class="row">
+                        <div class="col-md-6 mb-2">
+                            <button class="btn btn-outline-info btn-sm w-100" onclick="quickSearch('engenheiro')">
+                                🔧 Engenharia e Arquitetura
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <button class="btn btn-outline-success btn-sm w-100" onclick="quickSearch('médico')">
+                                ⚕️ Profissionais da Saúde
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <button class="btn btn-outline-primary btn-sm w-100" onclick="quickSearch('professor')">
+                                📚 Profissionais do Ensino
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <button class="btn btn-outline-warning btn-sm w-100" onclick="quickSearch('analista')">
+                                💻 Tecnologia da Informação
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <button class="btn btn-outline-secondary btn-sm w-100" onclick="quickSearch('advogado')">
+                                ⚖️ Profissionais Jurídicos
+                            </button>
+                        </div>
+                        <div class="col-md-6 mb-2">
+                            <button class="btn btn-outline-dark btn-sm w-100" onclick="quickSearch('administrador')">
+                                📊 Administração e Gestão
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Buscas Rápidas -->
+                <div class="mt-4">
+                    <h5>⚡ Profissões Populares</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('programador')">
+                            Programador
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('enfermeiro')">
+                            Enfermeiro
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('contador')">
+                            Contador
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('designer')">
+                            Designer
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('jornalista')">
+                            Jornalista
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('2511-05')">
+                            2511-05
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANÚNCIO APÓS FERRAMENTA -->
+        <div class="my-4">
+            <div class="text-center p-3 bg-light rounded">
+                <small class="text-muted">Publicidade</small>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4115727278051485"
+                     data-ad-slot="2222222222"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+
+        <!-- Informações sobre CBO -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">📖 O que é CBO?</h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>CBO (Classificação Brasileira de Ocupações)</strong> é um documento normativo que 
+                    reconhece, nomeia e codifica os títulos e descreve as características das ocupações do 
+                    mercado de trabalho brasileiro.
+                </p>
+                
+                <h6>📌 Como usar:</h6>
+                <ol>
+                    <li>Digite o <strong>código CBO</strong> (ex: 2124-05, 2511-05)</li>
+                    <li>Ou digite o <strong>nome da profissão</strong> (ex: administrador, programador)</li>
+                    <li>Clique em "Buscar" ou pressione Enter</li>
+                    <li>Veja os resultados com códigos e descrições detalhadas</li>
+                </ol>
+                
+                <h6>🎯 Para que serve:</h6>
+                <ul>
+                    <li>Currículos e processos seletivos</li>
+                    <li>Documentação trabalhista</li>
+                    <li>Estudos de mercado de trabalho</li>
+                    <li>Regulamentação profissional</li>
+                </ul>
+                
+                <div class="alert alert-info mt-3">
+                    <strong>💡 Dica:</strong> O código CBO é frequentemente solicitado em 
+                    cadastros profissionais, currículos e documentos trabalhistas.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="col-lg-4">
+        <!-- ANÚNCIO SIDEBAR -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h6 class="card-title mb-0">Publicidade</h6>
+            </div>
+            <div class="card-body text-center p-2">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4115727278051485"
+                     data-ad-slot="5555555555"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+
+        <!-- Outras Soluções -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">🔧 Outras Soluções</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('solutions.solution_detail', solution_slug='consulta-cid') }}" 
+                       class="list-group-item list-group-item-action">
+                        🏥 Consulta CID
+                    </a>
+                    <a href="{{ url_for('solutions.solution_detail', solution_slug='calculadora') }}" 
+                       class="list-group-item list-group-item-action">
+                        🧮 Calculadora Online
+                    </a>
+                    <a href="{{ url_for('solutions.solution_detail', solution_slug='validador-cpf') }}" 
+                       class="list-group-item list-group-item-action">
+                        🆔 Validador de CPF
+                    </a>
+                    <a href="{{ url_for('solutions.solution_detail', solution_slug='gerador-senha') }}" 
+                       class="list-group-item list-group-item-action">
+                        🔐 Gerador de Senhas
+                    </a>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('solutions.solutions_index') }}" class="btn btn-outline-success btn-sm">
+                        Ver Todas as Soluções →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estatísticas de Uso -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">📊 Estatísticas</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h4 class="text-primary" id="searchCount">0</h4>
+                        <small class="text-muted">Buscas hoje</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-success">2.500+</h4>
+                        <small class="text-muted">Ocupações CBO</small>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted">
+                        ✅ Base oficial do MTE<br>
+                        ✅ Sempre atualizado<br>
+                        ✅ Busca rápida e precisa
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Categorias CBO -->
+        <div class="card">
+            <div class="card-header bg-warning text-dark">
+                <h5 class="card-title mb-0">📂 Grupos CBO</h5>
+            </div>
+            <div class="card-body">
+                <div class="small">
+                    <strong>Grupo 1:</strong> Dirigentes<br>
+                    <strong>Grupo 2:</strong> Profissionais das ciências e intelectuais<br>
+                    <strong>Grupo 3:</strong> Técnicos de nível médio<br>
+                    <strong>Grupo 4:</strong> Trabalhadores de serviços administrativos<br>
+                    <strong>Grupo 5:</strong> Trabalhadores dos serviços<br>
+                    <strong>Grupo 6:</strong> Trabalhadores agropecuários<br>
+                    <strong>Grupo 7:</strong> Trabalhadores da produção<br>
+                    <strong>Grupo 8:</strong> Operadores de instalações<br>
+                    <strong>Grupo 9:</strong> Trabalhadores de manutenção
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<style>
+.search-container input:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.25);
+}
+
+.result-item {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.result-item:hover {
+    border-color: #0d6efd;
+    box-shadow: 0 2px 8px rgba(13, 110, 253, 0.15);
+    transform: translateY(-1px);
+}
+
+.cbo-code {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #0d6efd;
+}
+
+.cbo-description {
+    color: #333;
+    margin-top: 5px;
+    font-weight: 500;
+}
+
+.cbo-details {
+    color: #666;
+    font-size: 0.9rem;
+    margin-top: 8px;
+}
+
+@media (max-width: 768px) {
+    .search-container .col-md-8,
+    .search-container .col-md-4 {
+        margin-bottom: 10px;
+    }
+    
+    .col-md-6.mb-2 {
+        margin-bottom: 0.5rem !important;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// URL do Google Apps Script para CBO
+const SCRIPT_URL = "{{ solution.script_url }}";
+let searchCount = 0;
+
+// Buscar CBO
+async function searchCBO() {
+    const query = document.getElementById('cbo-search').value.trim();
+    
+    if (!query || query.length < 2) {
+        alert('Digite pelo menos 2 caracteres para buscar');
+        return;
+    }
+    
+    showLoading(true);
+    
+    try {
+        // Chamar Google Apps Script
+        const response = await fetch(`${SCRIPT_URL}?action=search&query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        
+        displayResults(data);
+        updateSearchCount();
+        
+        // Analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'cbo_search', {
+                'event_category': 'solutions',
+                'event_label': query,
+                'value': 1
+            });
+        }
+        
+    } catch (error) {
+        console.error('Erro na busca:', error);
+        
+        // Tentar busca local como fallback
+        const fallbackData = fallbackSearch(query);
+        if (fallbackData.results.length > 0) {
+            displayResults(fallbackData);
+            showFallbackNotice();
+        } else {
+            showError('Erro ao buscar CBO. Tente novamente.');
+        }
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Busca rápida
+function quickSearch(term) {
+    document.getElementById('cbo-search').value = term;
+    searchCBO();
+}
+
+// Limpar busca
+function clearSearch() {
+    document.getElementById('cbo-search').value = '';
+    document.getElementById('cbo-results').style.display = 'none';
+}
+
+// Mostrar loading
+function showLoading(show) {
+    document.getElementById('loading').style.display = show ? 'block' : 'none';
+    document.getElementById('cbo-results').style.display = show ? 'none' : 'block';
+}
+
+// Exibir resultados
+function displayResults(data) {
+    const resultsContainer = document.getElementById('results-container');
+    const resultsDiv = document.getElementById('cbo-results');
+    
+    if (!data || !data.results || data.results.length === 0) {
+        resultsContainer.innerHTML = '<div class="alert alert-warning">Nenhum resultado encontrado. Tente outros termos de busca.</div>';
+        resultsDiv.style.display = 'block';
+        return;
+    }
+    
+    let html = '';
+    data.results.forEach(result => {
+        html += `
+            <div class="result-item">
+                <div class="cbo-code">${result.code}</div>
+                <div class="cbo-description">${result.title}</div>
+                ${result.description ? `<div class="cbo-details">${result.description}</div>` : ''}
+                ${result.requirements ? `<div class="cbo-details"><strong>Requisitos:</strong> ${result.requirements}</div>` : ''}
+                <div class="mt-2">
+                    <button class="btn btn-sm btn-outline-primary" onclick="copyToClipboard('${result.code}')">
+                        📋 Copiar Código
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="shareResult('${result.code}', '${result.title}')">
+                        🔗 Compartilhar
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    resultsContainer.innerHTML = html;
+    resultsDiv.style.display = 'block';
+}
+
+// Mostrar aviso de fallback
+function showFallbackNotice() {
+    const notice = '<div class="alert alert-info"><small>ℹ️ Resultados obtidos da base local. Para resultados completos, tente novamente.</small></div>';
+    document.getElementById('results-container').insertAdjacentHTML('afterbegin', notice);
+}
+
+// Mostrar erro
+function showError(message) {
+    const resultsContainer = document.getElementById('results-container');
+    resultsContainer.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+    document.getElementById('cbo-results').style.display = 'block';
+}
+
+// Copiar para clipboard
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Mostrar feedback visual
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✅ Copiado!';
+        btn.classList.remove('btn-outline-primary');
+        btn.classList.add('btn-success');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-primary');
+        }, 2000);
+    });
+}
+
+// Compartilhar resultado
+function shareResult(code, title) {
+    const text = `CBO ${code}: ${title}`;
+    const url = window.location.href;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Consulta CBO - Mente Magna',
+            text: text,
+            url: url
+        });
+    } else {
+        copyToClipboard(`${text}\n\nConsulte mais em: ${url}`);
+        alert('Link copiado para a área de transferência!');
+    }
+}
+
+// Atualizar contador de buscas
+function updateSearchCount() {
+    searchCount++;
+    document.getElementById('searchCount').textContent = searchCount;
+}
+
+// Função de fallback caso Google Apps Script falhe
+function fallbackSearch(query) {
+    // Base de dados local simplificada como backup
+    const fallbackCBOs = {
+        '2124-05': { title: 'Administrador', description: 'Administra organizações, estabelecendo diretrizes e controlando recursos' },
+        '2511-05': { title: 'Analista de sistemas', description: 'Desenvolve e implanta sistemas informatizados' },
+        '2512-05': { title: 'Programador de sistemas', description: 'Desenvolve programas de computador' },
+        '2711-05': { title: 'Médico clínico', description: 'Realiza consultas e atendimentos médicos' },
+        '2235-05': { title: 'Enfermeiro', description: 'Presta cuidados de enfermagem' },
+        '2310-05': { title: 'Professor de ensino fundamental', description: 'Ministra aulas no ensino fundamental' },
+        '2611-05': { title: 'Advogado', description: 'Presta serviços de consultoria e assessoria jurídica' },
+        '2622-05': { title: 'Contador', description: 'Executa a escrituração contábil' },
+        '2141-05': { title: 'Engenheiro civil', description: 'Desenvolve projetos de engenharia civil' },
+        '2521-05': { title: 'Designer gráfico', description: 'Cria e desenvolve projetos gráficos' }
+    };
+    
+    const results = [];
+    const queryLower = query.toLowerCase();
+    
+    for (const [code, data] of Object.entries(fallbackCBOs)) {
+        if (code.toLowerCase().includes(queryLower) || 
+            data.title.toLowerCase().includes(queryLower) ||
+            data.description.toLowerCase().includes(queryLower)) {
+            results.push({ 
+                code, 
+                title: data.title, 
+                description: data.description 
+            });
+        }
+    }
+    
+    return { results, fallback: true };
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Enter para buscar
+    document.getElementById('cbo-search').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchCBO();
+        }
+    });
+    
+    // Analytics de carregamento da página
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'page_view', {
+            'event_category': 'solutions',
+            'event_label': 'consulta_cbo'
+        });
+    }
+});
+</script>
+{% endblock %}

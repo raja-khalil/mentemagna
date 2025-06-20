@@ -1,0 +1,452 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ solution.name }} - Mente Magna{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <!-- Conteúdo Principal -->
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h1 class="h3 mb-0">{{ solution.icon }} {{ solution.name }}</h1>
+                    <small>💻 Tecnologia HTML/JS</small>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{ solution.description }}</p>
+                    
+                    <!-- Calculadora Interface -->
+                    <div class="calculator-container mx-auto" style="max-width: 400px;">
+                        <div class="calculator-screen mb-3">
+                            <input type="text" id="display" class="form-control form-control-lg text-end" 
+                                   value="0" readonly 
+                                   style="font-size: 2rem; background: #000; color: #00ff00; border: none; font-family: monospace;">
+                        </div>
+                        
+                        <div class="calculator-buttons">
+                            <div class="row g-2">
+                                <!-- Primeira linha -->
+                                <div class="col-3">
+                                    <button class="btn btn-secondary w-100 calc-btn" onclick="clearAll()">C</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-secondary w-100 calc-btn" onclick="clearEntry()">CE</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-warning w-100 calc-btn" onclick="backspace()">⌫</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-info w-100 calc-btn" onclick="inputOperator('/')">÷</button>
+                                </div>
+                                
+                                <!-- Segunda linha -->
+                                <div class="col-3">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputNumber('7')">7</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputNumber('8')">8</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputNumber('9')">9</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-info w-100 calc-btn" onclick="inputOperator('*')">×</button>
+                                </div>
+                                
+                                <!-- Terceira linha -->
+                                <div class="col-3">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputNumber('4')">4</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputNumber('5')">5</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputNumber('6')">6</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-info w-100 calc-btn" onclick="inputOperator('-')">−</button>
+                                </div>
+                                
+                                <!-- Quarta linha -->
+                                <div class="col-3">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputNumber('1')">1</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputNumber('2')">2</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputNumber('3')">3</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-info w-100 calc-btn" onclick="inputOperator('+')">+</button>
+                                </div>
+                                
+                                <!-- Quinta linha -->
+                                <div class="col-6">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputNumber('0')">0</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-dark w-100 calc-btn" onclick="inputDecimal()">.</button>
+                                </div>
+                                <div class="col-3">
+                                    <button class="btn btn-success w-100 calc-btn" onclick="calculate()">=</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Histórico -->
+                    <div class="mt-4">
+                        <h5>📊 Histórico de Cálculos</h5>
+                        <div id="history" class="border rounded p-3 bg-light" style="height: 150px; overflow-y: auto;">
+                            <small class="text-muted">Os cálculos aparecerão aqui...</small>
+                        </div>
+                        <div class="mt-2">
+                            <button class="btn btn-outline-secondary btn-sm" onclick="clearHistory()">
+                                🗑️ Limpar Histórico
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ANÚNCIO -->
+            <div class="my-4 text-center p-3 bg-light rounded">
+                <small class="text-muted">Publicidade</small>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4115727278051485"
+                     data-ad-slot="2222222222"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <!-- Como Usar -->
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📖 Como Usar</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <h6>🖱️ Com o Mouse:</h6>
+                            <ol>
+                                <li>Clique nos números para inserir valores</li>
+                                <li>Use +, −, ×, ÷ para operações</li>
+                                <li>Pressione = para calcular</li>
+                                <li>C limpa tudo, CE limpa entrada</li>
+                            </ol>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>⌨️ Com o Teclado:</h6>
+                            <ol>
+                                <li>Digite números diretamente</li>
+                                <li>Use +, -, *, / para operações</li>
+                                <li>Enter ou = para calcular</li>
+                                <li>Escape para limpar</li>
+                            </ol>
+                        </div>
+                    </div>
+                    
+                    <div class="alert alert-info mt-3">
+                        <strong>💡 Dica:</strong> Todos os cálculos ficam salvos no histórico durante sua sessão!
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="col-lg-4">
+            <!-- ANÚNCIO SIDEBAR -->
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">Publicidade</h6>
+                </div>
+                <div class="card-body text-center p-2">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-4115727278051485"
+                         data-ad-slot="5555555555"
+                         data-ad-format="rectangle"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+            </div>
+
+            <!-- Outras Soluções -->
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">🔧 Outras Soluções</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('solutions.solution_detail', solution_slug='consulta-cid') }}" 
+                           class="btn btn-outline-danger btn-sm">🏥 Consulta CID</a>
+                        <a href="{{ url_for('solutions.solution_detail', solution_slug='consulta-cbo') }}" 
+                           class="btn btn-outline-primary btn-sm">👔 Consulta CBO</a>
+                        <a href="{{ url_for('solutions.solutions_index') }}" 
+                           class="btn btn-success btn-sm">Ver Todas →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Funções Disponíveis -->
+            <div class="card mb-4">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">🔢 Operações</h5>
+                </div>
+                <div class="card-body">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <div class="bg-light p-2 rounded mb-2">
+                                <strong>+</strong><br>
+                                <small>Adição</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light p-2 rounded mb-2">
+                                <strong>−</strong><br>
+                                <small>Subtração</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light p-2 rounded mb-2">
+                                <strong>×</strong><br>
+                                <small>Multiplicação</small>
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="bg-light p-2 rounded">
+                                <strong>÷</strong><br>
+                                <small>Divisão</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Características -->
+            <div class="card">
+                <div class="card-header bg-dark text-white">
+                    <h5 class="mb-0">✨ Características</h5>
+                </div>
+                <div class="card-body">
+                    <small class="text-muted">
+                        ✅ Totalmente gratuita<br>
+                        ✅ Funciona offline<br>
+                        ✅ Suporte a teclado<br>
+                        ✅ Histórico de cálculos<br>
+                        ✅ Interface responsiva<br>
+                        ✅ Sem necessidade de cadastro
+                    </small>
+                    
+                    <hr>
+                    
+                    <div class="text-center">
+                        <small class="text-muted">
+                            🔒 <strong>Privacidade:</strong><br>
+                            Todos os cálculos são processados localmente no seu navegador.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// Variáveis da calculadora
+let currentValue = '0';
+let previousValue = '';
+let operator = '';
+let waitingForNewValue = false;
+let history = [];
+
+// Atualizar display
+function updateDisplay() {
+    document.getElementById('display').value = currentValue;
+}
+
+// Inserir número
+function inputNumber(num) {
+    if (waitingForNewValue) {
+        currentValue = num;
+        waitingForNewValue = false;
+    } else {
+        currentValue = currentValue === '0' ? num : currentValue + num;
+    }
+    updateDisplay();
+}
+
+// Inserir operador
+function inputOperator(nextOperator) {
+    const inputValue = parseFloat(currentValue);
+
+    if (previousValue === '') {
+        previousValue = inputValue;
+    } else if (operator) {
+        const currentResult = performCalculation();
+        currentValue = String(currentResult);
+        previousValue = currentResult;
+        updateDisplay();
+    }
+
+    waitingForNewValue = true;
+    operator = nextOperator;
+}
+
+// Inserir decimal
+function inputDecimal() {
+    if (waitingForNewValue) {
+        currentValue = '0.';
+        waitingForNewValue = false;
+    } else if (currentValue.indexOf('.') === -1) {
+        currentValue += '.';
+    }
+    updateDisplay();
+}
+
+// Calcular resultado
+function calculate() {
+    if (operator && previousValue !== '' && !waitingForNewValue) {
+        const result = performCalculation();
+        
+        // Adicionar ao histórico
+        const calculation = `${previousValue} ${getOperatorSymbol()} ${currentValue} = ${result}`;
+        addToHistory(calculation);
+        
+        currentValue = String(result);
+        previousValue = '';
+        operator = '';
+        waitingForNewValue = true;
+        updateDisplay();
+    }
+}
+
+// Realizar cálculo
+function performCalculation() {
+    const prev = parseFloat(previousValue);
+    const current = parseFloat(currentValue);
+
+    switch (operator) {
+        case '+': return prev + current;
+        case '-': return prev - current;
+        case '*': return prev * current;
+        case '/': return current !== 0 ? prev / current : 0;
+        default: return current;
+    }
+}
+
+// Obter símbolo do operador
+function getOperatorSymbol() {
+    const symbols = { '+': '+', '-': '−', '*': '×', '/': '÷' };
+    return symbols[operator] || operator;
+}
+
+// Limpar tudo
+function clearAll() {
+    currentValue = '0';
+    previousValue = '';
+    operator = '';
+    waitingForNewValue = false;
+    updateDisplay();
+}
+
+// Limpar entrada
+function clearEntry() {
+    currentValue = '0';
+    waitingForNewValue = false;
+    updateDisplay();
+}
+
+// Backspace
+function backspace() {
+    if (currentValue.length > 1) {
+        currentValue = currentValue.slice(0, -1);
+    } else {
+        currentValue = '0';
+    }
+    updateDisplay();
+}
+
+// Adicionar ao histórico
+function addToHistory(calculation) {
+    history.unshift(calculation);
+    if (history.length > 20) {
+        history.pop();
+    }
+    updateHistory();
+}
+
+// Atualizar histórico
+function updateHistory() {
+    const historyDiv = document.getElementById('history');
+    
+    if (history.length === 0) {
+        historyDiv.innerHTML = '<small class="text-muted">Os cálculos aparecerão aqui...</small>';
+    } else {
+        historyDiv.innerHTML = history
+            .map(calc => `<div class="small border-bottom pb-1 mb-1">${calc}</div>`)
+            .join('');
+    }
+}
+
+// Limpar histórico
+function clearHistory() {
+    history = [];
+    updateHistory();
+}
+
+// Suporte a teclado
+document.addEventListener('keydown', function(e) {
+    if (e.key >= '0' && e.key <= '9') {
+        inputNumber(e.key);
+    } else if (['+', '-', '*', '/'].includes(e.key)) {
+        inputOperator(e.key);
+    } else if (e.key === 'Enter' || e.key === '=') {
+        calculate();
+    } else if (e.key === '.') {
+        inputDecimal();
+    } else if (e.key === 'Escape') {
+        clearAll();
+    } else if (e.key === 'Backspace') {
+        backspace();
+    }
+});
+
+// Inicialização
+document.addEventListener('DOMContentLoaded', function() {
+    updateDisplay();
+    updateHistory();
+});
+</script>
+
+<style>
+.calc-btn {
+    height: 60px;
+    font-size: 1.2rem;
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.calc-btn:hover {
+    transform: scale(1.05);
+}
+
+.calc-btn:active {
+    transform: scale(0.95);
+}
+
+#display {
+    text-shadow: 0 0 5px #00ff00;
+}
+
+@media (max-width: 768px) {
+    .calc-btn {
+        height: 50px;
+        font-size: 1rem;
+    }
+}
+</style>
+{% endblock %}

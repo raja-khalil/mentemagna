@@ -1,0 +1,461 @@
+{% extends 'base.html' %}
+
+{% set page_title = solution.name + ' - Mente Magna' %}
+{% set page_description = solution.description %}
+
+{% block content %}
+<div class="row">
+    <!-- Ferramenta Principal -->
+    <div class="col-lg-8">
+        <div class="card">
+            <div class="card-header bg-danger text-white">
+                <h1 class="card-title mb-0">{{ solution.icon }} {{ solution.name }}</h1>
+                <small>Powered by Google Apps Script</small>
+            </div>
+            <div class="card-body">
+                <p class="lead">{{ solution.description }}</p>
+                
+                <!-- Interface de Busca CID -->
+                <div class="search-container">
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" 
+                                       id="cid-search" 
+                                       class="form-control form-control-lg" 
+                                       placeholder="Digite o código CID ou descrição da doença..."
+                                       maxlength="100">
+                                <button class="btn btn-danger" type="button" onclick="searchCID()">
+                                    🔍 Buscar
+                                </button>
+                            </div>
+                            <small class="form-text text-muted">
+                                Exemplo: "A09", "diabetes", "hipertensão", "covid"
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="d-grid">
+                                <button class="btn btn-outline-secondary" onclick="clearSearch()">
+                                    🗑️ Limpar
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading -->
+                <div id="loading" class="text-center" style="display: none;">
+                    <div class="spinner-border text-danger" role="status">
+                        <span class="visually-hidden">Buscando...</span>
+                    </div>
+                    <p class="mt-2">Consultando base de dados CID...</p>
+                </div>
+
+                <!-- Resultados -->
+                <div id="cid-results" class="mt-4" style="display: none;">
+                    <h5>📋 Resultados da Busca</h5>
+                    <div id="results-container" class="border rounded p-3" style="max-height: 400px; overflow-y: auto;">
+                        <!-- Resultados aparecerão aqui -->
+                    </div>
+                </div>
+
+                <!-- Exemplos Rápidos -->
+                <div class="mt-4">
+                    <h5>⚡ Buscas Rápidas</h5>
+                    <div class="d-flex flex-wrap gap-2">
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('diabetes')">
+                            Diabetes
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('hipertensão')">
+                            Hipertensão
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('covid')">
+                            COVID-19
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('A00')">
+                            A00 - Cólera
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('depressão')">
+                            Depressão
+                        </button>
+                        <button class="btn btn-outline-primary btn-sm" onclick="quickSearch('ansiedade')">
+                            Ansiedade
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ANÚNCIO APÓS FERRAMENTA -->
+        <div class="my-4">
+            <div class="text-center p-3 bg-light rounded">
+                <small class="text-muted">Publicidade</small>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4115727278051485"
+                     data-ad-slot="2222222222"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+
+        <!-- Informações sobre CID -->
+        <div class="card mt-4">
+            <div class="card-header">
+                <h5 class="mb-0">📖 O que é CID?</h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    <strong>CID (Classificação Internacional de Doenças)</strong> é um sistema de classificação 
+                    desenvolvido pela Organização Mundial da Saúde (OMS) para codificar doenças, transtornos, 
+                    lesões e outras condições de saúde.
+                </p>
+                
+                <h6>📌 Como usar:</h6>
+                <ol>
+                    <li>Digite o <strong>código CID</strong> (ex: A09, E11, F32)</li>
+                    <li>Ou digite o <strong>nome da doença</strong> (ex: diabetes, hipertensão)</li>
+                    <li>Clique em "Buscar" ou pressione Enter</li>
+                    <li>Veja os resultados com códigos e descrições</li>
+                </ol>
+                
+                <div class="alert alert-info mt-3">
+                    <strong>💡 Dica:</strong> Esta ferramenta é para consulta e estudos. 
+                    Para diagnósticos médicos, sempre consulte um profissional de saúde.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="col-lg-4">
+        <!-- ANÚNCIO SIDEBAR -->
+        <div class="card mb-4">
+            <div class="card-header bg-primary text-white">
+                <h6 class="card-title mb-0">Publicidade</h6>
+            </div>
+            <div class="card-body text-center p-2">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4115727278051485"
+                     data-ad-slot="5555555555"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+
+        <!-- Outras Soluções -->
+        <div class="card mb-4">
+            <div class="card-header bg-success text-white">
+                <h5 class="card-title mb-0">🔧 Outras Soluções</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group list-group-flush">
+                    <a href="{{ url_for('solutions.solution_detail', solution_slug='consulta-cbo') }}" 
+                       class="list-group-item list-group-item-action">
+                        👔 Consulta CBO
+                    </a>
+                    <a href="{{ url_for('solutions.solution_detail', solution_slug='calculadora') }}" 
+                       class="list-group-item list-group-item-action">
+                        🧮 Calculadora Online
+                    </a>
+                    <a href="{{ url_for('solutions.solution_detail', solution_slug='imc') }}" 
+                       class="list-group-item list-group-item-action">
+                        ⚕️ Calculadora de IMC
+                    </a>
+                    <a href="{{ url_for('solutions.solution_detail', solution_slug='validador-cpf') }}" 
+                       class="list-group-item list-group-item-action">
+                        🆔 Validador de CPF
+                    </a>
+                </div>
+                
+                <div class="text-center mt-3">
+                    <a href="{{ url_for('solutions.solutions_index') }}" class="btn btn-outline-success btn-sm">
+                        Ver Todas as Soluções →
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estatísticas de Uso -->
+        <div class="card mb-4">
+            <div class="card-header bg-info text-white">
+                <h5 class="card-title mb-0">📊 Estatísticas</h5>
+            </div>
+            <div class="card-body">
+                <div class="row text-center">
+                    <div class="col-6">
+                        <h4 class="text-primary" id="searchCount">0</h4>
+                        <small class="text-muted">Buscas hoje</small>
+                    </div>
+                    <div class="col-6">
+                        <h4 class="text-success">10.000+</h4>
+                        <small class="text-muted">Códigos CID</small>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted">
+                        ✅ Gratuito e sem cadastro<br>
+                        ✅ Base atualizada da OMS<br>
+                        ✅ Busca rápida e precisa
+                    </small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Informações Técnicas -->
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5 class="card-title mb-0">🔧 Informações Técnicas</h5>
+            </div>
+            <div class="card-body">
+                <h6>Versão CID:</h6>
+                <p class="small">CID-10 (10ª Revisão)</p>
+                
+                <h6>Base de Dados:</h6>
+                <p class="small">Organização Mundial da Saúde (OMS)</p>
+                
+                <h6>Última Atualização:</h6>
+                <p class="small">Junho 2025</p>
+                
+                <h6>Tecnologia:</h6>
+                <p class="small">Google Apps Script + JavaScript</p>
+            </div>
+        </div>
+    </aside>
+</div>
+
+<style>
+.search-container input:focus {
+    border-color: #dc3545;
+    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+}
+
+.result-item {
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 10px;
+    background: #fff;
+    transition: all 0.2s ease;
+}
+
+.result-item:hover {
+    border-color: #dc3545;
+    box-shadow: 0 2px 8px rgba(220, 53, 69, 0.15);
+    transform: translateY(-1px);
+}
+
+.cid-code {
+    font-family: 'Courier New', monospace;
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #dc3545;
+}
+
+.cid-description {
+    color: #333;
+    margin-top: 5px;
+}
+
+@media (max-width: 768px) {
+    .search-container .col-md-8,
+    .search-container .col-md-4 {
+        margin-bottom: 10px;
+    }
+}
+</style>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// URL do Google Apps Script
+const SCRIPT_URL = "{{ solution.script_url }}";
+let searchCount = 0;
+
+// Buscar CID
+async function searchCID() {
+    const query = document.getElementById('cid-search').value.trim();
+    
+    if (!query || query.length < 2) {
+        alert('Digite pelo menos 2 caracteres para buscar');
+        return;
+    }
+    
+    showLoading(true);
+    
+    try {
+        // Chamar Google Apps Script
+        const response = await fetch(`${SCRIPT_URL}?action=search&query=${encodeURIComponent(query)}`);
+        const data = await response.json();
+        
+        displayResults(data);
+        updateSearchCount();
+        
+        // Analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'cid_search', {
+                'event_category': 'solutions',
+                'event_label': query,
+                'value': 1
+            });
+        }
+        
+    } catch (error) {
+        console.error('Erro na busca:', error);
+        showError('Erro ao buscar CID. Tente novamente.');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Busca rápida
+function quickSearch(term) {
+    document.getElementById('cid-search').value = term;
+    searchCID();
+}
+
+// Limpar busca
+function clearSearch() {
+    document.getElementById('cid-search').value = '';
+    document.getElementById('cid-results').style.display = 'none';
+}
+
+// Mostrar loading
+function showLoading(show) {
+    document.getElementById('loading').style.display = show ? 'block' : 'none';
+    document.getElementById('cid-results').style.display = show ? 'none' : 'block';
+}
+
+// Exibir resultados
+function displayResults(data) {
+    const resultsContainer = document.getElementById('results-container');
+    const resultsDiv = document.getElementById('cid-results');
+    
+    if (!data || !data.results || data.results.length === 0) {
+        resultsContainer.innerHTML = '<div class="alert alert-warning">Nenhum resultado encontrado. Tente outros termos de busca.</div>';
+        resultsDiv.style.display = 'block';
+        return;
+    }
+    
+    let html = '';
+    data.results.forEach(result => {
+        html += `
+            <div class="result-item">
+                <div class="cid-code">${result.code}</div>
+                <div class="cid-description">${result.description}</div>
+                <div class="mt-2">
+                    <button class="btn btn-sm btn-outline-primary" onclick="copyToClipboard('${result.code}')">
+                        📋 Copiar Código
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary" onclick="shareResult('${result.code}', '${result.description}')">
+                        🔗 Compartilhar
+                    </button>
+                </div>
+            </div>
+        `;
+    });
+    
+    resultsContainer.innerHTML = html;
+    resultsDiv.style.display = 'block';
+}
+
+// Mostrar erro
+function showError(message) {
+    const resultsContainer = document.getElementById('results-container');
+    resultsContainer.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+    document.getElementById('cid-results').style.display = 'block';
+}
+
+// Copiar para clipboard
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(() => {
+        // Mostrar feedback visual
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✅ Copiado!';
+        btn.classList.remove('btn-outline-primary');
+        btn.classList.add('btn-success');
+        
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.classList.remove('btn-success');
+            btn.classList.add('btn-outline-primary');
+        }, 2000);
+    });
+}
+
+// Compartilhar resultado
+function shareResult(code, description) {
+    const text = `CID ${code}: ${description}`;
+    const url = window.location.href;
+    
+    if (navigator.share) {
+        navigator.share({
+            title: 'Consulta CID - Mente Magna',
+            text: text,
+            url: url
+        });
+    } else {
+        copyToClipboard(`${text}\n\nConsulte mais em: ${url}`);
+        alert('Link copiado para a área de transferência!');
+    }
+}
+
+// Atualizar contador de buscas
+function updateSearchCount() {
+    searchCount++;
+    document.getElementById('searchCount').textContent = searchCount;
+}
+
+// Event listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Enter para buscar
+    document.getElementById('cid-search').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            searchCID();
+        }
+    });
+    
+    // Analytics de carregamento da página
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'page_view', {
+            'event_category': 'solutions',
+            'event_label': 'consulta_cid'
+        });
+    }
+});
+
+// Função de fallback caso Google Apps Script falhe
+function fallbackSearch(query) {
+    // Base de dados local simplificada como backup
+    const fallbackCIDs = {
+        'A00': 'Cólera',
+        'A09': 'Diarréia e gastroenterite de origem infecciosa presumível',
+        'E10': 'Diabetes mellitus tipo 1',
+        'E11': 'Diabetes mellitus tipo 2',
+        'F32': 'Episódios depressivos',
+        'F41': 'Outros transtornos ansiosos',
+        'I10': 'Hipertensão essencial',
+        'J00': 'Nasofaringite aguda [resfriado comum]',
+        'K29': 'Gastrite e duodenite',
+        'M54': 'Dorsalgia',
+        'R50': 'Febre não especificada'
+    };
+    
+    const results = [];
+    const queryLower = query.toLowerCase();
+    
+    for (const [code, description] of Object.entries(fallbackCIDs)) {
+        if (code.toLowerCase().includes(queryLower) || 
+            description.toLowerCase().includes(queryLower)) {
+            results.push({ code, description });
+        }
+    }
+    
+    return { results, fallback: true };
+}
+</script>
+{% endblock %}

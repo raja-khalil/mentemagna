@@ -1,5 +1,33 @@
 {% extends 'base.html' %}
-{% block title %}{{ post.titulo }} – Mente Magna{% endblock %}
+
+{% set page_title = post.titulo + ' - Mente Magna' %}
+{% set page_description = post.resumo or (post.conteudo|striptags)[:160] %}
+{% set page_keywords = 'tecnologia, programação, ' + post.titulo %}
+
+{% block og_type %}article{% endblock %}
+{% block og_title %}{{ post.titulo }}{% endblock %}
+{% block og_description %}{{ post.resumo or (post.conteudo|striptags)[:160] }}{% endblock %}
+{% block og_image %}{{ post.imagem or url_for('static', filename='img/logo_mentemagna.png', _external=True) }}{% endblock %}
+
+{% block schema_type %}Article{% endblock %}
+{% block schema_extra %},
+    "headline": "{{ post.titulo }}",
+    "datePublished": "{{ post.data_criacao.isoformat() }}",
+    "dateModified": "{{ post.data_criacao.isoformat() }}",
+    "author": {
+      "@type": "Person",
+      "name": "Mente Magna"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "Mente Magna",
+      "logo": {
+        "@type": "ImageObject",
+        "url": "{{ url_for('static', filename='img/logo_mentemagna.png', _external=True) }}"
+      }
+    },
+    "image": "{{ post.imagem or url_for('static', filename='img/logo_mentemagna.png', _external=True) }}",
+    "articleBody": "{{ (post.conteudo|striptags)[:500] }}"{% endblock %}
 
 {% block content %}
 <div class="row">
@@ -13,30 +41,94 @@
                     <small>
                         📅 {{ post.data_criacao.strftime('%d/%m/%Y às %H:%M') }} | 
                         👤 <strong>Mente Magna</strong> | 
-                        🏷️ <span class="badge bg-primary">Tecnologia</span>
+                        🏷️ <span class="badge bg-primary">Tecnologia</span> |
+                        👁️ <span id="viewCount">Carregando...</span> visualizações
                     </small>
                 </div>
                 
                 {% if post.imagem %}
-                    <img src="{{ post.imagem }}" class="img-fluid rounded shadow mb-4" alt="{{ post.titulo }}">
+                    <img src="{{ post.imagem }}" 
+                         class="img-fluid rounded shadow mb-4" 
+                         alt="{{ post.titulo }}"
+                         loading="lazy">
                 {% endif %}
             </div>
 
-            <!-- Conteúdo do Post -->
-            <div class="post-content">
-                {{ post.conteudo|safe }}
+            <!-- ANÚNCIO MOBILE BANNER (só aparece em mobile) -->
+            <div class="d-block d-lg-none mb-4">
+                <div class="ad-container">
+                    <div class="ad-label">Publicidade</div>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-4115727278051485"
+                         data-ad-slot="7777777777"
+                         data-ad-format="banner"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
             </div>
 
-            <!-- Anúncio no Final do Artigo -->
-            <div class="my-5 p-4 bg-light rounded text-center">
-                <h6 class="text-muted mb-3">Publicidade</h6>
-                <ins class="adsbygoogle"
-                     style="display:block"
-                     data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
-                     data-ad-slot="FINAL-DO-ARTIGO-SLOT"
-                     data-ad-format="auto"
-                     data-full-width-responsive="true"></ins>
-                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            <!-- Conteúdo do Post com Anúncio In-Content -->
+            <div class="post-content">
+                {% set content_parts = post.conteudo.split('</p>') %}
+                
+                <!-- Primeiro parágrafo -->
+                {% if content_parts|length > 0 %}
+                    {{ content_parts[0] }}</p>
+                {% endif %}
+                
+                <!-- ANÚNCIO IN-CONTENT após primeiro parágrafo (MELHOR CTR) -->
+                {% if content_parts|length > 1 %}
+                    <div class="my-4">
+                        <div class="ad-container">
+                            <div class="ad-label">Publicidade</div>
+                            <ins class="adsbygoogle"
+                                 style="display:block; text-align:center;"
+                                 data-ad-layout="in-article"
+                                 data-ad-format="fluid"
+                                 data-ad-client="ca-pub-4115727278051485"
+                                 data-ad-slot="9876543210"></ins>
+                            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                        </div>
+                    </div>
+                {% endif %}
+                
+                <!-- Resto do conteúdo -->
+                {% for part in content_parts[1:] %}
+                    {% if part.strip() %}
+                        {{ part }}</p>
+                        
+                        <!-- Anúncio adicional no meio do conteúdo (se artigo for longo) -->
+                        {% if loop.index == (content_parts|length // 2) and content_parts|length > 6 %}
+                            <div class="my-4">
+                                <div class="ad-container">
+                                    <div class="ad-label">Publicidade</div>
+                                    <ins class="adsbygoogle"
+                                         style="display:block"
+                                         data-ad-client="ca-pub-4115727278051485"
+                                         data-ad-slot="3333333333"
+                                         data-ad-format="rectangle"
+                                         data-full-width-responsive="true"></ins>
+                                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endif %}
+                {% endfor %}
+            </div>
+
+            <!-- ANÚNCIO FINAL DO ARTIGO (ALTA PERFORMANCE) -->
+            <div class="my-5">
+                <div class="ad-container">
+                    <div class="ad-label">Publicidade</div>
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-4115727278051485"
+                         data-ad-slot="2222222222"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
             </div>
 
             <!-- Navegação Entre Posts -->
@@ -47,7 +139,8 @@
                             <div class="card-body">
                                 <h6 class="card-subtitle mb-2 text-muted">← Post Anterior</h6>
                                 <h5 class="card-title">
-                                    <a href="{{ url_for('blog.post_detail', slug=previous_post.slug) }}" class="text-decoration-none">
+                                    <a href="{{ url_for('blog.post_detail', slug=previous_post.slug) }}" 
+                                       class="text-decoration-none">
                                         {{ previous_post.titulo }}
                                     </a>
                                 </h5>
@@ -61,7 +154,8 @@
                             <div class="card-body text-end">
                                 <h6 class="card-subtitle mb-2 text-muted">Próximo Post →</h6>
                                 <h5 class="card-title">
-                                    <a href="{{ url_for('blog.post_detail', slug=next_post.slug) }}" class="text-decoration-none">
+                                    <a href="{{ url_for('blog.post_detail', slug=next_post.slug) }}" 
+                                       class="text-decoration-none">
                                         {{ next_post.titulo }}
                                     </a>
                                 </h5>
@@ -74,30 +168,68 @@
             <!-- Compartilhamento Social -->
             <div class="mt-4 p-3 bg-light rounded">
                 <h6 class="mb-3">📢 Compartilhe este artigo:</h6>
-                <div class="d-flex gap-2">
+                <div class="d-flex gap-2 flex-wrap">
                     <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.url }}" 
-                       target="_blank" class="btn btn-primary btn-sm">
+                       target="_blank" 
+                       class="btn btn-primary btn-sm"
+                       onclick="trackSocialShare('Facebook')">
                         📘 Facebook
                     </a>
                     <a href="https://twitter.com/intent/tweet?url={{ request.url }}&text={{ post.titulo }}" 
-                       target="_blank" class="btn btn-info btn-sm">
+                       target="_blank" 
+                       class="btn btn-info btn-sm"
+                       onclick="trackSocialShare('Twitter')">
                         🐦 Twitter
                     </a>
                     <a href="https://www.linkedin.com/sharing/share-offsite/?url={{ request.url }}" 
-                       target="_blank" class="btn btn-secondary btn-sm">
+                       target="_blank" 
+                       class="btn btn-secondary btn-sm"
+                       onclick="trackSocialShare('LinkedIn')">
                         💼 LinkedIn
                     </a>
                     <a href="whatsapp://send?text={{ post.titulo }} {{ request.url }}" 
-                       class="btn btn-success btn-sm">
+                       class="btn btn-success btn-sm"
+                       onclick="trackSocialShare('WhatsApp')">
                         💬 WhatsApp
                     </a>
+                    <button type="button" 
+                            class="btn btn-outline-secondary btn-sm" 
+                            onclick="copyToClipboard('{{ request.url }}')">
+                        📋 Copiar Link
+                    </button>
                 </div>
+            </div>
+
+            <!-- Seção de Comentários (placeholder para futuro) -->
+            <div class="mt-5 p-4 bg-light rounded">
+                <h5>💬 Comentários</h5>
+                <p class="text-muted">
+                    Em breve teremos um sistema de comentários! 
+                    Por enquanto, entre em contato conosco através do 
+                    <a href="{{ url_for('main.contato') }}" class="text-primary">formulário de contato</a>.
+                </p>
             </div>
         </article>
     </div>
 
     <!-- Sidebar Direita -->
     <aside class="col-lg-4">
+        <!-- ANÚNCIO SIDEBAR PRINCIPAL (BONS RENDIMENTOS) -->
+        <div class="sidebar-ad card mb-4">
+            <div class="card-header bg-light">
+                <h6 class="card-title mb-0 text-muted">Publicidade</h6>
+            </div>
+            <div class="card-body text-center p-2">
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4115727278051485"
+                     data-ad-slot="5555555555"
+                     data-ad-format="rectangle"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+        </div>
+
         <!-- Últimos Artigos -->
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
@@ -112,7 +244,8 @@
                                     <img src="{{ recent_post.imagem }}" 
                                          class="me-3 rounded" 
                                          style="width: 80px; height: 60px; object-fit: cover;" 
-                                         alt="{{ recent_post.titulo }}">
+                                         alt="{{ recent_post.titulo }}"
+                                         loading="lazy">
                                 {% else %}
                                     <div class="me-3 bg-light rounded d-flex align-items-center justify-content-center" 
                                          style="width: 80px; height: 60px; min-width: 80px;">
@@ -145,16 +278,16 @@
             </div>
         </div>
 
-        <!-- Anúncio Sidebar -->
-        <div class="card mb-4">
-            <div class="card-header bg-light">
-                <h6 class="card-title mb-0 text-muted">Publicidade</h6>
+        <!-- ANÚNCIO SIDEBAR SECUNDÁRIO -->
+        <div class="sidebar-ad card mb-4">
+            <div class="card-header bg-info text-white">
+                <h6 class="card-title mb-0">Recomendado</h6>
             </div>
-            <div class="card-body text-center">
+            <div class="card-body text-center p-2">
                 <ins class="adsbygoogle"
                      style="display:block"
-                     data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
-                     data-ad-slot="SIDEBAR-SLOT"
+                     data-ad-client="ca-pub-4115727278051485"
+                     data-ad-slot="6666666666"
                      data-ad-format="auto"
                      data-full-width-responsive="true"></ins>
                 <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
@@ -212,23 +345,286 @@
 </div>
 
 <style>
+/* Estilos específicos para posts */
 .post-content {
     font-size: 1.1rem;
     line-height: 1.8;
+    color: #333;
 }
-.post-content h2 {
+
+.post-content h2, .post-content h3 {
+    color: #2c3e50;
     margin-top: 2rem;
     margin-bottom: 1rem;
-    color: #2c3e50;
 }
+
 .post-content img {
+    max-width: 100%;
+    height: auto;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    margin: 1rem 0;
+    margin: 1.5rem 0;
 }
+
+.post-content blockquote {
+    border-left: 4px solid #007bff;
+    margin: 1.5rem 0;
+    padding: 1rem 1.5rem;
+    background-color: #f8f9fa;
+    font-style: italic;
+}
+
+.post-content code {
+    background-color: #f8f9fa;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+}
+
+.post-content pre {
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+/* Melhorar aparência dos cards */
 .card {
     border: none;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Responsividade para mobile */
+@media (max-width: 768px) {
+    .post-content {
+        font-size: 1rem;
+    }
+    
+    .display-5 {
+        font-size: 2rem;
+    }
+    
+    .ad-container {
+        margin: 10px 0;
+        padding: 8px;
+    }
+}
+
+/* Animação para compartilhamento */
+.btn:hover {
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+
+/* Estilo para copy feedback */
+.copy-feedback {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #28a745;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 5px;
+    z-index: 9999;
+    display: none;
 }
 </style>
+
+<!-- Feedback visual para copy -->
+<div id="copyFeedback" class="copy-feedback">
+    ✅ Link copiado!
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+// Contador de visualizações simples
+document.addEventListener('DOMContentLoaded', function() {
+    // Simular contador de views (você pode implementar com backend)
+    const viewCount = Math.floor(Math.random() * 1000) + 100;
+    document.getElementById('viewCount').textContent = viewCount;
+    
+    // Tracking de tempo de leitura
+    let startTime = Date.now();
+    let maxScroll = 0;
+    
+    // Track scroll depth
+    window.addEventListener('scroll', function() {
+        const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+        maxScroll = Math.max(maxScroll, scrollPercent);
+    });
+    
+    // Enviar analytics quando usuário sair
+    window.addEventListener('beforeunload', function() {
+        const timeSpent = Math.round((Date.now() - startTime) / 1000);
+        
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'page_view_time', {
+                'event_category': 'engagement',
+                'event_label': '{{ post.titulo }}',
+                'value': timeSpent
+            });
+            
+            gtag('event', 'scroll_depth', {
+                'event_category': 'engagement',
+                'event_label': '{{ post.titulo }}',
+                'value': maxScroll
+            });
+        }
+    });
+});
+
+// Função para copiar link
+function copyToClipboard(text) {
+    navigator.clipboard.writeText(text).then(function() {
+        // Mostrar feedback visual
+        const feedback = document.getElementById('copyFeedback');
+        feedback.style.display = 'block';
+        
+        setTimeout(function() {
+            feedback.style.display = 'none';
+        }, 2000);
+        
+        // Analytics
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'share', {
+                'method': 'copy_link',
+                'content_type': 'article',
+                'content_id': '{{ post.slug }}'
+            });
+        }
+    }).catch(function(err) {
+        console.error('Erro ao copiar: ', err);
+        // Fallback para navegadores antigos
+        const textArea = document.createElement('textarea');
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textArea);
+        
+        const feedback = document.getElementById('copyFeedback');
+        feedback.style.display = 'block';
+        setTimeout(() => feedback.style.display = 'none', 2000);
+    });
+}
+
+// Tracking de compartilhamento social
+function trackSocialShare(platform) {
+    if (typeof gtag !== 'undefined') {
+        gtag('event', 'share', {
+            'method': platform.toLowerCase(),
+            'content_type': 'article',
+            'content_id': '{{ post.slug }}'
+        });
+    }
+}
+
+// Lazy loading melhorado para anúncios
+let adsInitialized = false;
+
+function initializeAds() {
+    if (!adsInitialized) {
+        adsInitialized = true;
+        
+        // Verificar se cookies de publicidade estão aceitos
+        const consent = localStorage.getItem('cookieConsent');
+        const preferences = JSON.parse(localStorage.getItem('cookiePreferences') || '{}');
+        
+        if (consent === 'accepted' || (consent === 'customized' && preferences.advertising)) {
+            // Carregar todos os anúncios
+            const ads = document.querySelectorAll('.adsbygoogle');
+            ads.forEach(function(ad) {
+                if (!ad.getAttribute('data-adsbygoogle-status')) {
+                    try {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    } catch (e) {
+                        console.log('AdSense não carregou ainda');
+                    }
+                }
+            });
+        }
+    }
+}
+
+// Inicializar anúncios quando usuário fizer scroll
+let scrollTimeout;
+window.addEventListener('scroll', function() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(function() {
+        if (window.scrollY > 200) {
+            initializeAds();
+        }
+    }, 100);
+});
+
+// Inicializar anúncios após 3 segundos se usuário não fez scroll
+setTimeout(function() {
+    initializeAds();
+}, 3000);
+
+// Melhorar performance: lazy load de imagens
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver(function(entries, observer) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src || img.src;
+                    img.classList.add('loaded');
+                    observer.unobserve(img);
+                }
+            });
+        });
+        
+        images.forEach(function(img) {
+            imageObserver.observe(img);
+        });
+    }
+});
+
+// Auto-resize para anúncios responsivos
+window.addEventListener('resize', function() {
+    // Força recálculo de anúncios responsivos
+    if (typeof adsbygoogle !== 'undefined') {
+        try {
+            const ads = document.querySelectorAll('.adsbygoogle');
+            ads.forEach(function(ad) {
+                if (ad.getAttribute('data-adsbygoogle-status') === 'done') {
+                    // Re-renderizar anúncio se necessário
+                    const rect = ad.getBoundingClientRect();
+                    if (rect.height === 0) {
+                        (adsbygoogle = window.adsbygoogle || []).push({});
+                    }
+                }
+            });
+        } catch (e) {
+            console.log('Erro ao re-renderizar anúncios:', e);
+        }
+    }
+});
+
+// Prevenir cliques acidentais em anúncios
+document.querySelectorAll('.adsbygoogle').forEach(function(ad) {
+    ad.addEventListener('click', function(e) {
+        // Log para analytics (opcional)
+        if (typeof gtag !== 'undefined') {
+            gtag('event', 'ad_click', {
+                'event_category': 'monetization',
+                'event_label': 'adsense',
+                'value': 1
+            });
+        }
+    });
+});
+</script>
 {% endblock %}

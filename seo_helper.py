@@ -1,173 +1,223 @@
-# seo_helper.py - Ferramentas para SEO e Google Search Console
-import requests
-from datetime import datetime
-import os
+# seo_helper.py - Sistema de SEO dinâmico e palavras-chave
+from dataclasses import dataclass
+from typing import List, Dict, Optional
+import re
 
-class SEOHelper:
-    """Classe helper para otimizações de SEO"""
+@dataclass
+class SEOData:
+    """Classe para dados de SEO de uma página"""
+    title: str
+    description: str
+    keywords: List[str]
+    og_title: Optional[str] = None
+    og_description: Optional[str] = None
+    canonical_url: Optional[str] = None
+    schema_type: str = "WebPage"
+
+class SEOManager:
+    """Gerenciador de SEO dinâmico para o site"""
     
-    def __init__(self, base_url):
-        self.base_url = base_url.rstrip('/')
-    
-    def ping_google_sitemap(self):
-        """Avisa o Google sobre atualizações no sitemap"""
-        sitemap_url = f"{self.base_url}/sitemap.xml"
-        ping_url = f"http://www.google.com/ping?sitemap={sitemap_url}"
-        
-        try:
-            response = requests.get(ping_url, timeout=10)
-            if response.status_code == 200:
-                print(f"✅ Google notificado sobre sitemap: {sitemap_url}")
-                return True
-            else:
-                print(f"⚠️ Erro ao notificar Google: {response.status_code}")
-                return False
-        except Exception as e:
-            print(f"❌ Erro ao conectar com Google: {e}")
-            return False
-    
-    def ping_bing_sitemap(self):
-        """Avisa o Bing sobre atualizações no sitemap"""
-        sitemap_url = f"{self.base_url}/sitemap.xml"
-        ping_url = f"http://www.bing.com/ping?sitemap={sitemap_url}"
-        
-        try:
-            response = requests.get(ping_url, timeout=10)
-            if response.status_code == 200:
-                print(f"✅ Bing notificado sobre sitemap: {sitemap_url}")
-                return True
-            else:
-                print(f"⚠️ Erro ao notificar Bing: {response.status_code}")
-                return False
-        except Exception as e:
-            print(f"❌ Erro ao conectar com Bing: {e}")
-            return False
-    
-    def validate_sitemap(self):
-        """Valida se o sitemap está acessível e bem formado"""
-        sitemap_url = f"{self.base_url}/sitemap.xml"
-        
-        try:
-            response = requests.get(sitemap_url, timeout=10)
-            if response.status_code == 200:
-                # Verificar se é XML válido
-                if '<?xml' in response.text and '<urlset' in response.text:
-                    print(f"✅ Sitemap válido: {sitemap_url}")
-                    return True
-                else:
-                    print(f"❌ Sitemap com formato inválido")
-                    return False
-            else:
-                print(f"❌ Sitemap inacessível: {response.status_code}")
-                return False
-        except Exception as e:
-            print(f"❌ Erro ao validar sitemap: {e}")
-            return False
-    
-    def validate_robots(self):
-        """Valida se o robots.txt está acessível"""
-        robots_url = f"{self.base_url}/robots.txt"
-        
-        try:
-            response = requests.get(robots_url, timeout=10)
-            if response.status_code == 200:
-                if 'User-agent:' in response.text and 'Sitemap:' in response.text:
-                    print(f"✅ Robots.txt válido: {robots_url}")
-                    return True
-                else:
-                    print(f"⚠️ Robots.txt com formato básico")
-                    return True
-            else:
-                print(f"❌ Robots.txt inacessível: {response.status_code}")
-                return False
-        except Exception as e:
-            print(f"❌ Erro ao validar robots.txt: {e}")
-            return False
-    
-    def generate_google_verification_file(self, verification_code):
-        """Gera arquivo de verificação do Google Search Console"""
-        filename = f"google{verification_code}.html"
-        content = f"google-site-verification: google{verification_code}.html"
-        
-        try:
-            # Salvar na pasta static para ser acessível
-            filepath = os.path.join('static', filename)
-            with open(filepath, 'w') as f:
-                f.write(content)
-            
-            print(f"✅ Arquivo de verificação criado: {filename}")
-            print(f"📱 Acesse: {self.base_url}/{filename}")
-            return True
-        except Exception as e:
-            print(f"❌ Erro ao criar arquivo de verificação: {e}")
-            return False
-    
-    def check_seo_basics(self):
-        """Verifica itens básicos de SEO"""
-        print("\n🔍 VERIFICAÇÃO SEO BÁSICA")
-        print("=" * 50)
-        
-        checks = [
-            ("Sitemap XML", self.validate_sitemap()),
-            ("Robots.txt", self.validate_robots()),
+    def __init__(self):
+        self.base_keywords = [
+            "tecnologia", "programação", "python", "flask", "desenvolvimento web",
+            "inteligência artificial", "machine learning", "chatgpt", "inovação",
+            "tutorial", "blog tech", "desenvolvedor", "código", "software"
         ]
         
-        # Verificar páginas importantes
-        important_pages = [
-            '/',
-            '/blog',
-            '/sobre',
-            '/contato',
-            '/termos',
-            '/privacidade'
+        # Palavras-chave por categoria
+        self.category_keywords = {
+            "inteligencia_artificial": [
+                "inteligência artificial", "machine learning", "deep learning", 
+                "chatgpt", "gpt", "redes neurais", "algoritmos", "ia", 
+                "reconhecimento de imagem", "processamento de linguagem natural",
+                "computer vision", "tensorflow", "pytorch", "scikit-learn"
+            ],
+            "programacao": [
+                "programação", "python", "javascript", "java", "c++", "php",
+                "desenvolvimento", "código", "algoritmos", "estrutura de dados",
+                "orientação a objetos", "framework", "biblioteca", "api"
+            ],
+            "web_development": [
+                "desenvolvimento web", "frontend", "backend", "html", "css",
+                "javascript", "react", "vue", "angular", "node.js", "flask",
+                "django", "laravel", "responsivo", "spa", "pwa"
+            ],
+            "ferramentas": [
+                "calculadora", "ferramentas online", "utilitários", "produtividade",
+                "cid", "cbo", "conversores", "geradores", "validadores"
+            ],
+            "mobile": [
+                "desenvolvimento mobile", "android", "ios", "react native",
+                "flutter", "kotlin", "swift", "app", "aplicativo móvel"
+            ],
+            "cloud": [
+                "cloud computing", "aws", "azure", "google cloud", "docker",
+                "kubernetes", "devops", "ci/cd", "infraestrutura", "serverless"
+            ]
+        }
+        
+        # Templates de SEO por tipo de página
+        self.seo_templates = {
+            "home": {
+                "title": "Mente Magna - Portal de Tecnologia, Programação e Inovação",
+                "description": "Portal de referência em tecnologia, programação, IA e inovação. Artigos, tutoriais, ferramentas e insights para desenvolvedores e entusiastas de tecnologia.",
+                "keywords": self.base_keywords + ["portal tecnologia", "blog programação", "tutoriais desenvolvimento"]
+            },
+            "blog_list": {
+                "title": "Blog - Mente Magna | Artigos sobre Tecnologia e Programação",
+                "description": "Artigos sobre tecnologia, programação, inteligência artificial e desenvolvimento. Tutoriais práticos, análises e insights para desenvolvedores.",
+                "keywords": self.base_keywords + ["blog tecnologia", "artigos programação", "tutoriais desenvolvimento"]
+            },
+            "category": {
+                "title_template": "{category_name} - Blog Mente Magna",
+                "description_template": "Artigos e tutoriais sobre {category_name}. Conteúdo especializado em {category_description} para desenvolvedores e entusiastas.",
+                "keywords_base": self.base_keywords
+            },
+            "post": {
+                "title_template": "{post_title} - Mente Magna",
+                "description_template": "{post_excerpt}",
+                "keywords_base": self.base_keywords
+            },
+            "tool": {
+                "title_template": "{tool_name} - Ferramenta Online Gratuita | Mente Magna",
+                "description_template": "{tool_description}. Ferramenta online gratuita, rápida e segura. Use agora sem cadastro!",
+                "keywords_base": self.base_keywords + ["ferramenta online", "calculadora", "grátis"]
+            }
+        }
+    
+    def extract_keywords_from_content(self, content: str, max_keywords: int = 10) -> List[str]:
+        """Extrai palavras-chave relevantes do conteúdo"""
+        if not content:
+            return []
+        
+        # Remove HTML tags
+        clean_content = re.sub(r'<[^>]+>', '', content.lower())
+        
+        # Lista de palavras-chave técnicas relevantes
+        tech_keywords = [
+            "python", "javascript", "react", "vue", "angular", "node.js", "flask",
+            "django", "api", "rest", "graphql", "database", "sql", "nosql",
+            "mongodb", "postgresql", "mysql", "redis", "docker", "kubernetes",
+            "aws", "azure", "cloud", "serverless", "microservices", "devops",
+            "ci/cd", "git", "github", "artificial intelligence", "machine learning",
+            "deep learning", "neural networks", "tensorflow", "pytorch",
+            "scikit-learn", "pandas", "numpy", "data science", "big data",
+            "blockchain", "cryptocurrency", "iot", "mobile development",
+            "android", "ios", "react native", "flutter", "kotlin", "swift"
         ]
         
-        for page in important_pages:
-            url = f"{self.base_url}{page}"
-            try:
-                response = requests.get(url, timeout=10)
-                status = response.status_code == 200
-                checks.append((f"Página {page}", status))
-            except:
-                checks.append((f"Página {page}", False))
+        found_keywords = []
+        for keyword in tech_keywords:
+            if keyword in clean_content and keyword not in found_keywords:
+                found_keywords.append(keyword)
+                if len(found_keywords) >= max_keywords:
+                    break
         
-        # Mostrar resultados
-        for check_name, status in checks:
-            icon = "✅" if status else "❌"
-            print(f"{icon} {check_name}")
+        return found_keywords
+    
+    def get_category_seo(self, category_slug: str, category_name: str) -> SEOData:
+        """Gera SEO para páginas de categoria"""
+        category_keywords = self.category_keywords.get(category_slug, [])
         
-        # Resumo
-        passed = sum(1 for _, status in checks if status)
-        total = len(checks)
-        print(f"\n📊 Resultado: {passed}/{total} verificações passaram")
+        description_map = {
+            "inteligencia_artificial": "inteligência artificial, machine learning e deep learning",
+            "programacao": "programação, algoritmos e desenvolvimento de software",
+            "web_development": "desenvolvimento web, frontend e backend",
+            "ferramentas": "ferramentas online e utilitários para desenvolvedores",
+            "mobile": "desenvolvimento mobile e aplicativos",
+            "cloud": "cloud computing e infraestrutura"
+        }
         
-        if passed == total:
-            print("🎉 Seu site está otimizado para SEO!")
-        elif passed >= total * 0.8:
-            print("👍 Bom! Alguns ajustes menores podem melhorar.")
-        else:
-            print("⚠️ Várias melhorias de SEO são necessárias.")
+        category_desc = description_map.get(category_slug, category_name.lower())
         
-        return passed / total
+        return SEOData(
+            title=f"{category_name} - Blog Mente Magna",
+            description=f"Artigos e tutoriais sobre {category_desc}. Conteúdo especializado para desenvolvedores e entusiastas de tecnologia.",
+            keywords=self.base_keywords + category_keywords + [category_name.lower()],
+            schema_type="CollectionPage"
+        )
+    
+    def get_post_seo(self, post_title: str, post_content: str, post_excerpt: str = None, category: str = None) -> SEOData:
+        """Gera SEO para posts individuais"""
+        # Extrair palavras-chave do conteúdo
+        content_keywords = self.extract_keywords_from_content(post_content)
+        
+        # Adicionar palavras-chave da categoria se especificada
+        category_keywords = []
+        if category:
+            category_keywords = self.category_keywords.get(category, [])
+        
+        # Gerar descrição
+        description = post_excerpt or (post_content[:160] + "..." if len(post_content) > 160 else post_content)
+        description = re.sub(r'<[^>]+>', '', description)  # Remove HTML
+        
+        all_keywords = list(set(self.base_keywords + content_keywords + category_keywords))
+        
+        return SEOData(
+            title=f"{post_title} - Mente Magna",
+            description=description,
+            keywords=all_keywords,
+            schema_type="Article"
+        )
+    
+    def get_tool_seo(self, tool_name: str, tool_description: str, tool_type: str) -> SEOData:
+        """Gera SEO para ferramentas/calculadoras"""
+        tool_keywords = {
+            "calculadora": ["calculadora online", "calcular", "matemática", "fórmulas"],
+            "cid": ["cid", "classificação internacional doenças", "código cid", "diagnóstico"],
+            "cbo": ["cbo", "classificação brasileira ocupações", "profissões", "código cbo"],
+            "conversor": ["conversor", "conversão", "unidades", "medidas"],
+            "gerador": ["gerador", "criar", "gerar", "automático"],
+            "validador": ["validador", "validar", "verificar", "cpf", "cnpj"]
+        }
+        
+        specific_keywords = tool_keywords.get(tool_type, [])
+        
+        return SEOData(
+            title=f"{tool_name} - Ferramenta Online Gratuita | Mente Magna",
+            description=f"{tool_description}. Ferramenta online gratuita, rápida e segura. Use agora sem cadastro!",
+            keywords=self.base_keywords + ["ferramenta online", "grátis", "calculadora"] + specific_keywords,
+            schema_type="WebApplication"
+        )
 
-# Função utilitária para usar no Flask
-def notify_search_engines(base_url):
-    """Notifica motores de busca sobre atualizações"""
-    seo = SEOHelper(base_url)
-    
-    print("\n📡 NOTIFICANDO MOTORES DE BUSCA")
-    print("=" * 50)
-    
-    seo.ping_google_sitemap()
-    seo.ping_bing_sitemap()
-    
-    print("✅ Notificações enviadas!")
+# Instância global do SEO Manager
+seo_manager = SEOManager()
 
-# Script para executar verificações
-if __name__ == "__main__":
-    # Para testes locais
-    seo = SEOHelper("http://localhost:5000")
-    seo.check_seo_basics()
+# Função helper para templates
+def get_seo_data(page_type: str, **kwargs) -> Dict:
+    """Função helper para usar nos templates"""
+    if page_type == "category":
+        seo_data = seo_manager.get_category_seo(
+            kwargs.get('category_slug', ''),
+            kwargs.get('category_name', '')
+        )
+    elif page_type == "post":
+        seo_data = seo_manager.get_post_seo(
+            kwargs.get('post_title', ''),
+            kwargs.get('post_content', ''),
+            kwargs.get('post_excerpt', ''),
+            kwargs.get('category', '')
+        )
+    elif page_type == "tool":
+        seo_data = seo_manager.get_tool_seo(
+            kwargs.get('tool_name', ''),
+            kwargs.get('tool_description', ''),
+            kwargs.get('tool_type', '')
+        )
+    else:
+        # Default home page
+        template = seo_manager.seo_templates.get("home", {})
+        seo_data = SEOData(
+            title=template.get("title", "Mente Magna"),
+            description=template.get("description", "Portal de tecnologia e inovação"),
+            keywords=template.get("keywords", seo_manager.base_keywords)
+        )
     
-    # Para notificar quando estiver online
-    # notify_search_engines("https://seudominio.com")
+    return {
+        'page_title': seo_data.title,
+        'page_description': seo_data.description,
+        'page_keywords': ', '.join(seo_data.keywords),
+        'og_title': seo_data.og_title or seo_data.title,
+        'og_description': seo_data.og_description or seo_data.description,
+        'schema_type': seo_data.schema_type
+    }
