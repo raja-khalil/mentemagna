@@ -1,0 +1,199 @@
+{% extends 'base.html' %}
+
+{% set page_title = 'Política de Privacidade - Mente Magna' %}
+{% set page_description = 'Política de privacidade do Mente Magna. Como coletamos, usamos e protegemos seus dados pessoais.' %}
+{% set breadcrumbs = [{'title': 'Política de Privacidade'}] %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <article class="legal-document">
+            <header class="mb-5">
+                <h1 class="display-5 fw-bold text-success">Política de Privacidade</h1>
+                <p class="lead text-muted">
+                    Última atualização: {{ moment().strftime('%d de %B de %Y') if moment else '20 de Junho de 2025' }}
+                </p>
+                <div class="alert alert-info">
+                    <strong>📋 LGPD Compliance:</strong> Esta política está em conformidade com a 
+                    Lei Geral de Proteção de Dados (LGPD - Lei 13.709/2018).
+                </div>
+            </header>
+
+            <div class="content">
+                <section class="mb-4">
+                    <h2>1. Informações Gerais</h2>
+                    <p>
+                        O <strong>Mente Magna</strong> respeita sua privacidade e está comprometido 
+                        em proteger seus dados pessoais. Esta política explica como coletamos, 
+                        usamos, armazenamos e protegemos suas informações.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>2. Dados Coletados</h2>
+                    <h3>2.1 Dados fornecidos voluntariamente:</h3>
+                    <ul>
+                        <li><strong>Formulário de contato:</strong> nome, email e mensagem</li>
+                        <li><strong>Newsletter:</strong> endereço de email (quando implementado)</li>
+                        <li><strong>Comentários:</strong> nome e email (quando implementado)</li>
+                    </ul>
+                    
+                    <h3>2.2 Dados coletados automaticamente:</h3>
+                    <ul>
+                        <li><strong>Analytics:</strong> páginas visitadas, tempo de permanência, origem do tráfego</li>
+                        <li><strong>Cookies:</strong> preferências do usuário e dados de navegação</li>
+                        <li><strong>Logs do servidor:</strong> endereço IP, navegador, sistema operacional</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>3. Finalidade do Tratamento</h2>
+                    <p>Utilizamos seus dados para:</p>
+                    <ul>
+                        <li>Responder às suas mensagens de contato</li>
+                        <li>Melhorar a experiência de navegação</li>
+                        <li>Análise de tráfego e comportamento dos usuários</li>
+                        <li>Exibição de anúncios relevantes (Google AdSense)</li>
+                        <li>Prevenção de fraudes e spam</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>4. Base Legal (LGPD)</h2>
+                    <p>O tratamento dos seus dados é baseado em:</p>
+                    <ul>
+                        <li><strong>Consentimento:</strong> para cookies e newsletter</li>
+                        <li><strong>Legítimo interesse:</strong> para analytics e melhoria do site</li>
+                        <li><strong>Execução de contrato:</strong> para responder contatos</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>5. Compartilhamento de Dados</h2>
+                    <p>Seus dados podem ser compartilhados com:</p>
+                    <ul>
+                        <li><strong>Google Analytics:</strong> para análise de tráfego (dados anonimizados)</li>
+                        <li><strong>Google AdSense:</strong> para exibição de anúncios relevantes</li>
+                        <li><strong>Provedores de email:</strong> para envio de respostas aos contatos</li>
+                    </ul>
+                    <p><strong>Não vendemos</strong> seus dados para terceiros.</p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>6. Cookies</h2>
+                    <p>Utilizamos cookies para:</p>
+                    <ul>
+                        <li>Lembrar suas preferências</li>
+                        <li>Analisar o tráfego do site</li>
+                        <li>Personalizar anúncios</li>
+                    </ul>
+                    <p>
+                        Você pode gerenciar cookies nas configurações do seu navegador ou através da nossa 
+                        <a href="{{ url_for('main.cookies') }}" class="text-primary">Política de Cookies</a>.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>7. Seus Direitos (LGPD)</h2>
+                    <p>Você tem direito a:</p>
+                    <ul>
+                        <li><strong>Confirmação:</strong> saber se tratamos seus dados</li>
+                        <li><strong>Acesso:</strong> obter cópia dos seus dados</li>
+                        <li><strong>Correção:</strong> corrigir dados incompletos ou inexatos</li>
+                        <li><strong>Anonimização/Exclusão:</strong> eliminar dados desnecessários</li>
+                        <li><strong>Portabilidade:</strong> transferir dados para outro fornecedor</li>
+                        <li><strong>Oposição:</strong> opor-se ao tratamento dos dados</li>
+                        <li><strong>Revogação:</strong> retirar consentimento a qualquer momento</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>8. Retenção de Dados</h2>
+                    <ul>
+                        <li><strong>Dados de contato:</strong> mantidos por 2 anos após último contato</li>
+                        <li><strong>Analytics:</strong> dados anonimizados mantidos indefinidamente</li>
+                        <li><strong>Cookies:</strong> conforme configuração do usuário</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>9. Segurança</h2>
+                    <p>Implementamos medidas de segurança técnicas e organizacionais:</p>
+                    <ul>
+                        <li>Criptografia SSL/TLS para transmissão de dados</li>
+                        <li>Acesso restrito aos dados pessoais</li>
+                        <li>Monitoramento de atividades suspeitas</li>
+                        <li>Backups regulares e seguros</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>10. Alterações nesta Política</h2>
+                    <p>
+                        Podemos atualizar esta política periodicamente. Mudanças significativas 
+                        serão comunicadas através do site e/ou email.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>11. Contato e DPO</h2>
+                    <p>Para exercer seus direitos ou esclarecer dúvidas sobre privacidade:</p>
+                    <ul>
+                        <li><strong>Email:</strong> privacidade@mentemagna.com</li>
+                        <li><strong>Contato:</strong> <a href="{{ url_for('main.contato') }}" class="text-primary">Formulário de contato</a></li>
+                        <li><strong>DPO:</strong> Raja Khalil (raja@mentemagna.com)</li>
+                    </ul>
+                </section>
+            </div>
+
+            <footer class="mt-5 pt-4 border-top">
+                <div class="alert alert-success">
+                    <strong>✅ Conformidade LGPD:</strong> Esta política atende aos requisitos da 
+                    Lei Geral de Proteção de Dados brasileira e do GDPR europeu.
+                </div>
+                <div class="text-center">
+                    <p class="text-muted">
+                        <strong>Mente Magna</strong> - Portal de Tecnologia e Inovação<br>
+                        <small>Documento atualizado em {{ moment().strftime('%d/%m/%Y') if moment else '20/06/2025' }}</small>
+                    </p>
+                </div>
+            </footer>
+        </article>
+    </div>
+</div>
+
+<style>
+.legal-document h2 {
+    color: #28a745;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.legal-document h3 {
+    color: #495057;
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.legal-document p {
+    line-height: 1.8;
+    text-align: justify;
+    margin-bottom: 1rem;
+}
+
+.legal-document ul {
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.legal-document a {
+    text-decoration: none;
+}
+
+.legal-document a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}

@@ -2,27 +2,93 @@
 {% block title %}Contato – Mente Magna{% endblock %}
 
 {% block content %}
-<h1>Contato</h1>
-<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-<form>
-  <div class="mb-3">
-    <label class="form-label">Nome</label>
-    <input class="form-control" placeholder="Seu nome">
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Email</label>
-    <input class="form-control" placeholder="seu@email.com">
-  </div>
-  <div class="mb-3">
-    <label class="form-label">Mensagem</label>
-    <textarea class="form-control" rows="5">Lorem ipsum dolor sit amet...</textarea>
-  </div>
-  <button type="submit" class="btn btn-primary">Enviar</button>
-</form>
+<div class="row">
+    <div class="col-md-8">
+        <h1>Entre em Contato</h1>
+        <p class="lead">Tem alguma dúvida ou quer conhecer nossos serviços? Envie uma mensagem!</p>
+        
+        <form method="POST">
+            {{ form.hidden_tag() }}
+            
+            <div class="mb-3">
+                {{ form.nome.label(class="form-label") }}
+                {{ form.nome(class="form-control", placeholder="Seu nome completo") }}
+                {% if form.nome.errors %}
+                    <div class="text-danger">
+                        {% for error in form.nome.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.email.label(class="form-label") }}
+                {{ form.email(class="form-control", placeholder="seu@email.com") }}
+                {% if form.email.errors %}
+                    <div class="text-danger">
+                        {% for error in form.email.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            <div class="mb-3">
+                {{ form.mensagem.label(class="form-label") }}
+                {{ form.mensagem(class="form-control", id="mensagem", rows="6") }}
+                {% if form.mensagem.errors %}
+                    <div class="text-danger">
+                        {% for error in form.mensagem.errors %}{{ error }}{% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+            
+            {{ form.enviar(class="btn btn-primary btn-lg") }}
+        </form>
+    </div>
+    
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5>📍 Nosso Endereço</h5>
+                <p>Rio das Ostras, RJ<br>Brasil</p>
+                
+                <h5>📧 Email</h5>
+                <p>contato@mentemagna.com</p>
+                
+                <h5>⏰ Horário</h5>
+                <p>Segunda a Sexta<br>9h às 18h</p>
+            </div>
+        </div>
+        
+        <!-- Anúncio Sidebar -->
+        <div class="mt-4 text-center">
+            <ins class="adsbygoogle" 
+                 style="display:block" 
+                 data-ad-client="ca-pub-XXXXXXXXXXXXXXX" 
+                 data-ad-slot="6666666666" 
+                 data-ad-format="auto" 
+                 data-full-width-responsive="true"></ins>
+            <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+        </div>
+    </div>
+</div>
 
 <!-- Anúncio no final do formulário -->
-<div class="text-center my-4">
-  <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-XXXXXXXXXXXXXXX" data-ad-slot="9999999999" data-ad-format="auto" data-full-width-responsive="true"></ins>
-  <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+<div class="text-center my-5">
+    <ins class="adsbygoogle" 
+         style="display:block" 
+         data-ad-client="ca-pub-XXXXXXXXXXXXXXX" 
+         data-ad-slot="9999999999" 
+         data-ad-format="auto" 
+         data-full-width-responsive="true"></ins>
+    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
 </div>
+
+<!-- CKEditor simples para textarea da mensagem -->
+<script src="https://cdn.ckeditor.com/ckeditor5/38.1.0/classic/ckeditor.js"></script>
+<script>
+ClassicEditor
+    .create(document.querySelector('#mensagem'), {
+        toolbar: ['bold', 'italic', 'link', 'bulletedList', 'numberedList']
+    })
+    .catch(error => console.error(error));
+</script>
 {% endblock %}

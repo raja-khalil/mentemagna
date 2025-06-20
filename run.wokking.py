@@ -1,75 +1,75 @@
 import os
 from flask import Flask
 
-# Tentar importar dotenv, mas funcionar mesmo sem ele
-try:
-    from dotenv import load_dotenv
-    load_dotenv()
-except ImportError:
-    print("⚠️ python-dotenv não encontrado, usando configurações padrão")
-
+# Importa as extensões
 from extensions import db, migrate, mail, login_manager
+
+# Importa os blueprints
 from routes.main import main_bp
 from routes.blog import blog_bp
 from routes.auth import auth_bp
-from routes.sitemap import sitemap_bp  # Nova rota
 from admin.routes import admin_bp
-from config import config
-
 
 def create_app():
-    # Instancia a aplicação Flask (configurações em instance/)
+    """Cria e configura a aplicação Flask"""
+    
     app = Flask(__name__, instance_relative_config=True)
     os.makedirs(app.instance_path, exist_ok=True)
 
-    # Seleciona configuração conforme FLASK_ENV (development, production ou default)
-    env = os.getenv('FLASK_ENV', 'development')
-    app.config.from_object(config.get(env, config['development']))
+    # Configuração direta (sem dotenv)
+    app.config['SECRET_KEY'] = 'chave-temporaria-mude-depois'
+    app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+    app.config['DEBUG'] = True
+    
+    # Banco SQLite
+    BASE_DIR = os.path.abspath(os.path.dirname(__file__))
+    app.config['SQLALCHEMY_DATABASE_URI'] = f"sqlite:///{os.path.join(BASE_DIR, 'instance', 'database.db')}"
+    
+    # Email (configurar depois)
+    app.config['MAIL_SERVER'] = 'smtp.gmail.com'
+    app.config['MAIL_PORT'] = 587
+    app.config['MAIL_USE_TLS'] = True
+    app.config['MAIL_USERNAME'] = 'seu@email.com'
+    app.config['MAIL_PASSWORD'] = 'sua-senha'
 
-    # Inicializa extensões
+    # Inicializa extensões (sem CKEditor)
     db.init_app(app)
     migrate.init_app(app, db)
     mail.init_app(app)
     login_manager.init_app(app)
 
-    # Registra blueprints: autenticação, painel admin, blog, sitemap e rotas públicas
+    # Registra blueprints
     app.register_blueprint(auth_bp, url_prefix='/auth')
     app.register_blueprint(admin_bp, url_prefix='/admin')
     app.register_blueprint(blog_bp, url_prefix='/blog')
-    app.register_blueprint(sitemap_bp)  # Sem prefixo para sitemap.xml na raiz
     app.register_blueprint(main_bp)
 
     return app
-
 
 # Cria instância da aplicação
 app = create_app()
 
 if __name__ == '__main__':
-    # Garante criação das tabelas se não existirem
+    # Garante criação das tabelas
     with app.app_context():
         db.create_all()
-        print('[✅] Banco criado/verificado em', app.config['SQLALCHEMY_DATABASE_URI'])
+        print('[✅] Banco criado/verificado!')
         
-        # Criar usuário admin padrão se não existir
+        # Criar usuário admin se não existir
         from models import User
         admin = User.query.filter_by(username='admin').first()
         if not admin:
             admin = User(username='admin')
-            admin.set_password('123456')  # Senha temporária
+            admin.set_password('123456')
             db.session.add(admin)
             db.session.commit()
             print('[✅] Usuário admin criado - Login: admin / Senha: 123456')
         else:
             print('[ℹ️] Usuário admin já existe')
     
-    # URLs importantes do sistema
     print('\n🚀 MENTEMAGNA FUNCIONANDO!')
     print('📱 Site: http://localhost:5000')
     print('🔐 Admin: http://localhost:5000/auth/login')
     print('👤 Login: admin / Senha: 123456')
-    print('🗺️ Sitemap: http://localhost:5000/sitemap.xml')
-    print('🤖 Robots: http://localhost:5000/robots.txt')
-    print('\nPressione Ctrl+C para parar')
     
-    app.run(debug=app.config.get('DEBUG', True))
+    app.run(debug=True, port=5000)

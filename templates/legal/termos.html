@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% set page_title = 'Condições Gerais - Mente Magna' %}
+{% set page_description = 'Condições gerais de uso do portal Mente Magna. Termos e condições para utilização dos nossos serviços.' %}
+{% set breadcrumbs = [{'title': 'Condições Gerais'}] %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <article class="legal-document">
+            <header class="mb-5">
+                <h1 class="display-5 fw-bold text-primary">Condições Gerais de Uso</h1>
+                <p class="lead text-muted">
+                    Última atualização: {{ moment().strftime('%d de %B de %Y') if moment else '20 de Junho de 2025' }}
+                </p>
+            </header>
+
+            <div class="content">
+                <section class="mb-4">
+                    <h2>1. Aceitação dos Termos</h2>
+                    <p>
+                        Ao acessar e utilizar o portal <strong>Mente Magna</strong> (mentemagna.com), 
+                        você concorda em cumprir e estar vinculado aos seguintes termos e condições de uso.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>2. Descrição do Serviço</h2>
+                    <p>
+                        O Mente Magna é um portal de conteúdo dedicado à tecnologia, programação, 
+                        inteligência artificial e inovação, oferecendo:
+                    </p>
+                    <ul>
+                        <li>Artigos e tutoriais sobre tecnologia</li>
+                        <li>Análises de tendências em IA e desenvolvimento</li>
+                        <li>Recursos educacionais gratuitos</li>
+                        <li>Conteúdo informativo e educacional</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>3. Uso Aceitável</h2>
+                    <p>Você concorda em usar nosso site apenas para fins legais e de acordo com estas condições. É proibido:</p>
+                    <ul>
+                        <li>Copiar, reproduzir ou distribuir conteúdo sem autorização</li>
+                        <li>Usar o site para atividades ilegais ou não autorizadas</li>
+                        <li>Tentar acessar áreas restritas do sistema</li>
+                        <li>Interferir no funcionamento normal do site</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>4. Propriedade Intelectual</h2>
+                    <p>
+                        Todo o conteúdo do Mente Magna, incluindo textos, imagens, logotipos, 
+                        vídeos e códigos, é protegido por direitos autorais e outras leis de 
+                        propriedade intelectual.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>5. Privacidade</h2>
+                    <p>
+                        Respeitamos sua privacidade. Para informações sobre como coletamos, 
+                        usamos e protegemos seus dados, consulte nossa 
+                        <a href="{{ url_for('main.privacidade') }}" class="text-primary">Política de Privacidade</a>.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>6. Modificações</h2>
+                    <p>
+                        Reservamos o direito de modificar estes termos a qualquer momento. 
+                        As alterações entrarão em vigor imediatamente após a publicação no site.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>7. Limitação de Responsabilidade</h2>
+                    <p>
+                        O conteúdo do Mente Magna é fornecido "como está" para fins informativos. 
+                        Não garantimos a precisão, completude ou atualidade das informações.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>8. Lei Aplicável</h2>
+                    <p>
+                        Estes termos são regidos pelas leis brasileiras. Qualquer disputa será 
+                        resolvida nos tribunais competentes do Brasil.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>9. Contato</h2>
+                    <p>
+                        Para questões sobre estes termos, entre em contato conosco através da 
+                        <a href="{{ url_for('main.contato') }}" class="text-primary">página de contato</a> 
+                        ou pelo email: contato@mentemagna.com
+                    </p>
+                </section>
+            </div>
+
+            <footer class="mt-5 pt-4 border-top">
+                <div class="text-center">
+                    <p class="text-muted">
+                        <strong>Mente Magna</strong> - Portal de Tecnologia e Inovação<br>
+                        <small>Documento gerado automaticamente em {{ moment().strftime('%d/%m/%Y') if moment else '20/06/2025' }}</small>
+                    </p>
+                </div>
+            </footer>
+        </article>
+    </div>
+</div>
+
+<style>
+.legal-document h2 {
+    color: #2c3e50;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.legal-document p {
+    line-height: 1.8;
+    text-align: justify;
+    margin-bottom: 1rem;
+}
+
+.legal-document ul {
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.legal-document a {
+    text-decoration: none;
+}
+
+.legal-document a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}

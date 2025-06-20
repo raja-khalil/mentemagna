@@ -3,31 +3,115 @@
 {% block title %}Painel de Artigos - Admin - Mente Magna{% endblock %}
 
 {% block content %}
-<h1 class="mb-4">Painel de Artigos</h1>
-<a href="{{ url_for('admin.novo_post') }}" class="btn btn-success mb-4">➕ Novo Artigo</a>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Painel de Artigos</h1>
+    <div>
+        <a href="{{ url_for('admin.novo_post') }}" class="btn btn-success">➕ Novo Artigo</a>
+        <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-secondary">🚪 Sair</a>
+    </div>
+</div>
 
 {% if posts %}
-<table class="table table-bordered table-hover">
-    <thead class="table-light">
-        <tr>
-            <th>Título</th>
-            <th>Data</th>
-            <th>Ações</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for post in posts %}
-        <tr>
-            <td>{{ post.titulo }}</td>
-            <td>{{ post.data_criacao.strftime('%d/%m/%Y %H:%M') }}</td>
-            <td>
-                <a href="{{ url_for('admin.editar_post', post_id=post.id) }}" class="btn btn-sm btn-primary">✏️ Editar</a>
-            </td>
-        </tr>
-        {% endfor %}
-    </tbody>
-</table>
+<div class="row mb-3">
+    <div class="col-md-3">
+        <div class="card text-center bg-primary text-white">
+            <div class="card-body">
+                <h3>{{ posts|length }}</h3>
+                <p>Total de Posts</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center bg-success text-white">
+            <div class="card-body">
+                <h3>{{ posts|selectattr('publicado')|list|length }}</h3>
+                <p>Publicados</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center bg-warning text-white">
+            <div class="card-body">
+                <h3>{{ posts|rejectattr('publicado')|list|length }}</h3>
+                <p>Rascunhos</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-center bg-info text-white">
+            <div class="card-body">
+                <h3>{{ posts|selectattr('data_criacao')|selectattr('data_criacao', 'gt', (moment().subtract(7, 'days')))|list|length if moment else 0 }}</h3>
+                <p>Esta Semana</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="card">
+    <div class="card-header">
+        <h5 class="mb-0">Todos os Artigos</h5>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-hover mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th>Título</th>
+                        <th>Status</th>
+                        <th>Data</th>
+                        <th>Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for post in posts %}
+                    <tr>
+                        <td>
+                            <strong>{{ post.titulo }}</strong>
+                            {% if post.imagem %}
+                                <small class="text-muted d-block">📷 Com imagem</small>
+                            {% endif %}
+                        </td>
+                        <td>
+                            {% if post.publicado %}
+                                <span class="badge bg-success">✅ Publicado</span>
+                            {% else %}
+                                <span class="badge bg-warning">📝 Rascunho</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <small>{{ post.data_criacao.strftime('%d/%m/%Y') }}</small><br>
+                            <small class="text-muted">{{ post.data_criacao.strftime('%H:%M') }}</small>
+                        </td>
+                        <td>
+                            <div class="btn-group btn-group-sm">
+                                {% if post.publicado %}
+                                    <a href="{{ url_for('blog.post_detail', slug=post.slug) }}" 
+                                       class="btn btn-outline-primary" target="_blank" title="Ver Post">
+                                        👁️
+                                    </a>
+                                {% endif %}
+                                <a href="{{ url_for('admin.editar_post', post_id=post.id) }}" 
+                                   class="btn btn-outline-secondary" title="Editar">
+                                    ✏️
+                                </a>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 {% else %}
-<div class="alert alert-info">Nenhum artigo publicado ainda.</div>
+<div class="text-center py-5">
+    <div class="card">
+        <div class="card-body">
+            <h3 class="text-muted">📝 Nenhum artigo ainda</h3>
+            <p class="text-muted">Comece criando seu primeiro post!</p>
+            <a href="{{ url_for('admin.novo_post') }}" class="btn btn-primary btn-lg">➕ Criar Primeiro Artigo</a>
+        </div>
+    </div>
+</div>
 {% endif %}
 {% endblock %}

@@ -1,0 +1,248 @@
+{% extends 'base.html' %}
+
+{% set page_title = 'Aviso Legal - Mente Magna' %}
+{% set page_description = 'Aviso legal do portal Mente Magna. Informações legais, direitos autorais e responsabilidades.' %}
+{% set breadcrumbs = [{'title': 'Aviso Legal'}] %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <article class="legal-document">
+            <header class="mb-5">
+                <h1 class="display-5 fw-bold text-danger">⚖️ Aviso Legal</h1>
+                <p class="lead text-muted">
+                    Última atualização: {{ moment().strftime('%d de %B de %Y') if moment else '20 de Junho de 2025' }}
+                </p>
+            </header>
+
+            <div class="content">
+                <section class="mb-4">
+                    <h2>1. Identificação do Site</h2>
+                    <div class="card">
+                        <div class="card-body">
+                            <ul class="list-unstyled">
+                                <li><strong>Nome:</strong> Mente Magna</li>
+                                <li><strong>Domínio:</strong> mentemagna.com</li>
+                                <li><strong>Responsável:</strong> Raja Khalil</li>
+                                <li><strong>Email:</strong> contato@mentemagna.com</li>
+                                <li><strong>Localização:</strong> Rio das Ostras, RJ - Brasil</li>
+                                <li><strong>Natureza:</strong> Portal de conteúdo educacional e informativo</li>
+                            </ul>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="mb-4">
+                    <h2>2. Objeto e Finalidade</h2>
+                    <p>
+                        O <strong>Mente Magna</strong> é um portal dedicado à disseminação de conhecimento 
+                        sobre tecnologia, programação, inteligência artificial e inovação, com as seguintes finalidades:
+                    </p>
+                    <ul>
+                        <li>Publicação de artigos educacionais e informativos</li>
+                        <li>Compartilhamento de tutoriais e guias técnicos</li>
+                        <li>Análise de tendências tecnológicas</li>
+                        <li>Promoção do conhecimento em tecnologia</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>3. Direitos Autorais e Propriedade Intelectual</h2>
+                    <p>
+                        Todo o conteúdo disponibilizado no Mente Magna, incluindo mas não se limitando a:
+                    </p>
+                    <ul>
+                        <li>Textos, artigos e tutoriais</li>
+                        <li>Imagens, gráficos e ilustrações</li>
+                        <li>Logotipos e elementos visuais</li>
+                        <li>Códigos e exemplos de programação</li>
+                        <li>Vídeos e materiais multimídia</li>
+                    </ul>
+                    <p>
+                        São protegidos por direitos autorais e outras leis de propriedade intelectual. 
+                        A reprodução, distribuição ou uso comercial sem autorização expressa é proibida.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>4. Licença de Uso</h2>
+                    <h3>4.1 Uso Permitido:</h3>
+                    <ul>
+                        <li>Leitura e estudo pessoal do conteúdo</li>
+                        <li>Compartilhamento de links para os artigos</li>
+                        <li>Citação de trechos com devida atribuição</li>
+                        <li>Uso educacional não comercial com atribuição</li>
+                    </ul>
+                    
+                    <h3>4.2 Uso Proibido:</h3>
+                    <ul>
+                        <li>Cópia integral de artigos sem autorização</li>
+                        <li>Uso comercial do conteúdo</li>
+                        <li>Redistribuição sem atribuição</li>
+                        <li>Modificação de conteúdo sem permissão</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>5. Isenção de Responsabilidade</h2>
+                    <div class="alert alert-warning">
+                        <strong>⚠️ Importante:</strong> O conteúdo do Mente Magna é fornecido apenas para fins informativos e educacionais.
+                    </div>
+                    
+                    <h3>5.1 Precisão do Conteúdo:</h3>
+                    <p>
+                        Embora nos esforcemos para fornecer informações precisas e atualizadas, 
+                        não garantimos a precisão, completude ou atualidade de todo o conteúdo.
+                    </p>
+                    
+                    <h3>5.2 Uso por Conta e Risco:</h3>
+                    <p>
+                        O uso das informações e códigos fornecidos é por sua conta e risco. 
+                        Não nos responsabilizamos por quaisquer danos diretos ou indiretos 
+                        resultantes do uso do conteúdo.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>6. Links Externos</h2>
+                    <p>
+                        O site pode conter links para sites externos. Não somos responsáveis pelo 
+                        conteúdo, políticas de privacidade ou práticas desses sites externos.
+                    </p>
+                    <p>
+                        A inclusão de links não implica endosso ou recomendação dos sites vinculados.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>7. Publicidade e Monetização</h2>
+                    <p>
+                        O site utiliza sistemas de publicidade para monetização, incluindo:
+                    </p>
+                    <ul>
+                        <li><strong>Google AdSense:</strong> Anúncios contextuais</li>
+                        <li><strong>Links de afiliados:</strong> Quando aplicável, claramente identificados</li>
+                        <li><strong>Conteúdo patrocinado:</strong> Sempre identificado como tal</li>
+                    </ul>
+                    <p>
+                        Não nos responsabilizamos pelo conteúdo dos anúncios exibidos ou produtos/serviços anunciados.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>8. Comentários e Contribuições</h2>
+                    <p>
+                        Quando implementado, o sistema de comentários estará sujeito a moderação. 
+                        Reservamos o direito de:
+                    </p>
+                    <ul>
+                        <li>Moderar comentários antes da publicação</li>
+                        <li>Remover comentários inadequados</li>
+                        <li>Bloquear usuários que violem as regras</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>9. Modificações do Site</h2>
+                    <p>
+                        Reservamos o direito de:
+                    </p>
+                    <ul>
+                        <li>Modificar, suspender ou descontinuar qualquer parte do site</li>
+                        <li>Alterar estes termos legais a qualquer momento</li>
+                        <li>Restringir o acesso a certas partes do site</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>10. Lei Aplicável e Jurisdição</h2>
+                    <p>
+                        Este aviso legal é regido pelas leis brasileiras. Qualquer disputa 
+                        relacionada ao uso deste site será submetida à jurisdição dos 
+                        tribunais competentes do Brasil.
+                    </p>
+                </section>
+
+                <section class="mb-4">
+                    <h2>11. Política de DMCA</h2>
+                    <p>
+                        Respeitamos os direitos de propriedade intelectual. Se você acredita 
+                        que seu trabalho foi copiado de forma que constitua violação de direitos autorais, 
+                        entre em contato conosco com:
+                    </p>
+                    <ul>
+                        <li>Identificação da obra protegida</li>
+                        <li>Localização do material supostamente infrator</li>
+                        <li>Suas informações de contato</li>
+                        <li>Declaração de boa fé</li>
+                    </ul>
+                </section>
+
+                <section class="mb-4">
+                    <h2>12. Contato Legal</h2>
+                    <p>
+                        Para questões legais, violações de direitos autorais ou outros assuntos jurídicos:
+                    </p>
+                    <ul>
+                        <li><strong>Email legal:</strong> legal@mentemagna.com</li>
+                        <li><strong>Contato geral:</strong> 
+                            <a href="{{ url_for('main.contato') }}" class="text-primary">
+                                Formulário de contato
+                            </a>
+                        </li>
+                        <li><strong>Responsável:</strong> Raja Khalil</li>
+                    </ul>
+                </section>
+            </div>
+
+            <footer class="mt-5 pt-4 border-top">
+                <div class="alert alert-info">
+                    <strong>📋 Conformidade Legal:</strong> Este aviso legal está em conformidade 
+                    com a legislação brasileira e internacional aplicável.
+                </div>
+                <div class="text-center">
+                    <p class="text-muted">
+                        <strong>Mente Magna</strong> - Portal de Tecnologia e Inovação<br>
+                        <small>Aviso legal atualizado em {{ moment().strftime('%d/%m/%Y') if moment else '20/06/2025' }}</small>
+                    </p>
+                </div>
+            </footer>
+        </article>
+    </div>
+</div>
+
+<style>
+.legal-document h2 {
+    color: #dc3545;
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+    font-size: 1.4rem;
+}
+
+.legal-document h3 {
+    color: #495057;
+    margin-top: 1.5rem;
+    margin-bottom: 0.8rem;
+    font-size: 1.1rem;
+}
+
+.legal-document p {
+    line-height: 1.8;
+    text-align: justify;
+    margin-bottom: 1rem;
+}
+
+.legal-document ul {
+    line-height: 1.8;
+    margin-bottom: 1rem;
+}
+
+.legal-document a {
+    text-decoration: none;
+}
+
+.legal-document a:hover {
+    text-decoration: underline;
+}
+</style>
+{% endblock %}

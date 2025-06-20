@@ -43,3 +43,20 @@ def contato():
         flash('Mensagem enviada com sucesso!', 'success')
         return redirect(url_for('main.contato'))
     return render_template('contato.html', title="Contato", form=form)
+
+# Páginas Legais (LGPD e Google)
+@main_bp.route('/termos')
+def termos():
+    return render_template('legal/termos.html', title="Condições Gerais")
+
+@main_bp.route('/aviso-legal')
+def aviso_legal():
+    return render_template('legal/aviso-legal.html', title="Aviso Legal")
+
+@main_bp.route('/privacidade')
+def privacidade():
+    return render_template('legal/privacidade.html', title="Política de Privacidade")
+
+@main_bp.route('/cookies')
+def cookies():
+    return render_template('legal/cookies.html', title="Política de Cookies")

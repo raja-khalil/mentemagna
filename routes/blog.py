@@ -22,4 +22,36 @@ def post_detail(slug):
             .filter_by(slug=slug, publicado=True)
             .first_or_404()
     )
-    return render_template('post.html', post=post)
+    
+    # Buscar posts recentes (últimos 6, excluindo o atual)
+    recent_posts = (
+        Post.query
+            .filter_by(publicado=True)
+            .filter(Post.id != post.id)
+            .order_by(Post.data_criacao.desc())
+            .limit(6)
+            .all()
+    )
+    
+    # Buscar post anterior e próximo
+    previous_post = (
+        Post.query
+            .filter_by(publicado=True)
+            .filter(Post.data_criacao < post.data_criacao)
+            .order_by(Post.data_criacao.desc())
+            .first()
+    )
+    
+    next_post = (
+        Post.query
+            .filter_by(publicado=True)
+            .filter(Post.data_criacao > post.data_criacao)
+            .order_by(Post.data_criacao.asc())
+            .first()
+    )
+    
+    return render_template('post.html', 
+                         post=post, 
+                         recent_posts=recent_posts,
+                         previous_post=previous_post,
+                         next_post=next_post)

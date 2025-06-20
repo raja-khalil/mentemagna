@@ -1,4 +1,4 @@
-# forms.py - Versão sem CKEditor
+# forms_working.py - Versão sem CKEditor
 from flask_wtf import FlaskForm
 from wtforms import StringField, TextAreaField, FileField, SubmitField, BooleanField, PasswordField
 from wtforms.validators import DataRequired, Email
