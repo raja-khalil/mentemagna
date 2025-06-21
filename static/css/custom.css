@@ -1,6 +1,6 @@
-/* MenteMagna - Estilos Customizados */
+/* MenteMagna - Estilos Customizados Estilo Santander */
 
-/* Logo na navbar */
+/* ===== NAVBAR ===== */
 .navbar-brand img {
     transition: transform 0.3s ease;
     filter: brightness(1.1);
@@ -15,66 +15,97 @@
     .navbar-brand img {
         height: 35px !important;
     }
-    
-    .navbar-brand span {
-        font-size: 1.1rem;
-    }
 }
 
-/* Footer estilo Santander aprimorado */
+/* ===== FOOTER ESTILO SANTANDER ===== */
 footer {
+    background-color: #f8f9fa;
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    border-top: 1px solid #e9ecef;
+    font-size: 14px;
+}
+
+footer h6 {
+    color: #2c3e50;
+    font-size: 14px;
+    font-weight: 600;
+    margin-bottom: 12px;
 }
 
 footer a {
+    color: #6c757d;
+    text-decoration: none;
     transition: color 0.2s ease;
+    font-size: 13px;
+    line-height: 1.6;
 }
 
 footer a:hover {
-    color: #007bff !important;
+    color: #007bff;
+    text-decoration: none;
 }
 
-/* Botões de redes sociais */
-footer .btn-outline-secondary {
-    border-color: #ccc;
-    color: #666;
+footer ul {
+    margin-bottom: 0;
+}
+
+footer li {
+    margin-bottom: 6px;
+}
+
+/* Botões de redes sociais estilo Santander */
+.social-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid #dee2e6;
+    background: white;
+    color: #6c757d;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
     transition: all 0.3s ease;
+    font-size: 16px;
 }
 
-footer .btn-outline-secondary:hover {
+.social-btn:hover {
     background-color: #007bff;
     border-color: #007bff;
     color: white;
     transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
 }
 
 /* Botão de cookies estilo Santander */
-footer .btn-outline-danger {
+.cookies-btn {
     background-color: #fff;
-    border-color: #dc3545;
+    border: 1px solid #dc3545;
     color: #dc3545;
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 500;
     transition: all 0.3s ease;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
 }
 
-footer .btn-outline-danger:hover {
+.cookies-btn:hover {
     background-color: #dc3545;
-    border-color: #dc3545;
     color: white;
+    text-decoration: none;
 }
 
-/* Melhorias gerais de performance */
-img[loading="lazy"] {
-    opacity: 0.8;
-    transition: opacity 0.3s ease;
-}
+/* ===== COMPONENTES GERAIS ===== */
 
-img[loading="lazy"].loaded {
-    opacity: 1;
-}
-
-/* Animações suaves */
+/* Cards com animação suave */
 .card {
     transition: all 0.3s ease;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
 }
 
 .card:hover {
@@ -88,7 +119,7 @@ img[loading="lazy"].loaded {
     border-radius: 4px;
 }
 
-/* Posts content styling */
+/* ===== CONTEÚDO DE POSTS ===== */
 .post-content {
     font-size: 1.1rem;
     line-height: 1.8;
@@ -117,10 +148,11 @@ img[loading="lazy"].loaded {
     font-style: italic;
 }
 
-/* Breadcrumbs melhorados */
+/* ===== BREADCRUMBS ===== */
 .breadcrumb {
     background: none;
     padding: 0;
+    margin-bottom: 1rem;
 }
 
 .breadcrumb-item + .breadcrumb-item::before {
@@ -129,35 +161,67 @@ img[loading="lazy"].loaded {
     color: #6c757d;
 }
 
-/* Loading states */
+/* ===== LOADING STATES ===== */
 .btn.loading {
     opacity: 0.7;
     pointer-events: none;
 }
 
-/* Smooth scroll */
+/* ===== SMOOTH SCROLL ===== */
 html {
     scroll-behavior: smooth;
 }
 
-/* Cookie consent styling */
-.cookie-consent {
-    backdrop-filter: blur(10px);
-    animation: slideUp 0.3s ease-out;
+/* ===== RESPONSIVIDADE ===== */
+@media (max-width: 768px) {
+    .container {
+        padding-left: 15px;
+        padding-right: 15px;
+    }
+    
+    .post-content {
+        font-size: 1rem;
+    }
+    
+    .display-5 {
+        font-size: 2rem;
+    }
+    
+    /* Footer responsivo */
+    footer .row > div {
+        text-align: center !important;
+        margin-bottom: 1rem;
+    }
+    
+    footer .social-buttons {
+        justify-content: center !important;
+    }
+    
+    footer .d-flex.flex-wrap {
+        justify-content: center;
+    }
+    
+    footer .col-md-4.text-md-end {
+        text-align: center !important;
+    }
 }
 
-@keyframes slideUp {
-    from {
-        transform: translateY(100%);
-        opacity: 0;
+@media (max-width: 576px) {
+    .display-5 {
+        font-size: 1.8rem;
     }
-    to {
-        transform: translateY(0);
-        opacity: 1;
+    
+    footer h6 {
+        font-size: 13px;
+    }
+    
+    footer a,
+    footer .small {
+        font-size: 12px;
     }
 }
 
-/* Legal documents styling */
+/* ===== DOCUMENTOS LEGAIS ===== */
 .legal-document h2 {
     color: #2c3e50;
     margin-top: 2rem;
@@ -191,31 +255,66 @@ html {
     text-decoration: underline;
 }
 
-/* Form improvements */
+/* ===== FORMULÁRIOS ===== */
 .form-check-input:checked {
     background-color: #28a745;
     border-color: #28a745;
 }
 
-/* Responsive improvements */
-@media (max-width: 576px) {
-    .container {
-        padding-left: 15px;
-        padding-right: 15px;
+/* ===== ACESSIBILIDADE ===== */
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+/* Focus states melhorados */
+a:focus,
+button:focus,
+.btn:focus,
+.nav-link:focus,
+.social-btn:focus {
+    outline: 2px solid #007bff;
+    outline-offset: 2px;
+}
+
+/* ===== MODO DE ALTO CONTRASTE ===== */
+@media (prefers-contrast: high) {
+    .card {
+        border: 2px solid #000;
     }
     
-    .post-content {
-        font-size: 1rem;
-    }
-    
-    .display-5 {
-        font-size: 2rem;
+    .social-btn {
+        border-color: #000;
+        color: #000;
     }
 }
 
-/* Print styles */
+/* ===== REDUCED MOTION ===== */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ===== PRINT STYLES ===== */
 @media print {
-    .navbar, footer, .btn, .badge, .cookie-consent {
+    .navbar, 
+    footer, 
+    .btn, 
+    .badge, 
+    .social-btn,
+    ins.adsbygoogle {
         display: none !important;
     }
     
@@ -231,46 +330,49 @@ html {
     }
 }
 
-/* Accessibility improvements */
-.sr-only {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    padding: 0;
-    margin: -1px;
-    overflow: hidden;
-    clip: rect(0, 0, 0, 0);
+/* ===== ESTILO SANTANDER ESPECÍFICO ===== */
+
+/* Hierarquia visual clara */
+footer .container > .row:last-child {
+    border-top: 1px solid #e9ecef;
+    padding-top: 16px;
+}
+
+/* Espaçamento consistente */
+footer .col-md-3 h6,
+footer .col-lg-4 h6 {
+    margin-bottom: 16px;
+}
+
+/* Links com espaçamento adequado */
+footer .d-flex.gap-3 > * {
     white-space: nowrap;
-    border: 0;
 }
 
-/* Focus states */
-a:focus,
-button:focus,
-.btn:focus {
-    outline: 2px solid #007bff;
-    outline-offset: 2px;
+/* Ícones com alinhamento perfeito */
+footer i {
+    width: 16px;
+    text-align: center;
 }
 
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-    .card {
-        border: 2px solid #000;
-    }
-    
-    .btn-outline-secondary {
-        border-color: #000;
-        color: #000;
-    }
+/* Consistência tipográfica */
+footer .small {
+    font-size: 12px;
+    line-height: 1.4;
 }
 
-/* Reduced motion support */
-@media (prefers-reduced-motion: reduce) {
-    *,
-    *::before,
-    *::after {
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-    }
+/* Estado hover suave */
+footer a,
+.social-btn,
+.cookies-btn {
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Sombras sutis para hierarquia */
+.social-btn {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.social-btn:hover {
+    box-shadow: 0 4px 12px rgba(0,123,255,0.3);
 }

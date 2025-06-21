@@ -1,71 +1,42 @@
-# routes/main.py - Rotas Principais Corrigidas
-from flask import Blueprint, render_template, redirect, url_for, flash, request
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from forms import ContatoForm
-from flask_mail import Message
 from extensions import mail
-import os
+from flask_mail import Message
 
 main_bp = Blueprint('main', __name__)
 
 @main_bp.route('/')
-def home():
-    return render_template('home.html', title="Início")
+def home(): return render_template('home.html', title="Página Inicial")
 
 @main_bp.route('/sobre')
-def sobre():
-    return render_template('sobre.html', title="Sobre")
+def sobre(): return render_template('sobre.html', title="Sobre Nós")
 
 @main_bp.route('/produtos')
-def produtos():
-    return render_template('produtos.html', title="Produtos")
-
-@main_bp.route('/emagna')
-def emagna():
-    return render_template('emagna.html', title="E-Magna")
+def produtos(): return render_template('produtos.html', title="Produtos")
 
 @main_bp.route('/contato', methods=['GET', 'POST'])
 def contato():
     form = ContatoForm()
     if form.validate_on_submit():
         try:
-            msg = Message(
-                subject='Nova mensagem de contato - Mente Magna',
-                sender=form.email.data,
-                recipients=[os.getenv('MAIL_USERNAME', 'contato@mentemagna.com')],
-                body=f"""
-Nova mensagem recebida do site Mente Magna:
-
-Nome: {form.nome.data}
-Email: {form.email.data}
-
-Mensagem:
-{form.mensagem.data}
-
----
-Enviado automaticamente pelo sistema do Mente Magna
-                """
-            )
+            msg = Message("Nova Mensagem do Site",
+                          sender=current_app.config['MAIL_USERNAME'],
+                          recipients=[current_app.config['MAIL_USERNAME']])
+            msg.body = f"""
+            De: {form.nome.data} <{form.email.data}>
+            ---
+            {form.mensagem.data}
+            """
             mail.send(msg)
-            flash('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success')
+            flash('Sua mensagem foi enviada com sucesso!', 'success')
             return redirect(url_for('main.contato'))
         except Exception as e:
-            flash(f'Erro ao enviar mensagem: {str(e)}. Tente novamente.', 'error')
-    
+            flash(f'Ocorreu um erro ao enviar sua mensagem: {e}', 'danger')
     return render_template('contato.html', title="Contato", form=form)
 
-# Páginas Legais (LGPD e Google)
+# Rotas para páginas legais
 @main_bp.route('/termos')
-def termos():
-    return render_template('legal/termos.html', title="Condições Gerais")
-
-@main_bp.route('/aviso-legal')
-def aviso_legal():
-    return render_template('legal/aviso-legal.html', title="Aviso Legal")
+def termos(): return render_template('legal/termos.html')
 
 @main_bp.route('/privacidade')
-def privacidade():
-    return render_template('legal/privacidade.html', title="Política de Privacidade")
-
-@main_bp.route('/cookies')
-def cookies():
-    return render_template('legal/cookies.html', title="Política de Cookies")
+def privacidade(): return render_template('legal/privacidade.html')
