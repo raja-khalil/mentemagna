@@ -1,9 +1,27 @@
-# models.py - Modelos Simplificados e Funcionais
+# models.py - Modelos Simplificados
 
 from datetime import datetime
 from flask_login import UserMixin
 from werkzeug.security import generate_password_hash, check_password_hash
 from extensions import db, login_manager
+
+# Função para gerar slug simples
+def create_slug(text):
+    """Cria slug simples sem dependências extras"""
+    import re
+    import unicodedata
+    
+    # Remover acentos
+    text = unicodedata.normalize('NFD', text)
+    text = text.encode('ascii', 'ignore').decode('ascii')
+    
+    # Converter para minúsculas e substituir espaços
+    text = text.lower()
+    text = re.sub(r'[^a-z0-9\s-]', '', text)
+    text = re.sub(r'[\s_-]+', '-', text)
+    text = text.strip('-')
+    
+    return text or 'post'
 
 class User(UserMixin, db.Model):
     """Modelo de usuário para administração"""
@@ -32,34 +50,45 @@ class Post(db.Model):
     __tablename__ = 'posts'
     
     id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(200), nullable=False)
+    titulo = db.Column(db.String(200), nullable=False)
     slug = db.Column(db.String(200), unique=True, nullable=False)
-    content = db.Column(db.Text, nullable=False)
-    excerpt = db.Column(db.Text, nullable=True)
-    image_url = db.Column(db.String(500), nullable=True)
+    conteudo = db.Column(db.Text, nullable=False)
+    resumo = db.Column(db.Text, nullable=True)
+    imagem = db.Column(db.String(500), nullable=True)
     
     # Status e datas
-    is_published = db.Column(db.Boolean, default=False)
-    created_at = db.Column(db.DateTime, default=datetime.utcnow)
-    updated_at = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
-    published_at = db.Column(db.DateTime, nullable=True)
+    publicado = db.Column(db.Boolean, default=False)
+    data_criacao = db.Column(db.DateTime, default=datetime.utcnow)
+    data_atualizacao = db.Column(db.DateTime, default=datetime.utcnow, onupdate=datetime.utcnow)
     
-    # SEO e Analytics
-    meta_description = db.Column(db.String(160), nullable=True)
-    keywords = db.Column(db.String(500), nullable=True)
+    # Analytics
     views = db.Column(db.Integer, default=0)
-    
-    # Relacionamento com usuário
-    author_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=True)
-    author = db.relationship('User', backref=db.backref('posts', lazy=True))
+    likes = db.Column(db.Integer, default=0)
+
+    def __init__(self, **kwargs):
+        super(Post, self).__init__(**kwargs)
+        if not self.slug and self.titulo:
+            self.slug = self.generate_slug()
+
+    def generate_slug(self):
+        """Gera slug único baseado no título"""
+        base_slug = create_slug(self.titulo)
+        slug = base_slug
+        counter = 1
+        
+        while Post.query.filter_by(slug=slug).first():
+            slug = f"{base_slug}-{counter}"
+            counter += 1
+            
+        return slug
 
     def __repr__(self):
-        return f"<Post {self.title}>"
+        return f"<Post {self.titulo}>"
     
     @property
     def reading_time(self):
         """Calcula tempo estimado de leitura"""
-        words = len(self.content.split())
+        words = len(self.conteudo.split())
         return max(1, round(words / 200))  # ~200 palavras por minuto
 
 # Callback do Flask-Login

@@ -59,10 +59,22 @@
             margin-bottom: 8px;
         }
         
+        .navbar-brand img {
+            transition: transform 0.3s ease;
+        }
+        
+        .navbar-brand:hover img {
+            transform: scale(1.05);
+        }
+        
         @media (max-width: 768px) {
             .ad-container {
                 margin: 15px 0;
                 padding: 8px;
+            }
+            
+            .navbar-brand img {
+                height: 35px !important;
             }
         }
     </style>
@@ -74,10 +86,10 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
+            <!-- Logo apenas sem texto -->
             <a class="navbar-brand fw-bold" href="/">
                 <img src="{{ url_for('static', filename='img/logo_mentemagna.png') }}" 
                      alt="Mente Magna" height="40" class="me-2">
-                Mente Magna
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -97,6 +109,19 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/produtos">📦 Produtos</a>
+                    </li>
+                    <!-- MENU SOLUÇÕES ADICIONADO -->
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="solucoesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            🔧 Soluções
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="solucoesDropdown">
+                            <li><a class="dropdown-item" href="/solucoes/consulta-cid">🏥 Consulta CID</a></li>
+                            <li><a class="dropdown-item" href="/solucoes/consulta-cbo">👔 Consulta CBO</a></li>
+                            <li><a class="dropdown-item" href="/solucoes/calculadora">🧮 Calculadora</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/solucoes">🔧 Ver Todas</a></li>
+                        </ul>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/blog">📝 Blog</a>
@@ -125,6 +150,17 @@
 
     <!-- Conteúdo Principal -->
     <main class="container my-4 flex-grow-1">
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    </div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+        
         {% block content %}{% endblock %}
     </main>
 
@@ -152,9 +188,13 @@
                         <span class="text-muted">•</span>
                         <a href="/blog" class="text-decoration-none text-dark small">Blog</a>
                         <span class="text-muted">•</span>
+                        <a href="/solucoes" class="text-decoration-none text-dark small">Soluções</a>
+                        <span class="text-muted">•</span>
                         <a href="/contato" class="text-decoration-none text-dark small">Contato</a>
                         <span class="text-muted">•</span>
-                        <a href="/produtos" class="text-decoration-none text-dark small">Produtos</a>
+                        <a href="/termos" class="text-decoration-none text-dark small">Termos</a>
+                        <span class="text-muted">•</span>
+                        <a href="/privacidade" class="text-decoration-none text-dark small">Privacidade</a>
                     </div>
                 </div>
                 <div class="col-md-4 text-end">
@@ -166,6 +206,11 @@
                         <a href="https://www.linkedin.com/in/raja-khalil/" target="_blank" 
                            class="btn btn-outline-secondary btn-sm rounded-circle">
                             <i class="fab fa-linkedin-in"></i>
+                        </a>
+                        <!-- GitHub em vez de Twitter -->
+                        <a href="https://github.com/raja-khalil" target="_blank" 
+                           class="btn btn-outline-secondary btn-sm rounded-circle">
+                            <i class="fab fa-github"></i>
                         </a>
                     </div>
                 </div>

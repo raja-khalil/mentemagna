@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
-from flask import Blueprint, render_template, redirect, url_for, flash
+# routes/main.py - Rotas Principais Corrigidas
+from flask import Blueprint, render_template, redirect, url_for, flash, request
 from forms import ContatoForm
 from flask_mail import Message
 from extensions import mail
@@ -27,21 +27,30 @@ def emagna():
 def contato():
     form = ContatoForm()
     if form.validate_on_submit():
-        msg = Message(
-            subject='Nova mensagem de contato - Mente Magna',
-            sender=form.email.data,
-            recipients=[os.getenv('MAIL_USERNAME')],
-            body=f"""
-            Nome: {form.nome.data}
-            Email: {form.email.data}
+        try:
+            msg = Message(
+                subject='Nova mensagem de contato - Mente Magna',
+                sender=form.email.data,
+                recipients=[os.getenv('MAIL_USERNAME', 'contato@mentemagna.com')],
+                body=f"""
+Nova mensagem recebida do site Mente Magna:
 
-            Mensagem:
-            {form.mensagem.data}
-            """
-        )
-        mail.send(msg)
-        flash('Mensagem enviada com sucesso!', 'success')
-        return redirect(url_for('main.contato'))
+Nome: {form.nome.data}
+Email: {form.email.data}
+
+Mensagem:
+{form.mensagem.data}
+
+---
+Enviado automaticamente pelo sistema do Mente Magna
+                """
+            )
+            mail.send(msg)
+            flash('Mensagem enviada com sucesso! Entraremos em contato em breve.', 'success')
+            return redirect(url_for('main.contato'))
+        except Exception as e:
+            flash(f'Erro ao enviar mensagem: {str(e)}. Tente novamente.', 'error')
+    
     return render_template('contato.html', title="Contato", form=form)
 
 # Páginas Legais (LGPD e Google)

@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-Mente Magna - Servidor Principal 
-PROBLEMA DO BANCO CORRIGIDO
+Mente Magna - Servidor Principal Simplificado
 """
 
 import os
 import sys
-from flask import Flask, render_template
+from flask import Flask
 
 # Carregar variáveis de ambiente
 try:
@@ -21,7 +20,7 @@ def create_app():
     app = Flask(__name__)
     
     # Configurações básicas
-    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'chave-temporaria-desenvolvimento')
+    app.config['SECRET_KEY'] = os.getenv('SECRET_KEY', 'dev-key-change-in-production')
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///mentemagna.db'
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
     
@@ -31,6 +30,10 @@ def create_app():
     app.config['MAIL_USE_TLS'] = True
     app.config['MAIL_USERNAME'] = os.getenv('MAIL_USERNAME')
     app.config['MAIL_PASSWORD'] = os.getenv('MAIL_PASSWORD')
+    
+    # Configurações de upload
+    app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16MB
+    app.config['UPLOAD_FOLDER'] = 'static/uploads'
     
     print("✅ Configurações carregadas")
     
@@ -42,76 +45,50 @@ def create_app():
     mail.init_app(app)
     login_manager.init_app(app)
     
-    # IMPORTANTE: Importar models DEPOIS de inicializar extensões
-    from models import User, Post
-    
     print("✅ Extensões inicializadas")
     
-    # Registrar rotas principais
-    register_routes(app)
+    # Importar modelos APÓS inicializar extensões
+    from models import User, Post
     
-    # Criar banco de dados CORRETAMENTE
+    # Registrar blueprints
+    register_blueprints(app)
+    
+    # Criar banco de dados
     with app.app_context():
         try:
-            # Deletar banco existente se houver problema
-            if os.path.exists('mentemagna.db'):
-                os.remove('mentemagna.db')
-                print("🗑️ Banco antigo removido")
-            
-            # Criar todas as tabelas
             db.create_all()
-            print("✅ Tabelas criadas com sucesso")
+            print("✅ Banco de dados criado/verificado")
             
-            # Criar usuário admin
+            # Criar usuário admin se não existir
             create_admin_user(db, User)
             
         except Exception as e:
-            print(f"❌ Erro ao criar banco: {e}")
+            print(f"❌ Erro no banco: {e}")
     
     return app
 
-def register_routes(app):
-    """Registra todas as rotas da aplicação"""
+def register_blueprints(app):
+    """Registra todos os blueprints"""
     
-    @app.route('/')
-    def home():
-        return render_template('home.html')
+    # Rotas principais
+    from routes.main import main_bp
+    from routes.blog import blog_bp
+    from routes.auth import auth_bp
     
-    @app.route('/sobre')
-    def sobre():
-        return render_template('sobre.html')
+    # Blueprint admin
+    from admin.routes import admin_bp
     
-    @app.route('/contato')
-    def contato():
-        return render_template('contato.html')
+    # Registrar blueprints
+    app.register_blueprint(main_bp)
+    app.register_blueprint(blog_bp, url_prefix='/blog')
+    app.register_blueprint(auth_bp, url_prefix='/auth')
+    app.register_blueprint(admin_bp, url_prefix='/admin')
     
-    @app.route('/blog')
-    def blog():
-        return render_template('blog.html')
-    
-    @app.route('/produtos')
-    def produtos():
-        return render_template('produtos.html')
-    
-    @app.route('/emagna')
-    def emagna():
-        return render_template('emagna.html')
-    
-    # Rotas de administração
-    @app.route('/admin')
-    def admin():
-        return '<h1>🔧 Admin em construção</h1><a href="/">← Voltar</a>'
-    
-    @app.route('/auth/login')
-    def login():
-        return '<h1>🔑 Login em construção</h1><a href="/">← Voltar</a>'
-    
-    print("✅ Rotas registradas")
+    print("✅ Blueprints registrados")
 
 def create_admin_user(db, User):
     """Cria usuário admin padrão"""
     try:
-        # Verificar se admin já existe
         admin = User.query.filter_by(username='admin').first()
         if not admin:
             admin = User(
@@ -140,6 +117,7 @@ def show_startup_info():
     print("📞 Contato: http://localhost:5000/contato")
     
     print("\n👤 ADMIN:")
+    print("   URL: http://localhost:5000/auth/login")
     print("   Usuário: admin")
     print("   Senha: 123456")
     

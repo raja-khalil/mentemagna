@@ -1,87 +1,149 @@
 {% extends 'admin_base.html' %}
 
-{% block title %}
-  {{ legend }} - Admin
-{% endblock %}
+{% block title %}{{ legend }} - Admin{% endblock %}
 
 {% block content %}
 <div class="container">
-    <h1 class="mb-4">{{ legend }}</h1>
-    
-    <form method="POST" enctype="multipart/form-data" novalidate>
-        {{ form.hidden_tag() }}
-        
-        <div class="mb-3">
-            {{ form.titulo.label(class="form-label") }}
-            {{ form.titulo(class="form-control form-control-lg") }}
-        </div>
+    <div class="row">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="mb-0">{{ legend }}</h4>
+                </div>
+                <div class="card-body">
+                    <form method="POST" enctype="multipart/form-data" novalidate>
+                        {{ form.hidden_tag() }}
+                        
+                        <div class="mb-3">
+                            {{ form.titulo.label(class="form-label") }}
+                            {{ form.titulo(class="form-control form-control-lg") }}
+                            {% if form.titulo.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.titulo.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
 
-        <div class="mb-3">
-            {{ form.resumo.label(class="form-label") }}
-            {{ form.resumo(class="form-control", rows="3") }}
-            <small class="form-text text-muted">
-              Este resumo será usado para SEO na descrição do Google e em compartilhamentos. Máximo 160 caracteres.
-            </small>
-        </div>
-        
-        <div class="mb-3">
-            {{ form.conteudo.label(class="form-label") }}
-            {{ form.conteudo(rows=20) }}
-        </div>
-        
-        <div class="mb-3">
-            {{ form.imagem.label(class="form-label") }}
-            {{ form.imagem(class="form-control") }}
-            {% if post and post.imagem %}
-                <small class="d-block mt-2">Imagem atual: 
-                    <img src="{{ post.imagem }}" alt="Imagem atual" style="max-width: 200px; height: auto;">
-                </small>
-            {% endif %}
-        </div>
-        
-        <div class="mb-3 form-check">
-            {{ form.publicado(class="form-check-input") }}
-            {{ form.publicado.label(class="form-check-label") }}
-        </div>
-        
-        <div class="d-flex justify-content-between">
-            <div>
-                {{ form.submit(class="btn btn-primary btn-lg") }}
-                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary btn-lg">Cancelar</a>
+                        <div class="mb-3">
+                            {{ form.resumo.label(class="form-label") }}
+                            {{ form.resumo(class="form-control", rows="3") }}
+                            <small class="form-text text-muted">
+                                Este resumo será usado para SEO e compartilhamentos. Máximo 300 caracteres.
+                            </small>
+                            {% if form.resumo.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.resumo.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.conteudo.label(class="form-label") }}
+                            {{ form.conteudo(class="form-control", rows="15", style="font-family: monospace;") }}
+                            <small class="form-text text-muted">
+                                Use HTML para formatação. Ex: &lt;h2&gt;Título&lt;/h2&gt;, &lt;p&gt;Parágrafo&lt;/p&gt;, &lt;strong&gt;Negrito&lt;/strong&gt;
+                            </small>
+                            {% if form.conteudo.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.conteudo.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3">
+                            {{ form.imagem.label(class="form-label") }}
+                            {{ form.imagem(class="form-control") }}
+                            {% if post and post.imagem %}
+                                <small class="d-block mt-2">
+                                    Imagem atual: 
+                                    <img src="{{ post.imagem }}" alt="Imagem atual" style="max-width: 200px; height: auto;" class="rounded">
+                                </small>
+                            {% endif %}
+                            {% if form.imagem.errors %}
+                                <div class="text-danger">
+                                    {% for error in form.imagem.errors %}{{ error }}{% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="mb-3 form-check">
+                            {{ form.publicado(class="form-check-input") }}
+                            {{ form.publicado.label(class="form-check-label") }}
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <div>
+                                {{ form.submit(class="btn btn-primary btn-lg") }}
+                                <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary btn-lg">Cancelar</a>
+                            </div>
+                            {% if post %}
+                                <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#deleteModal">
+                                    Excluir Post
+                                </button>
+                            {% endif %}
+                        </div>
+                    </form>
+                </div>
             </div>
-            {% if post %}
-                <button type="button" class="btn btn-danger btn-lg" data-bs-toggle="modal" data-bs-target="#deleteModal">
-                    Excluir
-                </button>
-            {% endif %}
         </div>
-    </form>
+        
+        <div class="col-md-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">💡 Dicas de Formatação</h5>
+                </div>
+                <div class="card-body">
+                    <small>
+                        <strong>Títulos:</strong><br>
+                        &lt;h2&gt;Título Principal&lt;/h2&gt;<br>
+                        &lt;h3&gt;Subtítulo&lt;/h3&gt;<br><br>
+                        
+                        <strong>Parágrafos:</strong><br>
+                        &lt;p&gt;Seu texto aqui&lt;/p&gt;<br><br>
+                        
+                        <strong>Formatação:</strong><br>
+                        &lt;strong&gt;Negrito&lt;/strong&gt;<br>
+                        &lt;em&gt;Itálico&lt;/em&gt;<br><br>
+                        
+                        <strong>Listas:</strong><br>
+                        &lt;ul&gt;<br>
+                        &nbsp;&nbsp;&lt;li&gt;Item 1&lt;/li&gt;<br>
+                        &nbsp;&nbsp;&lt;li&gt;Item 2&lt;/li&gt;<br>
+                        &lt;/ul&gt;<br><br>
+                        
+                        <strong>Links:</strong><br>
+                        &lt;a href="URL"&gt;Texto do link&lt;/a&gt;<br><br>
+                        
+                        <strong>Imagens:</strong><br>
+                        &lt;img src="URL" alt="Descrição"&gt;
+                    </small>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
 {% if post %}
+<!-- Modal de confirmação para deletar -->
 <div class="modal fade" id="deleteModal" tabindex="-1">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Confirmar Exclusão</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body">
-        <p>Tem certeza que deseja excluir o post "<strong>{{ post.titulo }}</strong>"? Esta ação não pode ser desfeita.</p>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-        <form action="{{ url_for('admin.deletar_post', post_id=post.id) }}" method="POST">
-            <button type="submit" class="btn btn-danger">Sim, Excluir</button>
-        </form>
-      </div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">⚠️ Confirmar Exclusão</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <p>Tem certeza que deseja deletar o post <strong>"{{ post.titulo }}"</strong>?</p>
+                <p class="text-danger"><strong>Esta ação não pode ser desfeita.</strong></p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <form method="POST" action="{{ url_for('admin.deletar_post', post_id=post.id) }}" style="display: inline;">
+                    <button type="submit" class="btn btn-danger">Deletar Definitivamente</button>
+                </form>
+            </div>
+        </div>
     </div>
-  </div>
 </div>
 {% endif %}
-{% endblock %}
-
-{% block scripts %}
-  {{ super() }}
-  {{ ckeditor.load() }}
 {% endblock %}
