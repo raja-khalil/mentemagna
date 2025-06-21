@@ -8,14 +8,11 @@ base_dir = Path(__file__).parent.absolute()
 
 class Config:
     """Configurações base da aplicação."""
-    SECRET_KEY = os.environ.get('SECRET_KEY') or 'uma-chave-secreta-padrao'
+    SECRET_KEY = os.environ.get('SECRET_KEY') or 'uma-chave-secreta-forte-e-dificil-de-adivinhar'
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-
-    # Configuração do Banco de Dados SQLite
-    SQLALCHEMY_DATABASE_URI = f"sqlite:///{base_dir / 'instance' / 'site.db'}"
-
+    
     # Configuração de Uploads
-    UPLOAD_FOLDER = base_dir / 'static' / 'uploads'
+    UPLOAD_FOLDER = os.path.join(base_dir, 'static', 'uploads')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
 
     # Configuração de Email
@@ -25,3 +22,30 @@ class Config:
     MAIL_USERNAME = os.environ.get('MAIL_USERNAME')
     MAIL_PASSWORD = os.environ.get('MAIL_PASSWORD')
     MAIL_DEFAULT_SENDER = os.environ.get('MAIL_USERNAME')
+
+    # Configuração do AdSense
+    GOOGLE_ADSENSE_CLIENT = os.environ.get('GOOGLE_ADSENSE_CLIENT', 'ca-pub-XXXXXXXXXXXXXXX')
+
+class DevelopmentConfig(Config):
+    """Configurações para desenvolvimento."""
+    DEBUG = True
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or f"sqlite:///{os.path.join(base_dir, 'instance', 'dev.db')}"
+
+class ProductionConfig(Config):
+    """Configurações para produção."""
+    DEBUG = False
+    # Use a variável de ambiente DATABASE_URL fornecida pela HostGator ou outro provedor.
+    # Se não houver, usa um SQLite de produção como fallback.
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f"sqlite:///{os.path.join(base_dir, 'instance', 'prod.db')}"
+
+class TestingConfig(Config):
+    """Configurações para testes."""
+    TESTING = True
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:' # Usa um banco de dados em memória para testes
+    WTF_CSRF_ENABLED = False # Desabilita CSRF nos testes
+
+config_by_name = dict(
+    development=DevelopmentConfig,
+    production=ProductionConfig,
+    testing=TestingConfig
+)

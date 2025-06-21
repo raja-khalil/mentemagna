@@ -1,9 +1,11 @@
+# routes/solutions.py - Sistema modular de soluções
 from flask import Blueprint, render_template, request, jsonify, redirect, url_for
 from seo_helper import get_seo_data
 import json
 
 solutions_bp = Blueprint('solutions', __name__, url_prefix='/solucoes')
 
+# --- CONFIGURAÇÃO CENTRAL DE SOLUÇÕES ---
 SOLUTIONS_CONFIG = {
     'consulta-cid': {
         'name': 'Consulta CID',
@@ -37,7 +39,7 @@ SOLUTIONS_CONFIG = {
         'keywords': ['sigtap', 'sus', 'tabela de procedimentos', 'medicamentos', 'opm', 'saúde pública'],
         'type': 'google_apps_script',
         'deployment_id': 'AKfycbzNzp-V_EWEBhcMSLMaU8SOO0hxhFrto6OpRLl4sGtndvLZS-3SJ-kBoYqNsyCL6W0',
-        'template': 'solutions/sigtap.html',
+        'template': 'templates/solutions/sigtap.html', # Corrigi o caminho do template
         'status': 'active',
         'featured': True
     },
@@ -48,7 +50,7 @@ SOLUTIONS_CONFIG = {
         'category': 'Utilitários',
         'keywords': ['calculadora', 'matemática', 'calcular', 'operações'],
         'type': 'html_js',
-        'template': 'solutions/calculadora.html',
+        'template': 'templates/solutions/calculadora.html', # Corrigi o caminho do template
         'status': 'active',
         'featured': True
     },

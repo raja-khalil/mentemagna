@@ -1,28 +1,63 @@
-{% extends "admin/admin_base.html" %}
+{% extends "admin_base.html" %}
+
+{% block title %}Editor de Post{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h2>{{ legend }}</h2>
-    <form method="POST" novalidate>
+<div class="container-fluid">
+    <form method="POST" enctype="multipart/form-data" novalidate>
         {{ form.hidden_tag() }}
-        <div class="mb-3">
-            {{ form.titulo.label(class="form-label") }}
-            {{ form.titulo(class="form-control") }}
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="card mb-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">{{ legend }}</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            {{ form.titulo.label(class="form-label fw-bold") }}
+                            {{ form.titulo(class="form-control form-control-lg") }}
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Conteúdo</label>
+                            {{ form.conteudo(class="form-control", id="editor-ck") }}
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-3">
+                <div class="card mb-3">
+                    <div class="card-header"><strong>Publicação</strong></div>
+                    <div class="card-body">
+                        <div class="form-check form-switch mb-3">
+                            {{ form.publicado(class="form-check-input") }}
+                            {{ form.publicado.label(class="form-check-label") }}
+                        </div>
+                        <div class="d-grid gap-2">
+                            {{ form.submit(class="btn btn-primary") }}
+                            <a href="{{ url_for('admin.dashboard') }}" class="btn btn-outline-secondary">Cancelar</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header"><strong>Resumo (SEO)</strong></div>
+                    <div class="card-body">
+                        {{ form.resumo.label(class="form-label visually-hidden") }}
+                        {{ form.resumo(class="form-control", rows="5", placeholder="Escreva um resumo atrativo para o post...") }}
+                    </div>
+                </div>
+                <div class="card mb-3">
+                    <div class="card-header"><strong>Imagem de Destaque</strong></div>
+                    <div class="card-body">
+                        {{ form.imagem.label(class="form-label visually-hidden") }}
+                        {{ form.imagem(class="form-control") }}
+                        {% if post and post.imagem %}
+                            <img src="{{ url_for('static', filename=post.imagem.replace('static/', '')) }}" class="img-fluid mt-2 rounded" alt="Imagem atual">
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="mb-3">
-            {{ form.resumo.label(class="form-label") }}
-            {{ form.resumo(class="form-control", rows="3") }}
-        </div>
-        <div class="mb-3">
-            {{ form.conteudo.label(class="form-label") }}
-            {{ form.conteudo(class="form-control", id="editor") }}
-        </div>
-        <div class="form-check mb-3">
-            {{ form.publicado(class="form-check-input") }}
-            {{ form.publicado.label(class="form-check-label") }}
-        </div>
-        {{ form.submit(class="btn btn-primary") }}
-        <a href="{{ url_for('admin.dashboard') }}" class="btn btn-secondary">Cancelar</a>
     </form>
 </div>
 {% endblock %}
@@ -31,15 +66,16 @@
 <script src="https://cdn.ckeditor.com/ckeditor5/41.4.2/classic/ckeditor.js"></script>
 <script>
     ClassicEditor
-        .create(document.querySelector('#editor'), {
-            // Configuração para upload de imagem
+        .create(document.querySelector('#editor-ck'), {
+            // Configuração do upload de imagem
             ckfinder: {
                 // Endpoint para onde o CKEditor enviará o arquivo
                 uploadUrl: '{{ url_for("admin.upload") }}'
-            }
+            },
+            language: 'pt-br' // Habilita o idioma português
         })
         .catch(error => {
-            console.error(error);
+            console.error('Erro ao inicializar o CKEditor:', error);
         });
 </script>
 {% endblock %}

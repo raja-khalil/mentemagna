@@ -1,0 +1,213 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ solution.name }} - Mente Magna{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h1 class="h3 mb-0">{{ solution.icon }} {{ solution.name }}</h1>
+                    <small>🚀 Powered by Google Apps Script | Base: Maio/2025</small>
+                </div>
+                <div class="card-body">
+                    <p class="lead">{{ solution.description }}</p>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="input-group">
+                                <input type="text" 
+                                       id="sigtap-search" 
+                                       class="form-control form-control-lg" 
+                                       placeholder="Digite o código ou nome do procedimento..."
+                                       maxlength="100">
+                                <button class="btn btn-info" type="button" onclick="searchSIGTAP()">
+                                    🔍 Buscar
+                                </button>
+                            </div>
+                            <small class="form-text text-muted">
+                                Ex: "03.01.01.007-0", "consulta médica", "hemograma"
+                            </small>
+                        </div>
+                        <div class="col-md-4">
+                            <button class="btn btn-outline-secondary w-100" onclick="clearResults()">
+                                🗑️ Limpar
+                            </button>
+                        </div>
+                    </div>
+
+                    <div id="loading" class="text-center d-none">
+                        <div class="spinner-border text-info" role="status">
+                            <span class="visually-hidden">Buscando...</span>
+                        </div>
+                        <p class="mt-2">Consultando base de dados SIGTAP...</p>
+                    </div>
+
+                    <div id="results-section" class="d-none">
+                        <h5>📋 Resultados da Busca</h5>
+                        <div id="results-container" class="border rounded p-3" style="max-height: 400px; overflow-y: auto;">
+                            </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="my-4 text-center p-3 bg-light rounded">
+                <small class="text-muted">Publicidade</small>
+                <ins class="adsbygoogle"
+                     style="display:block"
+                     data-ad-client="ca-pub-4115727278051485"
+                     data-ad-slot="2222222222"
+                     data-ad-format="auto"
+                     data-full-width-responsive="true"></ins>
+                <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">📖 Sobre a Tabela SIGTAP</h5>
+                </div>
+                <div class="card-body">
+                    <p>A <strong>Tabela de Procedimentos, Medicamentos e OPM do Sistema Único de Saúde (SIGTAP)</strong> é o sistema que unifica e padroniza os códigos e descrições de todos os itens faturáveis no SUS.</p>
+                    
+                    <div class="alert alert-info">
+                        <strong>💡 Importante:</strong> Esta é uma ferramenta de consulta para profissionais e estudantes. As informações não substituem as diretrizes oficiais do Ministério da Saúde.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h6 class="mb-0">Publicidade</h6>
+                </div>
+                <div class="card-body text-center p-2">
+                    <ins class="adsbygoogle"
+                         style="display:block"
+                         data-ad-client="ca-pub-4115727278051485"
+                         data-ad-slot="5555555555"
+                         data-ad-format="auto"
+                         data-full-width-responsive="true"></ins>
+                    <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+                </div>
+            </div>
+
+            <div class="card mb-4">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">🔧 Outras Soluções</h5>
+                </div>
+                <div class="card-body">
+                    <div class="d-grid gap-2">
+                        <a href="{{ url_for('solutions.solution_detail', solution_slug='consulta-cid') }}" 
+                           class="btn btn-outline-danger btn-sm">🏥 Consulta CID</a>
+                        <a href="{{ url_for('solutions.solution_detail', solution_slug='consulta-cbo') }}" 
+                           class="btn btn-outline-primary btn-sm">👔 Consulta CBO</a>
+                        <a href="{{ url_for('solutions.solutions_index') }}" 
+                           class="btn btn-success btn-sm">Ver Todas →</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// URL do Google Apps Script
+const SCRIPT_URL = "{{ solution.script_url }}";
+
+// Buscar SIGTAP
+async function searchSIGTAP() {
+    const query = document.getElementById('sigtap-search').value.trim();
+    if (!query || query.length < 3) {
+        alert('Digite pelo menos 3 caracteres para buscar.');
+        return;
+    }
+    showLoading(true);
+    try {
+        const response = await fetch(`${SCRIPT_URL}?action=search&query=${encodeURIComponent(query)}`);
+        if (!response.ok) throw new Error('Erro na resposta do servidor.');
+        const data = await response.json();
+        displayResults(data);
+    } catch (error) {
+        console.error('Erro:', error);
+        showError('Não foi possível conectar ao serviço de busca. Tente novamente.');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// Limpar resultados
+function clearResults() {
+    document.getElementById('sigtap-search').value = '';
+    document.getElementById('results-section').classList.add('d-none');
+}
+
+// Mostrar loading
+function showLoading(show) {
+    document.getElementById('loading').classList.toggle('d-none', !show);
+    document.getElementById('results-section').classList.toggle('d-none', show);
+}
+
+// Exibir resultados
+function displayResults(data) {
+    const container = document.getElementById('results-container');
+    const section = document.getElementById('results-section');
+    if (!data || !data.results || data.results.length === 0) {
+        container.innerHTML = '<div class="alert alert-warning">Nenhum resultado encontrado.</div>';
+    } else {
+        let html = '';
+        data.results.forEach(result => {
+            html += `
+                <div class="result-item border rounded p-3 mb-2 bg-white">
+                    <div class="fw-bold text-info" style="font-family: monospace;">${result.code}</div>
+                    <div class="text-dark">${result.description}</div>
+                    <div class="mt-2">
+                        <button class="btn btn-sm btn-outline-primary" onclick="copyCode('${result.code}')">
+                            📋 Copiar Código
+                        </button>
+                    </div>
+                </div>
+            `;
+        });
+        container.innerHTML = html;
+    }
+    section.classList.remove('d-none');
+}
+
+// Mostrar erro
+function showError(message) {
+    const container = document.getElementById('results-container');
+    container.innerHTML = `<div class="alert alert-danger">${message}</div>`;
+    document.getElementById('results-section').classList.remove('d-none');
+}
+
+// Copiar código
+function copyCode(code) {
+    navigator.clipboard.writeText(code).then(() => {
+        const target = event.target;
+        target.innerHTML = '✅ Copiado!';
+        target.classList.replace('btn-outline-primary', 'btn-success');
+        setTimeout(() => {
+            target.innerHTML = '📋 Copiar Código';
+            target.classList.replace('btn-success', 'btn-outline-primary');
+        }, 2000);
+    });
+}
+
+// Event listener para a tecla Enter
+document.getElementById('sigtap-search').addEventListener('keypress', function(e) {
+    if (e.key === 'Enter') {
+        searchSIGTAP();
+    }
+});
+</script>
+
+<style>
+.result-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    transform: translateY(-1px);
+    transition: all 0.2s ease;
+}
+</style>
+{% endblock %}

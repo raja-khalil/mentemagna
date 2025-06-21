@@ -1,15 +1,39 @@
 {% extends "base.html" %}
 
-{% block description %}{{ post.resumo or post.conteudo|striptags|truncate(160) }}{% endblock %}
-
 {% block content %}
-    <h1>{{ post.titulo }}</h1>
-    <p class="text-muted">Publicado em: {{ post.data_criacao.strftime('%d/%m/%Y') }} | Visualizações: {{ post.views }}</p>
+<div class="row gx-lg-5">
+    <div class="col-lg-8">
+        <article>
+            <header class="mb-4">
+                <h1 class="fw-bolder mb-1">{{ post.titulo }}</h1>
+                <div class="text-muted fst-italic mb-2">Publicado em {{ post.data_criacao.strftime('%d de %B de %Y') }}</div>
+            </header>
+            {% if post.imagem %}
+            <figure class="mb-4">
+                <img class="img-fluid rounded" src="{{ url_for('static', filename=post.imagem.replace('static/', '')) }}" alt="{{ post.titulo }}">
+            </figure>
+            {% endif %}
 
-    <div class="my-4">
-        <ins class="adsbygoogle" style="display:block; text-align:center;" data-ad-layout="in-article" data-ad-format="fluid" data-ad-client="{{ config.get('GOOGLE_ADSENSE_CLIENT') }}" data-ad-slot="YOUR_AD_SLOT_ID"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
+            {% include '_ad_slot.html' %}
+
+            <section class="mb-5 post-content">
+                {{ post.conteudo|safe }}
+            </section>
+        </article>
     </div>
 
-    <div>{{ post.conteudo|safe }}</div>
+    <aside class="col-lg-4 mt-5 mt-lg-0">
+        <div class="sticky-top" style="top: 2rem;">
+            {% include '_ad_slot.html' %}
+        </div>
+    </aside>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<style>
+/* Estilos para o conteúdo do post */
+.post-content p { line-height: 1.8; margin-bottom: 1.5rem; }
+.post-content img { max-width: 100%; height: auto; border-radius: 8px; margin: 1rem 0; }
+</style>
 {% endblock %}

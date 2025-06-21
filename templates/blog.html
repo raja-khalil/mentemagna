@@ -2,93 +2,23 @@
 {% block title %}Blog – Mente Magna{% endblock %}
 
 {% block content %}
-<div class="row">
-  <div class="col-lg-8">
-    <!-- Cabeçalho do Blog -->
-    <div class="mb-5">
-      <h1 class="display-4 fw-bold">📝 Blog Mente Magna</h1>
-      <p class="lead text-muted">Seu portal de conhecimento em tecnologia, inovação e desenvolvimento</p>
-    </div>
-
-    {% if posts %}
-      {% for post in posts %}
-        <article class="card mb-4 shadow-sm">
-          {% if post.imagem %}
-            <img src="{{ post.imagem }}" class="card-img-top" style="height: 250px; object-fit: cover;" alt="{{ post.titulo }}">
-          {% endif %}
-          <div class="card-body">
-            <h2 class="card-title h3">
-              <a href="{{ url_for('blog.post_detail', slug=post.slug) }}" class="text-decoration-none text-dark">
-                {{ post.titulo }}
-              </a>
-            </h2>
-            <div class="text-muted mb-3">
-              <small>
-                📅 {{ post.data_criacao.strftime('%d/%m/%Y') }} | 
-                👤 Mente Magna | 
-                🏷️ <span class="badge bg-primary">Tecnologia</span>
-              </small>
+<div class="container mt-5">
+    <div class="row gx-lg-5">
+        <div class="col-lg-8 main-content-column">
+            <div class="mb-5">
+                <h1 class="display-5 fw-bold">📝 Blog Mente Magna</h1>
+                <p class="lead text-muted">Seu portal de conhecimento em tecnologia e desenvolvimento.</p>
             </div>
-            <p class="card-text">{{ post.resumo or (post.conteudo|striptags)[:200] }}...</p>
-            <a href="{{ url_for('blog.post_detail', slug=post.slug) }}" class="btn btn-primary">
-              📖 Continuar lendo
-            </a>
-          </div>
-        </article>
-      {% endfor %}
-    {% else %}
-      <div class="text-center py-5">
-        <div class="card">
-          <div class="card-body">
-            <h3 class="text-muted">📝 Nenhum post publicado ainda</h3>
-            <p class="text-muted">Volte em breve para conferir nossos artigos!</p>
-            <a href="{{ url_for('main.home') }}" class="btn btn-primary">← Voltar ao Início</a>
-          </div>
+            {% if posts %}
+                {% for post in posts %}
+                    <article class="card mb-4 shadow-sm">
+                        </article>
+                {% endfor %}
+            {% else %}
+                {% endif %}
         </div>
-      </div>
-    {% endif %}
-  </div>
 
-  <aside class="col-lg-4">
-    <!-- Widget: Sobre o Blog -->
-    <div class="card mb-4">
-      <div class="card-header bg-primary text-white">
-        <h5 class="mb-0">ℹ️ Sobre o Blog</h5>
-      </div>
-      <div class="card-body">
-        <p>Compartilhamos conhecimento sobre tecnologia, programação, inteligência artificial e inovação.</p>
-        <a href="{{ url_for('main.sobre') }}" class="btn btn-outline-primary btn-sm">Saiba mais</a>
-      </div>
+        {% include '_sidebar.html' %}
     </div>
-
-    <!-- Anúncio Lateral do Blog -->
-    <div class="card mb-4">
-      <div class="card-header bg-light">
-        <h6 class="mb-0 text-muted">Publicidade</h6>
-      </div>
-      <div class="card-body text-center">
-        <ins class="adsbygoogle"
-             style="display:block"
-             data-ad-client="ca-pub-XXXXXXXXXXXXXXX"
-             data-ad-slot="BLOG-SIDEBAR-SLOT"
-             data-ad-format="auto"
-             data-full-width-responsive="true"></ins>
-        <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
-      </div>
-    </div>
-
-    <!-- Newsletter -->
-    <div class="card">
-      <div class="card-header bg-success text-white">
-        <h5 class="mb-0">📧 Newsletter</h5>
-      </div>
-      <div class="card-body">
-        <p class="small">Receba nossos artigos diretamente no seu email!</p>
-        <a href="{{ url_for('main.contato') }}" class="btn btn-success btn-sm w-100">
-          ✉️ Inscrever-se
-        </a>
-      </div>
-    </div>
-  </aside>
 </div>
 {% endblock %}

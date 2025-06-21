@@ -1,0 +1,39 @@
+<aside class="col-lg-4">
+    <div class="sticky-top" style="top: 2rem;">
+        
+        <div class="card mb-4">
+            <div class="card-header">Publicidade</div>
+            <div class="card-body">
+                {% include '_ad_slot.html' %}
+            </div>
+        </div>
+
+        {% if sidebar_posts %}
+        <div class="card mb-4">
+            <div class="card-header"><strong>Artigos Recentes</strong></div>
+            <div class="list-group list-group-flush">
+                {% for s_post in sidebar_posts %}
+                    <a href="{{ url_for('blog.post_detail', slug=s_post.slug) }}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+                        {{ s_post.titulo | truncate(35) }}
+                        <span class="badge bg-primary rounded-pill">→</span>
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+        {% if sidebar_solutions %}
+        <div class="card mb-4">
+            <div class="card-header"><strong>Nossas Soluções</strong></div>
+             <div class="list-group list-group-flush">
+                {% for slug, solution in sidebar_solutions.items() %}
+                    <a href="{{ url_for('solutions.solution_detail', solution_slug=slug) }}" class="list-group-item list-group-item-action">
+                        {{ solution.icon }} {{ solution.name }}
+                    </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+
+    </div>
+</aside>
