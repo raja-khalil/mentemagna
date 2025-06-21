@@ -6,9 +6,9 @@
     
     <!-- SEO Básico -->
     <title>{% block title %}Mente Magna - Tecnologia e Inovação{% endblock %}</title>
-    <meta name="description" content="{% block description %}Portal de tecnologia, programação e inovação da E-Magna. Artigos, tutoriais e soluções para desenvolvedores.{% endblock %}">
-    <meta name="keywords" content="tecnologia, programação, inovação, e-magna, desenvolvimento, blog tech">
-    <meta name="author" content="E-Magna">
+    <meta name="description" content="{% block description %}Portal de tecnologia, programação e inovação. Artigos, tutoriais e soluções para desenvolvedores.{% endblock %}">
+    <meta name="keywords" content="tecnologia, programação, inovação, desenvolvimento, blog tech">
+    <meta name="author" content="Mente Magna">
     
     <!-- Open Graph -->
     <meta property="og:title" content="{% block og_title %}Mente Magna{% endblock %}">
@@ -23,16 +23,12 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     
-    <!-- Google AdSense - SUBSTITUA PELO SEU CÓDIGO -->
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-SEU-CODIGO-AQUI"
+    <!-- Google AdSense -->
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4115727278051485"
             crossorigin="anonymous"></script>
     
     <!-- CSS Customizado -->
     <style>
-        .hero-section {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        }
-        
         .card {
             transition: transform 0.2s ease, box-shadow 0.2s ease;
         }
@@ -40,23 +36,6 @@
         .card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(0,0,0,0.15) !important;
-        }
-        
-        .ad-container {
-            margin: 20px 0;
-            text-align: center;
-            background-color: #f8f9fa;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 10px;
-        }
-        
-        .ad-label {
-            font-size: 11px;
-            color: #6c757d;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 8px;
         }
         
         .navbar-brand img {
@@ -68,11 +47,6 @@
         }
         
         @media (max-width: 768px) {
-            .ad-container {
-                margin: 15px 0;
-                padding: 8px;
-            }
-            
             .navbar-brand img {
                 height: 35px !important;
             }
@@ -86,10 +60,8 @@
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <!-- Logo apenas sem texto -->
-            <a class="navbar-brand fw-bold" href="/">
-                <img src="{{ url_for('static', filename='img/logo_mentemagna.png') }}" 
-                     alt="Mente Magna" height="40" class="me-2">
+            <a class="navbar-brand fw-bold" href="{{ url_for('main.home') }}">
+                🧠 Mente Magna
             </a>
             
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
@@ -99,84 +71,102 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav ms-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="/">🏠 Início</a>
+                        <a class="nav-link {% if request.endpoint == 'main.home' %}active{% endif %}" 
+                           href="{{ url_for('main.home') }}">🏠 Início</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/sobre">ℹ️ Sobre</a>
+                        <a class="nav-link {% if request.endpoint == 'main.sobre' %}active{% endif %}" 
+                           href="{{ url_for('main.sobre') }}">ℹ️ Sobre</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/emagna">⚡ E-Magna</a>
+                        <a class="nav-link {% if request.endpoint == 'main.emagna' %}active{% endif %}" 
+                           href="{{ url_for('main.emagna') }}">⚡ E-Magna</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/produtos">📦 Produtos</a>
+                        <a class="nav-link {% if request.endpoint == 'main.produtos' %}active{% endif %}" 
+                           href="{{ url_for('main.produtos') }}">📦 Produtos</a>
                     </li>
-                    <!-- MENU SOLUÇÕES ADICIONADO -->
+                    
+                    <!-- Menu Soluções (opcional) -->
+                    {% if url_for('solutions.solutions_index', _external=False) %}
                     <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="solucoesDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="nav-link dropdown-toggle" href="#" id="solucoesDropdown" 
+                           role="button" data-bs-toggle="dropdown" aria-expanded="false">
                             🔧 Soluções
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="solucoesDropdown">
-                            <li><a class="dropdown-item" href="/solucoes/consulta-cid">🏥 Consulta CID</a></li>
-                            <li><a class="dropdown-item" href="/solucoes/consulta-cbo">👔 Consulta CBO</a></li>
-                            <li><a class="dropdown-item" href="/solucoes/calculadora">🧮 Calculadora</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('solutions.solution_detail', solution_slug='consulta-cid') }}">🏥 Consulta CID</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('solutions.solution_detail', solution_slug='consulta-cbo') }}">👔 Consulta CBO</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('solutions.solution_detail', solution_slug='calculadora') }}">🧮 Calculadora</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="/solucoes">🔧 Ver Todas</a></li>
+                            <li><a class="dropdown-item" href="{{ url_for('solutions.solutions_index') }}">🔧 Ver Todas</a></li>
                         </ul>
                     </li>
+                    {% endif %}
+                    
                     <li class="nav-item">
-                        <a class="nav-link" href="/blog">📝 Blog</a>
+                        <a class="nav-link {% if 'blog' in request.endpoint %}active{% endif %}" 
+                           href="{{ url_for('blog.blog') }}">📝 Blog</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/contato">📞 Contato</a>
+                        <a class="nav-link {% if request.endpoint == 'main.contato' %}active{% endif %}" 
+                           href="{{ url_for('main.contato') }}">📞 Contato</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 
-    <!-- ANÚNCIO HEADER -->
+    <!-- ANÚNCIO HEADER (opcional) -->
+    {% if not request.endpoint == 'auth.login' %}
     <div class="container mt-3">
-        <div class="ad-container">
-            <div class="ad-label">Publicidade</div>
+        <div class="text-center p-3 bg-light rounded">
+            <small class="text-muted">Publicidade</small>
             <ins class="adsbygoogle"
                  style="display:block"
-                 data-ad-client="ca-pub-SEU-CODIGO-AQUI"
+                 data-ad-client="ca-pub-4115727278051485"
                  data-ad-slot="1234567890"
                  data-ad-format="horizontal"
                  data-full-width-responsive="true"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
     </div>
+    {% endif %}
 
-    <!-- Conteúdo Principal -->
-    <main class="container my-4 flex-grow-1">
-        {% with messages = get_flashed_messages(with_categories=true) %}
-            {% if messages %}
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="container mt-3">
                 {% for category, message in messages %}
                     <div class="alert alert-{{ 'danger' if category == 'error' else category }} alert-dismissible fade show">
                         {{ message }}
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                     </div>
                 {% endfor %}
-            {% endif %}
-        {% endwith %}
-        
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Conteúdo Principal -->
+    <main class="container my-4 flex-grow-1">
         {% block content %}{% endblock %}
     </main>
 
-    <!-- ANÚNCIO FOOTER -->
+    <!-- ANÚNCIO FOOTER (opcional) -->
+    {% if not request.endpoint == 'auth.login' %}
     <div class="container my-4">
-        <div class="ad-container">
-            <div class="ad-label">Publicidade</div>
+        <div class="text-center p-3 bg-light rounded">
+            <small class="text-muted">Publicidade</small>
             <ins class="adsbygoogle"
                  style="display:block"
-                 data-ad-client="ca-pub-SEU-CODIGO-AQUI"
+                 data-ad-client="ca-pub-4115727278051485"
                  data-ad-slot="9999999999"
                  data-ad-format="auto"
                  data-full-width-responsive="true"></ins>
             <script>(adsbygoogle = window.adsbygoogle || []).push({});</script>
         </div>
     </div>
+    {% endif %}
 
     <!-- Footer -->
     <footer class="bg-light border-top py-4 mt-auto">
@@ -184,17 +174,15 @@
             <div class="row">
                 <div class="col-md-8">
                     <div class="d-flex flex-wrap gap-3">
-                        <a href="/sobre" class="text-decoration-none text-dark small">Sobre</a>
+                        <a href="{{ url_for('main.sobre') }}" class="text-decoration-none text-dark small">Sobre</a>
                         <span class="text-muted">•</span>
-                        <a href="/blog" class="text-decoration-none text-dark small">Blog</a>
+                        <a href="{{ url_for('blog.blog') }}" class="text-decoration-none text-dark small">Blog</a>
                         <span class="text-muted">•</span>
-                        <a href="/solucoes" class="text-decoration-none text-dark small">Soluções</a>
+                        <a href="{{ url_for('main.contato') }}" class="text-decoration-none text-dark small">Contato</a>
                         <span class="text-muted">•</span>
-                        <a href="/contato" class="text-decoration-none text-dark small">Contato</a>
+                        <a href="{{ url_for('main.termos') }}" class="text-decoration-none text-dark small">Termos</a>
                         <span class="text-muted">•</span>
-                        <a href="/termos" class="text-decoration-none text-dark small">Termos</a>
-                        <span class="text-muted">•</span>
-                        <a href="/privacidade" class="text-decoration-none text-dark small">Privacidade</a>
+                        <a href="{{ url_for('main.privacidade') }}" class="text-decoration-none text-dark small">Privacidade</a>
                     </div>
                 </div>
                 <div class="col-md-4 text-end">
@@ -207,7 +195,6 @@
                            class="btn btn-outline-secondary btn-sm rounded-circle">
                             <i class="fab fa-linkedin-in"></i>
                         </a>
-                        <!-- GitHub em vez de Twitter -->
                         <a href="https://github.com/raja-khalil" target="_blank" 
                            class="btn btn-outline-secondary btn-sm rounded-circle">
                             <i class="fab fa-github"></i>
@@ -218,7 +205,7 @@
             <div class="row mt-3">
                 <div class="col-12 text-center">
                     <small class="text-muted">
-                        © 2025 E-Magna - Mente Magna. Todos os direitos reservados.
+                        © 2025 Mente Magna - E-Magna. Todos os direitos reservados.
                     </small>
                 </div>
             </div>
