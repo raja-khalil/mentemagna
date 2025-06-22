@@ -5,7 +5,15 @@
 <div class="container col-xxl-8 px-4 py-5">
     <div class="row flex-lg-row-reverse align-items-center g-5 py-5">
       <div class="col-10 col-sm-8 col-lg-6">
-        <img src="https://lh3.googleusercontent.com/gg-dl/AJfQ9KRlFhDOT4AKG3LtufU2QEat8wwuqrBd3mMvvpIQ8pcjIDPDeN-To__rqQDwQpNuAUG6FeZq9Dwj4VI36sCEinnW2q_kecxNBipa910k9hnhYwis0AMXwv9Croo3lx1zTcPbuwZ-RjausBcFlZICrcONj1yw59N-QshPQKKfBiiAGj4=s1024" class="d-block mx-lg-auto img-fluid rounded-circle" alt="MenteMagna - Inteligência de Dados" loading="lazy">
+        {# 
+          1. O nome do arquivo foi atualizado para "Imagem_Temp_Home_MM.png".
+          2. Adicionado um `style` para limitar a largura máxima da imagem, garantindo harmonia visual. 
+        #}
+        <img src="{{ url_for('static', filename='img/Imagem_Temp_Home_MM.png') }}" 
+             class="d-block mx-lg-auto img-fluid rounded-circle shadow" 
+             alt="MenteMagna - Inteligência de Dados" 
+             loading="lazy"
+             style="max-width: 450px; height: auto;">
       </div>
       <div class="col-lg-6">
         <h1 class="display-5 fw-bold text-body-emphasis lh-1 mb-3">MenteMagna: Onde a Experiência Humana Encontra a Inteligência dos Dados</h1>
