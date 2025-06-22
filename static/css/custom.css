@@ -160,3 +160,9 @@ footer li {
         padding-right: 1.5rem;
     }
 }
+
+/* ===== REGRA GLOBAL PARA JUSTIFICAR TEXTO ===== */
+/* Esta regra justifica todos os parágrafos dentro do conteúdo principal */
+main p {
+    text-align: justify;
+}
