@@ -3,25 +3,25 @@
 
 {% block content %}
 <div class="container mt-5">
-    <div class="row gx-lg-5">
-        <div class="col-lg-8 main-content-column">
-            <h1 class="display-5 fw-bold mb-4">Produtos</h1>
-            <div class="row">
-                {% for i in range(1, 4) %}
-                <div class="col-md-6 mb-4">
-                    <div class="card h-100 shadow-sm">
-                        <img src="https://picsum.photos/seed/prod{{i}}/400/300" class="card-img-top" alt="Produto {{i}}">
-                        <div class="card-body">
-                            <h5 class="card-title">Produto Lorem {{i}}</h5>
-                            <p class="card-text">Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
-                        </div>
-                    </div>
+    <div class="text-center mb-5">
+        <h1 class="display-5 fw-bold">Nossos Produtos</h1>
+        <p class="lead text-muted">Soluções, livros e materiais desenvolvidos para impulsionar sua carreira e sua organização.</p>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-4 col-md-6 mx-auto">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ url_for('static', filename='img/cover-maquinas-inteligentes.jpg') }}" class="card-img-top" alt="Capa do Livro Máquinas Inteligentes, Decisões Humanas">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Livro: Máquinas Inteligentes, Decisões Humanas</h5>
+                    <p class="card-text small">O manual definitivo para profissionais com Inteligência Artificial no Setor Offshore.</p>
+                    <a href="{{ url_for('main.produto_maquinas_inteligentes') }}" class="btn btn-primary mt-auto">
+                        Ver Página do Livro
+                    </a>
                 </div>
-                {% endfor %}
             </div>
         </div>
 
-        {% include '_sidebar.html' %}
-    </div>
+        </div>
 </div>
 {% endblock %}
