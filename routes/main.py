@@ -60,8 +60,14 @@ def cookies():
 def aviso_legal():
     return render_template('legal/aviso-legal.html', title="Aviso Legal")
 
-# ROTA ADICIONADA PARA A LANDING PAGE DO LIVRO
+# --- ROTAS DOS PRODUTOS ---
+
 @main_bp.route('/produtos/maquinas-inteligentes-decisoes-humanas')
 def produto_maquinas_inteligentes():
-    """Exibe a landing page do livro."""
+    """Exibe a landing page do livro de IA Offshore."""
     return render_template('products/maquinas-inteligentes.html', title="Livro: Máquinas Inteligentes, Decisões Humanas")
+
+@main_bp.route('/produtos/manual-limpeza-escolar')
+def produto_manual_limpeza():
+    """Exibe a landing page do livro de Limpeza Escolar."""
+    return render_template('products/manual-limpeza.html', title="Livro: Manual Avançado de Técnicas de Limpeza")

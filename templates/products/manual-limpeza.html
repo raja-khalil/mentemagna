@@ -1,0 +1,82 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .hero-section-limpeza {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1581578731548-c64695cc6952?q=80&w=2070&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 6rem 0;
+    }
+    .btn-amazon {
+        background-color: #FF9900;
+        color: #111;
+        font-weight: bold;
+        border: none;
+    }
+    .btn-amazon:hover {
+        background-color: #e68a00;
+        color: #000;
+    }
+</style>
+
+<section class="hero-section-limpeza text-center">
+    <div class="container">
+        <p class="text-warning">LANÇAMENTO E-BOOK AMAZON</p>
+        <h1 class="display-4 fw-bold">Manual Avançado de Técnicas de Limpeza para Ambientes Escolares</h1>
+        <p class="lead col-lg-8 mx-auto">O guia profissional para transformar a rotina de limpeza em um padrão de excelência.</p>
+        <a href="https://www.amazon.com.br/Avan%C3%A7ado-T%C3%A9cnicas-Limpeza-Ambientes-Escolares-ebook/dp/B0DZSJY4BH/" class="btn btn-amazon btn-lg mt-3" target="_blank">
+            <i class="fab fa-amazon me-2"></i>Comprar na Amazon
+        </a>
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row g-5">
+        <div class="col-lg-8">
+            <article>
+                <section class="mb-5">
+                    <p class="lead">Transformar a rotina de limpeza em ambientes escolares em um padrão de excelência é o objetivo principal deste manual abrangente e inovador. Elaborado com a expertise de Raja Khalil Gebara Novaes, renomado consultor da E-Magna Desenvolvimento Humano e Empresarial, o livro oferece um guia técnico, detalhado e acessível para profissionais que desejam elevar suas práticas a níveis superiores.</p>
+                </section>
+
+                <section class="mb-5 p-4 bg-light rounded">
+                    <h3 class="fw-bold mb-4 text-center"><i class="fas fa-book-reader me-2"></i>O que você encontrará neste manual:</h3>
+                    <ul class="list-unstyled">
+                        <li class="d-flex mb-3"><i class="fas fa-check text-primary fa-fw me-2 mt-1"></i><span><strong>Técnicas Avançadas de Higienização:</strong> Métodos detalhados para salas de aula, laboratórios, bibliotecas, banheiros, refeitórios e mais.</span></li>
+                        <li class="d-flex mb-3"><i class="fas fa-check text-primary fa-fw me-2 mt-1"></i><span><strong>Protocolos Específicos:</strong> Passo a passo para desinfecção, controle de mofo e manutenção de áreas críticas.</span></li>
+                        <li class="d-flex mb-3"><i class="fas fa-check text-primary fa-fw me-2 mt-1"></i><span><strong>Gestão Estratégica:</strong> Dicas para criar cronogramas eficientes, calcular equipes e monitorar a qualidade.</span></li>
+                        <li class="d-flex mb-3"><i class="fas fa-check text-primary fa-fw me-2 mt-1"></i><span><strong>Sustentabilidade em Foco:</strong> Soluções para reduzir consumo, usar produtos biodegradáveis e implementar coleta seletiva.</span></li>
+                        <li class="d-flex mb-3"><i class="fas fa-check text-primary fa-fw me-2 mt-1"></i><span><strong>Desenvolvimento Profissional:</strong> Ferramentas para crescimento na carreira, comunicação e bem-estar.</span></li>
+                    </ul>
+                </section>
+
+                <section class="mb-5">
+                    <h3 class="fw-bold mb-4 text-center">Por que este livro é indispensável?</h3>
+                    <p>Escolas são mais do que espaços físicos – são ambientes onde o aprendizado floresce e o bem-estar é essencial. A limpeza, muitas vezes vista apenas como um serviço de suporte, é destacada aqui como um pilar fundamental na promoção da saúde, segurança e aprendizado. Este manual equipa profissionais com conhecimento técnico avançado e os prepara para se tornarem agentes de transformação dentro da comunidade escolar.</p>
+                </section>
+
+                <section class="mb-5 p-4 bg-light rounded">
+                    <h3 class="fw-bold mb-3"><i class="fas fa-user-tie me-2"></i>Sobre o Autor</h3>
+                    <p><strong>Raja Khalil Gebara Novaes</strong> possui experiência em gestão, tendo atuado em unidade saúde e escolares, formado em Serviço Social e com ampla experiência em comunicação estratégica com foco em dados. Sua abordagem multidisciplinar e sua paixão pela excelência profissional transparecem em cada página deste guia, tornando-o um recurso indispensável para equipes de limpeza que buscam superar expectativas.</p>
+                </section>
+
+                <section class="text-center my-5">
+                    <h2 class="fw-light">Eleve os padrões de higiene e segurança da sua instituição.</h2>
+                    <a href="https://www.amazon.com.br/Avan%C3%A7ado-T%C3%A9cnicas-Limpeza-Ambientes-Escolares-ebook/dp/B0DZSJY4BH/" class="btn btn-amazon btn-lg mt-3" target="_blank">
+                        <i class="fab fa-amazon me-2"></i>Garanta seu guia definitivo!
+                    </a>
+                </section>
+            </article>
+        </div>
+        <aside class="col-lg-4">
+            <div class="sticky-top" style="top: 2rem;">
+                <img src="{{ url_for('static', filename='img/cover-manual-limpeza.jpg') }}" alt="Capa do Livro Manual Avançado de Técnicas de Limpeza" class="img-fluid shadow-lg">
+                <div class="text-center mt-3">
+                     <a href="https://www.amazon.com.br/Avan%C3%A7ado-T%C3%A9cnicas-Limpeza-Ambientes-Escolares-ebook/dp/B0DZSJY4BH/" class="btn btn-amazon w-100" target="_blank">Ver na Amazon</a>
+                </div>
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}

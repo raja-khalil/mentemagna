@@ -2,21 +2,33 @@
 {% block title %}Produtos – Mente Magna{% endblock %}
 
 {% block content %}
-<div class="container mt-5">
+<div class="container my-5">
     <div class="text-center mb-5">
         <h1 class="display-5 fw-bold">Nossos Produtos</h1>
         <p class="lead text-muted">Soluções, livros e materiais desenvolvidos para impulsionar sua carreira e sua organização.</p>
     </div>
 
-    <div class="row">
-        <div class="col-lg-4 col-md-6 mx-auto">
+    <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-6 mb-4">
             <div class="card h-100 shadow-sm">
-                {# AJUSTE: O nome do arquivo da imagem foi corrigido aqui. #}
                 <img src="{{ url_for('static', filename='img/Maquina_Inteligente_Livro.jpg') }}" class="card-img-top" alt="Capa do Livro Máquinas Inteligentes, Decisões Humanas">
                 <div class="card-body d-flex flex-column">
                     <h5 class="card-title">Livro: Máquinas Inteligentes, Decisões Humanas</h5>
                     <p class="card-text small">O manual definitivo para profissionais com Inteligência Artificial no Setor Offshore.</p>
                     <a href="{{ url_for('main.produto_maquinas_inteligentes') }}" class="btn btn-primary mt-auto">
+                        Ver Página do Livro
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4 col-md-6 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ url_for('static', filename='img/cover-manual-limpeza.jpg') }}" class="card-img-top" alt="Capa do Livro Manual Avançado de Técnicas de Limpeza">
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">Livro: Manual Avançado de Técnicas de Limpeza</h5>
+                    <p class="card-text small">O guia profissional para transformar a rotina de limpeza em ambientes escolares em um padrão de excelência.</p>
+                    <a href="{{ url_for('main.produto_manual_limpeza') }}" class="btn btn-primary mt-auto">
                         Ver Página do Livro
                     </a>
                 </div>
