@@ -166,3 +166,10 @@ footer li {
 main p {
     text-align: justify;
 }
+
+/* Estilo para Harmonizar Imagens de Cards de Produtos */
+.product-card-img {
+    height: 400px; /* Define uma altura fixa para a imagem */
+    object-fit: cover; /* Garante que a imagem cubra o espaço sem distorcer */
+    width: 100%;
+}
