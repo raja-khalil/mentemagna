@@ -12,7 +12,7 @@ class Config:
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     
     # Configuração de Uploads
-    UPLOAD_FOLDER = os.path.join(base_dir, 'static', 'uploads')
+    UPLOAD_FOLDER = os.path.join(base_dir, 'static')
     MAX_CONTENT_LENGTH = 16 * 1024 * 1024  # 16 MB
 
     # Configuração de Email
@@ -29,20 +29,21 @@ class Config:
 class DevelopmentConfig(Config):
     """Configurações para desenvolvimento."""
     DEBUG = True
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DEV_DATABASE_URL') or f"sqlite:///{os.path.join(base_dir, 'instance', 'dev.db')}"
+    SQLALCHEMY_DATABASE_URI = f"sqlite:///{os.path.join(base_dir, 'instance', 'dev.db')}"
 
 class ProductionConfig(Config):
     """Configurações para produção."""
     DEBUG = False
-    # Use a variável de ambiente DATABASE_URL fornecida pela HostGator ou outro provedor.
-    # Se não houver, usa um SQLite de produção como fallback.
+    # ================== CONFIGURAÇÃO RESTAURADA PARA PRODUÇÃO ==================
+    # Esta linha foi descomentada para usar a variável de ambiente DATABASE_URL do Render.
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL') or f"sqlite:///{os.path.join(base_dir, 'instance', 'prod.db')}"
+    # ===========================================================================
 
 class TestingConfig(Config):
     """Configurações para testes."""
     TESTING = True
-    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:' # Usa um banco de dados em memória para testes
-    WTF_CSRF_ENABLED = False # Desabilita CSRF nos testes
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///:memory:'
+    WTF_CSRF_ENABLED = False
 
 config_by_name = dict(
     development=DevelopmentConfig,
