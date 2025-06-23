@@ -8,33 +8,30 @@
         <p class="lead text-muted">Soluções, livros e materiais desenvolvidos para impulsionar sua carreira e sua organização.</p>
     </div>
 
-    <h2 class="h3 border-bottom pb-2 mb-4">📚 Livros e Manuais</h2>
-    <div class="row">
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='img/Maquina_Inteligente_Livro.jpg') }}" class="card-img-top product-card-img" alt="Capa do Livro Máquinas Inteligentes, Decisões Humanas">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Livro: Máquinas Inteligentes, Decisões Humanas</h5>
-                    <p class="card-text small">O manual definitivo para profissionais com Inteligência Artificial no Setor Offshore.</p>
-                    <a href="{{ url_for('main.produto_maquinas_inteligentes') }}" class="btn btn-primary mt-auto">
-                        Ver Página do Livro
+    {% if products_by_category %}
+        {% for category, products in products_by_category.items() %}
+        <h2 class="h3 border-bottom pb-2 mb-4 mt-5">📚 {{ category }}</h2>
+        <div class="row">
+            {% for product in products %}
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <a href="{{ url_for('main.produto_detalhe', slug=product.slug) }}">
+                        <img src="{{ url_for('static', filename=product.image_file) }}" class="card-img-top product-card-img" alt="Capa de {{ product.name }}">
                     </a>
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ product.name }}</h5>
+                        <p class="card-text small">{{ product.short_description }}</p>
+                        <a href="{{ url_for('main.produto_detalhe', slug=product.slug) }}" class="btn btn-primary mt-auto">
+                            Saiba Mais
+                        </a>
+                    </div>
                 </div>
             </div>
+            {% endfor %}
         </div>
-
-        <div class="col-lg-4 col-md-6 mb-4">
-            <div class="card h-100 shadow-sm">
-                <img src="{{ url_for('static', filename='img/cover-manual-limpeza.jpg') }}" class="card-img-top product-card-img" alt="Capa do Livro Manual Avançado de Técnicas de Limpeza">
-                <div class="card-body d-flex flex-column">
-                    <h5 class="card-title">Livro: Manual Avançado de Técnicas de Limpeza</h5>
-                    <p class="card-text small">O guia profissional para transformar a rotina de limpeza em ambientes escolares em um padrão de excelência.</p>
-                    <a href="{{ url_for('main.produto_manual_limpeza') }}" class="btn btn-primary mt-auto">
-                        Ver Página do Livro
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
+        {% endfor %}
+    {% else %}
+        <div class="alert alert-info text-center">Nenhum produto cadastrado no momento. Volte em breve!</div>
+    {% endif %}
 </div>
 {% endblock %}

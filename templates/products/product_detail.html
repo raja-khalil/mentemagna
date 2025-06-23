@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    .hero-section {
+        background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://images.unsplash.com/photo-1521737711867-e3b97375f902?q=80&w=1887&auto=format&fit=crop');
+        background-size: cover;
+        background-position: center;
+        color: white;
+        padding: 6rem 0;
+    }
+    .btn-amazon {
+        background-color: #FF9900;
+        color: #111;
+        font-weight: bold;
+        border: none;
+    }
+    .btn-amazon:hover {
+        background-color: #e68a00;
+        color: #000;
+    }
+</style>
+
+<section class="hero-section text-center">
+    <div class="container">
+        <p class="text-warning text-uppercase">{{ produto.category }}</p>
+        <h1 class="display-4 fw-bold">{{ produto.name }}</h1>
+        <p class="lead col-lg-8 mx-auto">{{ produto.short_description }}</p>
+        {% if produto.amazon_link %}
+        <a href="{{ produto.amazon_link }}" class="btn btn-amazon btn-lg mt-3" target="_blank">
+            <i class="fab fa-amazon me-2"></i>Comprar na Amazon
+        </a>
+        {% endif %}
+    </div>
+</section>
+
+<div class="container my-5">
+    <div class="row g-5">
+        <div class="col-lg-8">
+            <article class="post-content">
+                {{ produto.full_description_html|safe }}
+            </article>
+        </div>
+        <aside class="col-lg-4">
+            <div class="sticky-top" style="top: 2rem;">
+                <img src="{{ url_for('static', filename=produto.image_file) }}" alt="Capa de {{ produto.name }}" class="img-fluid shadow-lg">
+                {% if produto.amazon_link %}
+                <div class="text-center mt-3">
+                     <a href="{{ produto.amazon_link }}" class="btn btn-amazon w-100" target="_blank">Ver na Amazon</a>
+                </div>
+                {% endif %}
+            </div>
+        </aside>
+    </div>
+</div>
+{% endblock %}
